@@ -1,5 +1,7 @@
 import telebot
-bot = telebot.TeleBot('2029713033:AAH_p7BTE0CBP8S8EB3QxtI_OfsPcLwrVAM')
+from conf import *
+
+bot = telebot.TeleBot(name)
 
 hi = 'доброе добрае доброго хай хай, хаай хааай'
 ass = 'жопа'
