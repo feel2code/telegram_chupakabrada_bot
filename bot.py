@@ -64,12 +64,19 @@ def get_text_messages(message):
         bot.send_message(message.chat.id, "Абидна да? хихихих")
     elif msg in message_a:
         bot.send_message(message.chat.id, "А?")
-    elif msg in message_who:
-        bot.send_message(message.chat.id, "Каво?")
     elif msg in message_no:
         bot.send_message(message.chat.id, "Ну, как хаварица, на нет и кабылы нет.")
     elif msg in message_thanks:
         bot.send_message(message.chat.id, "Соси Пажилую Сасульку. А, ню да. Так расшифровываеца.")
+    elif msg in message_who:
+        bot.send_message(message.chat.id, 'А кто кто кто кто а ктооо???')
+        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAP-YWA2fmSUzgbH_bVtT8VOnEYSU80AAnsOAAIDKJlKdv4m3SZDnO4hBA')
+
+
+# @bot.message_handler(content_types=["sticker"])
+# def send_sticker(message):
+    # sticker_id = message.sticker.file_id
+    # bot.send_message(message.chat.id, sticker_id)
 
 
 @bot.message_handler(content_types=['voice'])
