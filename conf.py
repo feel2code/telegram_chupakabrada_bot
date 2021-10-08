@@ -1,3 +1,0 @@
-# conf.py
-
-name = '2029713033:AAEQ_JH7UIz-342LNT22T3jU-9UfizrMgMs'
