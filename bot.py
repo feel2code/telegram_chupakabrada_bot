@@ -3,7 +3,6 @@ from conf import *
 
 bot = telebot.TeleBot(name)
 
-
 hi = 'доброе добрае доброго хай хай, хаай хааай'
 ass = 'жопа'
 message_lol = ['ХЕХ', 'АХАХАХ', 'АХАХАХАХ', 'ЛОЛ', 'ХАХА']
