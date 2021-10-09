@@ -94,10 +94,9 @@ def get_text_messages(message):
         weather_spb()
         weather_msk()
         weather_ekb()
-        bot.send_message(message.chat.id, 'Погода в Казани: '+k4+' по Цельсию.')
-        bot.send_message(message.chat.id, 'Погода в Питере: ' + p4 + ' по Цельсию.')
-        bot.send_message(message.chat.id, 'Погода в Москве: ' + m4 + ' по Цельсию.')
-        bot.send_message(message.chat.id, 'Погода в Екатеринбурге: ' + e4 + ' по Цельсию.')
+        what_to_send = ('Пагода в районах-харадах \n '+k4+' °C Казань \n ' + p4)
+        what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
+        bot.send_message(message.chat.id, what_to_send)
     if message.text == '/sticker':
         bot.send_message(message.chat.id, r'Ну вот тебе наклеечки, вот,'
                                           r'пожалуйста, https://t.me/addstickers/Jessieamstaff')
