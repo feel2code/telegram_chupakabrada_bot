@@ -140,6 +140,7 @@ def get_text_messages(message):
     # sticker_id = message.sticker.file_id
     # bot.send_message(message.chat.id, sticker_id)
 
+
 # @bot.message_handler(content_types=["text"])
 # def chat_id(message):
 #     if message.text == 'chat':
