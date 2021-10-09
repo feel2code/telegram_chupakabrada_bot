@@ -23,6 +23,7 @@ note = 'ля ля, ляя ляяя'
 k4 = ''
 p4 = ''
 m4 = ''
+e4 = ''
 
 
 def weather_kzn():
@@ -58,6 +59,17 @@ def weather_msk():
     return m4
 
 
+def weather_ekb():
+    global e4
+    r = requests.get('http://api.openweathermap.org/data/2.5/weather?id=1486209&appid='+go_weather)
+    e = r.json()
+    e1 = e['main']
+    e2 = e1['temp']
+    e3 = int(e2 - 273)
+    e4 = str(e3)
+    return e4
+
+
 def check(message, diction, answer):
     msg_check = message.text.upper().split()
     dictionary = diction.upper().split()
@@ -73,6 +85,10 @@ def check(message, diction, answer):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
+    bot.send_message(message.chat.id, text='ass hole')
+    if message.text == 'chat':
+        chat_id_var = message.chat.id
+        bot.send_message(message.chat.id, chat_id_var)
     global k4
     global p4
     global m4
@@ -80,9 +96,11 @@ def get_text_messages(message):
         weather_kzn()
         weather_spb()
         weather_msk()
+        weather_ekb()
         bot.send_message(message.chat.id, 'Погода в Казани: '+k4+' по Цельсию.')
         bot.send_message(message.chat.id, 'Погода в Питере: ' + p4 + ' по Цельсию.')
         bot.send_message(message.chat.id, 'Погода в Москве: ' + m4 + ' по Цельсию.')
+        bot.send_message(message.chat.id, 'Погода в Екатеринбурге: ' + e4 + ' по Цельсию.')
     if message.text == '/sticker':
         bot.send_message(message.chat.id, r'Ну вот тебе наклеечки, вот,'
                                           r'пожалуйста, https://t.me/addstickers/Jessieamstaff')
@@ -126,10 +144,16 @@ def get_text_messages(message):
     # sticker_id = message.sticker.file_id
     # bot.send_message(message.chat.id, sticker_id)
 
+# @bot.message_handler(content_types=["text"])
+# def chat_id(message):
+#     if message.text == 'chat':
+#         chat_id_var = message.chat.id
+#         bot.send_message(message.chat.id, chat_id_var)
+
 
 @bot.message_handler(content_types=['voice'])
-def get_voice_messages(sound):
-    bot.send_message(sound.chat.id, "Ничего не слышно, АЛО СВИТЛАНА????")
+def get_voice_messages(voice):
+    bot.send_message(voice.chat.id, "Ничего не слышно, АЛО СВИТЛАНА????")
 
 
 @bot.message_handler(content_types=['audio'])
