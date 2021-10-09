@@ -85,13 +85,10 @@ def check(message, diction, answer):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    bot.send_message(message.chat.id, text='ass hole')
-    if message.text == 'chat':
-        chat_id_var = message.chat.id
-        bot.send_message(message.chat.id, chat_id_var)
     global k4
     global p4
     global m4
+    global e4
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
         weather_kzn()
         weather_spb()
