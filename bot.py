@@ -1,6 +1,8 @@
 import telebot
 import requests
 from conf import *
+import random
+import pylightxl as xl
 
 bot = telebot.TeleBot(name)
 
@@ -115,9 +117,6 @@ def get_text_messages(message):
     # старт
     if message.text == '/start':
         bot.send_message(message.chat.id, r'Я тебе, шо, космонавт, чи шо? Добавляй в группу меня, скатабаза такая.')
-    # пока не доделано
-    if message.text == '/belching':
-        bot.send_message(message.chat.id, r'БУЭЭЭ')
     # catching messages
     check(message, hi, 'Хааааааай зяблс энд хай литл бэби бон')
     check(message, who_is_bot, 'Каво?')
@@ -161,6 +160,10 @@ def get_text_messages(message):
     elif message.text.upper() == 'КРОЛ':
         bot.send_message(message.chat.id, "Кто крол? Я крол?")
         bot.register_next_step_handler(message, get_bunny)
+    elif message.text == '/citate':
+        db = xl.readxl(fn='citates.xlsx', ws='Sheet1')
+        rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
+        bot.send_message(message.chat.id, rand)
 
 
 # @bot.message_handler(content_types=["sticker"])
