@@ -6,6 +6,15 @@ bot = telebot.TeleBot(name)
 
 hi = 'доброе добрае доброго хай хай, хаай хааай'
 ass = 'жопа'
+birthday = 'др рождения рожденья ражденья раждения'
+who_is_bot = 'каво'
+abba = 'абоба абобус амогус аабоба'
+note = 'ля ля, ляя ляяя'
+sorry = 'извинись извинись! извинись,'
+hello = 'ку привет привет, ку,'
+dog = 'собака пес сабака себек собочка'
+what = 'шо шоо шооо'
+
 message_lol = ['ХЕХ', 'АХАХАХ', 'АХАХАХАХ', 'ЛОЛ', 'ХАХА']
 message_plus = ['+', '++', '+++', '++++']
 message_aga = ['АГА']
@@ -16,9 +25,6 @@ message_a = ['А', 'АА', 'ААА', 'АААА']
 message_who = ['ХТО', 'КТО', 'КТО?', 'ХТО?']
 message_no = ['НЕ', 'НЕТ', 'НЕА', 'НЕТ(', 'НЕТ)']
 message_thanks = ['СПС', 'SPS']
-who_is_bot = 'каво'
-abba = 'абоба абобус амогус аабоба'
-note = 'ля ля, ляя ляяя'
 
 k4 = ''
 p4 = ''
@@ -85,6 +91,7 @@ def check(message, diction, answer):
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
+    # погода по команде
     global k4
     global p4
     global m4
@@ -97,14 +104,17 @@ def get_text_messages(message):
         what_to_send = ('Пагода в районах-харадах \n '+k4+' °C Казань \n ' + p4)
         what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
         bot.send_message(message.chat.id, what_to_send)
+    # рекламирует стикеры
     if message.text == '/sticker':
         bot.send_message(message.chat.id, r'Ну вот тебе наклеечки, вот,'
                                           r'пожалуйста, https://t.me/addstickers/Jessieamstaff')
+    # старт
     if message.text == '/start':
         bot.send_message(message.chat.id, r'Я тебе, шо, космонавт, чи шо? Добавляй в группу меня, скатабаза такая.')
+    # пока не доделано
     if message.text == '/belching':
         bot.send_message(message.chat.id, r'БУЭЭЭ')
-    msg = message.text.upper()
+    # catching messages
     check(message, hi, 'Хааааааай зяблс энд хай литл бэби бон')
     check(message, who_is_bot, 'Каво?')
     check(message, abba, 'А Б О Б А')
@@ -112,6 +122,13 @@ def get_text_messages(message):
     check(message, 'общем', 'В общем и целом, ага, ню да.')
     check(message, ass, 'Кто? Я? А может быть ТЫ? А?')
     check(message, note, 'Ля, какая!')
+    check(message, sorry, 'Сам извинись!')
+    check(message, birthday, 'С ДНЕМ РАЖДЕНЬЯ, ТЕБЕ СЕГОДНЯ 54 ГОДА??? А ну ладна!')
+    check(message, hello, 'Всем ку, с вами я. Непабидимый гладиатор!')
+    check(message, dog, 'Где сабака?')
+    check(message, what, 'ШО? Ну ШО?')
+    # пишет, только когда сообщение из одного слова
+    msg = message.text.upper()
     if msg in message_lol:
         bot.send_message(message.chat.id, "Пожилая скумбрия на связи. Зарофлю любого лола.")
     elif msg in message_plus:
@@ -146,6 +163,20 @@ def get_text_messages(message):
 #     if message.text == 'chat':
 #         chat_id_var = message.chat.id
 #         bot.send_message(message.chat.id, chat_id_var)
+
+
+# диалог
+def bunny(message):
+    if message.text.upper() == 'КРОЛ':
+        bot.send_message(message.from_user.id, "Кто крол? Я крол?")
+        bot.register_next_step_handler(message, get_bunny)
+
+
+def get_bunny(message):
+    if message.text.upper() == 'ДА':
+        bot.send_message(message.from_user.id, 'Каво? А может быть ты крол?')
+    else:
+        bot.send_message(message.from_user.id, 'Кхххтьфу на тебя.')
 
 
 @bot.message_handler(content_types=['voice'])
