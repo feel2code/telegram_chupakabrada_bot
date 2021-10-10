@@ -106,6 +106,9 @@ def get_text_messages(message):
         db = xl.readxl(fn='quotes.xlsx', ws='Sheet1')
         rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
         bot.send_message(message.chat.id, rand)
+    # about developer command
+    if message.text == '/about':
+        bot.send_message(message.chat.id, about)
     # catching messages
     # bot sends message if any word sent by user exists in dictionary
     check(message, hi, answer_hi)
