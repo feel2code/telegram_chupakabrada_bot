@@ -1,37 +1,12 @@
 import telebot
 import requests
 from conf import *
+from dictionary import *
 import random
 import pylightxl as xl
 
+# global variables
 bot = telebot.TeleBot(name)
-
-hi = 'доброе добрае доброго хай хай, хаай хааай'
-ass = 'жопа'
-birthday = 'др рождения рожденья ражденья раждения'
-who_is_bot = 'каво'
-abba = 'абоба абобус амогус аабоба'
-note = 'ля ля, ляя ляяя'
-sorry = 'извинись извинись! извинись,'
-hello = 'ку привет привет, ку,'
-dog = 'собака пес сабака себек собочка'
-what = 'шо шоо шооо'
-smoke = 'курю покурю закурю курить курит закурит сигареты сигарета самокрутки самокрутка'
-auto = 'машина авто тачка машине тачке машину тачку машины тачки'
-grease = 'грязь червяк'
-bull = 'быкануть быканул бык быкану быкануть? быканул?'
-
-message_lol = ['ХЕХ', 'АХАХАХ', 'АХАХАХАХ', 'ЛОЛ', 'ХАХА']
-message_plus = ['+', '++', '+++', '++++']
-message_aga = ['АГА']
-message_steel = ['ЖЕСТЬ']
-message_wtf = [')', '))', ')))', '))))', ')))))']
-message_sad = ['(', '((', '(((', '((((', '(((((']
-message_a = ['А', 'АА', 'ААА', 'АААА']
-message_who = ['ХТО', 'КТО', 'КТО?', 'ХТО?']
-message_no = ['НЕ', 'НЕТ', 'НЕА', 'НЕТ(', 'НЕТ)']
-message_thanks = ['СПС', 'SPS']
-
 k4 = ''
 p4 = ''
 m4 = ''
@@ -82,6 +57,7 @@ def weather_ekb():
     return e4
 
 
+# checking does message has a word in list from dictionary
 def check(message, diction, answer):
     msg_check = message.text.upper().split()
     dictionary = diction.upper().split()
@@ -95,13 +71,15 @@ def check(message, diction, answer):
             i += 1
 
 
+# catching text message or command for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    # погода по команде
+    # catching command
     global k4
     global p4
     global m4
     global e4
+    # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
         weather_kzn()
         weather_spb()
@@ -110,90 +88,81 @@ def get_text_messages(message):
         what_to_send = ('Пагода в районах-харадах \n '+k4+' °C Казань \n ' + p4)
         what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
         bot.send_message(message.chat.id, what_to_send)
-    # рекламирует стикеры
+    # sticker pack on command
     if message.text == '/sticker':
-        bot.send_message(message.chat.id, r'Ну вот тебе наклеечки, вот,'
-                                          r'пожалуйста, https://t.me/addstickers/Jessieamstaff')
-    # старт
+        bot.send_message(message.chat.id, answer_def_sticker)
+    # start bot
     if message.text == '/start':
-        bot.send_message(message.chat.id, r'Я тебе, шо, космонавт, чи шо? Добавляй в группу меня, скатабаза такая.')
+        bot.send_message(message.chat.id, answer_def_start)
+    # random quotes from db
+    if message.text == '/quote' or message.text == '/quote@chupakabrada_bot':
+        db = xl.readxl(fn='quotes.xlsx', ws='Sheet1')
+        rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
+        bot.send_message(message.chat.id, rand)
     # catching messages
-    check(message, hi, 'Хааааааай зяблс энд хай литл бэби бон')
-    check(message, who_is_bot, 'Каво?')
-    check(message, abba, 'А Б О Б А')
-    check(message, 'о', 'Шо ти окаешь, девачка?')
-    check(message, 'общем', 'В общем и целом, ага, ню да.')
-    check(message, ass, 'Кто? Я? А может быть ТЫ? А?')
-    check(message, note, 'Ля, какая!')
-    check(message, sorry, 'Сам извинись!')
-    check(message, birthday, 'С ДНЕМ РАЖДЕНЬЯ, ТЕБЕ СЕГОДНЯ 54 ГОДА??? А ну ладна!')
-    check(message, hello, 'Всем ку, с вами я. Непабидимый гладиатор!')
-    check(message, dog, 'Где сабака?')
-    check(message, what, 'ШО? Ну ШО?')
-    check(message, smoke, 'А я опяяять закурююююю....')
-    check(message, auto, 'А у тебя шо таота? Уууу, ясненько.')
-    check(message, grease, 'Так ты, грязь, червяк, я тебя знаешь чичас шо? А то!')
-    check(message, bull, 'Я щас так быкану, шо ты ляжешь! Хадость такая.')
+    check(message, hi, answer_hi)
+    check(message, who_is_bot, answer_who_is_bot)
+    check(message, abba, answer_abba)
+    check(message, o, answer_o)
+    check(message, full, answer_full)
+    check(message, ass, answer_ass)
+    check(message, note, answer_note)
+    check(message, sorry, answer_sorry)
+    check(message, birthday, answer_birthday)
+    check(message, hello, answer_hello)
+    check(message, dog, answer_dog)
+    check(message, what, answer_what)
+    check(message, smoke, answer_smoke)
+    check(message, auto, answer_auto)
+    check(message, grease, answer_grease)
+    check(message, bull, answer_bull)
     # пишет, только когда сообщение из одного слова
     msg = message.text.upper()
     if msg in message_lol:
-        bot.send_message(message.chat.id, "Пожилая скумбрия на связи. Зарофлю любого лола.")
+        bot.send_message(message.chat.id, answer_message_lol)
     elif msg in message_plus:
-        bot.send_message(message.chat.id, "Я тебе плюсану па галаве чичас кулаком")
+        bot.send_message(message.chat.id, answer_message_plus)
     elif msg in message_aga:
-        bot.send_message(message.chat.id, "Оооо, ну эта бан палучаица")
+        bot.send_message(message.chat.id, answer_message_aga)
     elif msg in message_steel:
-        bot.send_message(message.chat.id, "КХХХХтьфу")
+        bot.send_message(message.chat.id, answer_message_steel)
     elif msg in message_wtf:
-        bot.send_message(message.chat.id, "Все гиги гага, смешно да? А тебе не стыдно, не? Ай-яй-яй-яй-яй. Тьфу.")
+        bot.send_message(message.chat.id, answer_message_wtf)
     elif msg in message_sad:
-        bot.send_message(message.chat.id, "Абидна да? хихихих")
+        bot.send_message(message.chat.id, answer_message_sad)
     elif msg in message_a:
-        bot.send_message(message.chat.id, "А?")
+        bot.send_message(message.chat.id, answer_message_a)
     elif msg in message_no:
-        bot.send_message(message.chat.id, "Ну, как хаварица, на нет и кабылы нет.")
+        bot.send_message(message.chat.id, answer_message_no)
     elif msg in message_thanks:
-        bot.send_message(message.chat.id, "Соси Пажилую Сасульку. А, ню да. Так расшифровываеца.")
+        bot.send_message(message.chat.id, answer_message_thanks)
     elif msg in message_who:
-        bot.send_message(message.chat.id, 'А кто кто кто кто а ктооо???')
-        bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAP-YWA2fmSUzgbH_bVtT8VOnEYSU80AAnsOAAIDKJlKdv4m3SZDnO4hBA')
-    elif message.text.upper() == 'КРОЛ':
-        bot.send_message(message.chat.id, "Кто крол? Я крол?")
+        bot.send_message(message.chat.id, answer_message_who)
+        bot.send_sticker(message.chat.id, sticker_id1)
+    # simple dialog with bot - first step
+    elif message.text.upper() == bunny:
+        bot.send_message(message.chat.id, what_bunny)
         bot.register_next_step_handler(message, get_bunny)
-    elif message.text == '/citate':
-        db = xl.readxl(fn='citates.xlsx', ws='Sheet1')
-        rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
-        bot.send_message(message.chat.id, rand)
 
 
-# @bot.message_handler(content_types=["sticker"])
-# def send_sticker(message):
-    # sticker_id = message.sticker.file_id
-    # bot.send_message(message.chat.id, sticker_id)
-
-
-# @bot.message_handler(content_types=["text"])
-# def chat_id(message):
-#     if message.text == 'chat':
-#         chat_id_var = message.chat.id
-#         bot.send_message(message.chat.id, chat_id_var)
-
-
+# simple dialog with bot - second step
 def get_bunny(message):
-    if message.text.upper() == 'ДА':
-        bot.send_message(message.chat.id, 'Каво? А может быть ты крол?')
+    if message.text.upper() == yes:
+        bot.send_message(message.chat.id, no_you_bunny)
     else:
-        bot.send_message(message.chat.id, 'Кхххтьфу на тебя.')
+        bot.send_message(message.chat.id, spit)
 
 
+# catching audio files
 @bot.message_handler(content_types=['voice'])
 def get_voice_messages(voice):
-    bot.send_message(voice.chat.id, "Ничего не слышно, АЛО СВИТЛАНА????")
+    bot.send_message(voice.chat.id, answer_voice)
 
 
+# catching audio files
 @bot.message_handler(content_types=['audio'])
 def get_audio_messages(audio):
-    bot.send_message(audio.chat.id, "ООО, эта деду нраица!")
+    bot.send_message(audio.chat.id, answer_audio)
 
 
 bot.polling(none_stop=True, interval=0)
