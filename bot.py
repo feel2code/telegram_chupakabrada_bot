@@ -107,6 +107,7 @@ def get_text_messages(message):
         rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
         bot.send_message(message.chat.id, rand)
     # catching messages
+    # bot sends message if any word sent by user exists in dictionary
     check(message, hi, answer_hi)
     check(message, who_is_bot, answer_who_is_bot)
     check(message, abba, answer_abba)
@@ -123,7 +124,7 @@ def get_text_messages(message):
     check(message, auto, answer_auto)
     check(message, grease, answer_grease)
     check(message, bull, answer_bull)
-    # пишет, только когда сообщение из одного слова
+    # bot sends message if only one word sent by user in chat
     msg = message.text.upper()
     if msg in message_lol:
         bot.send_message(message.chat.id, answer_message_lol)
