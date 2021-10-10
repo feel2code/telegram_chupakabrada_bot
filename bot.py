@@ -1,3 +1,10 @@
+"""
+This is funny bot for Telegram.
+Bot can dialog with user in private/group chats, can reply for  often used words and phrases in chat.
+Bot can send weather info by command and by CRON send weather info at definite time.
+Another JUST FOR FUN function - send quotes from known in Russia YouTube streamer.
+"""
+
 import telebot
 import requests
 from conf import *
