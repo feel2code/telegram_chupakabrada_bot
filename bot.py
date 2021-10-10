@@ -150,6 +150,9 @@ def get_text_messages(message):
     elif msg in message_who:
         bot.send_message(message.chat.id, 'А кто кто кто кто а ктооо???')
         bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAP-YWA2fmSUzgbH_bVtT8VOnEYSU80AAnsOAAIDKJlKdv4m3SZDnO4hBA')
+    elif message.text.upper() == 'КРОЛ':
+        bot.send_message(message.chat.id, "Кто крол? Я крол?")
+        bot.register_next_step_handler(message, get_bunny)
 
 
 # @bot.message_handler(content_types=["sticker"])
@@ -165,18 +168,11 @@ def get_text_messages(message):
 #         bot.send_message(message.chat.id, chat_id_var)
 
 
-# диалог
-def bunny(message):
-    if message.text.upper() == 'КРОЛ':
-        bot.send_message(message.from_user.id, "Кто крол? Я крол?")
-        bot.register_next_step_handler(message, get_bunny)
-
-
 def get_bunny(message):
     if message.text.upper() == 'ДА':
-        bot.send_message(message.from_user.id, 'Каво? А может быть ты крол?')
+        bot.send_message(message.chat.id, 'Каво? А может быть ты крол?')
     else:
-        bot.send_message(message.from_user.id, 'Кхххтьфу на тебя.')
+        bot.send_message(message.chat.id, 'Кхххтьфу на тебя.')
 
 
 @bot.message_handler(content_types=['voice'])
