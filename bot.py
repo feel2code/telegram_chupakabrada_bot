@@ -135,6 +135,8 @@ def get_text_messages(message):
     check(message, auto, answer_auto)
     check(message, grease, answer_grease)
     check(message, bull, answer_bull)
+    check(message, u, answer_u)
+    check(message, insta, answer_insta)
     # bot sends message if only one word sent by user in chat
     msg = message.text.upper()
     if msg in message_lol:
