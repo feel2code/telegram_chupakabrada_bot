@@ -1,0 +1,2 @@
+00:12:40,924 urllib3.connectionpool DEBUG Starting new HTTPS connection (1): api.telegram.org:443
+00:13:01,268 urllib3.connectionpool DEBUG https://api.telegram.org:443 "GET /bot2029713033:AAEQ_JH7UIz-342LNT22T3jU-9UfizrMgMs/getUpdates?offset=1&timeout=20 HTTP/1.1" 200 23

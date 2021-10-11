@@ -11,6 +11,7 @@ from conf import *
 from dictionary import *
 import random
 import pylightxl as xl
+import logging
 
 # global variables
 bot = telebot.TeleBot(name)
@@ -18,6 +19,13 @@ k4 = ''
 p4 = ''
 m4 = ''
 e4 = ''
+# logging bot
+log = telebot.logger
+logging.basicConfig(filename='chupakabra.log',
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
 
 
 def weather_kzn():
