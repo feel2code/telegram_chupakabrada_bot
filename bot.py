@@ -114,6 +114,11 @@ def get_text_messages(message):
         db = xl.readxl(fn='quotes.xlsx', ws='Sheet1')
         rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
         bot.send_message(message.chat.id, rand)
+    # random films from db
+    if message.text.upper() == 'ФИЛЬМ':
+        db = xl.readxl(fn='films.xlsx', ws='Sheet1')
+        rand = db.ws(ws='Sheet1').address(address='B' + str(random.randint(1, 250)))
+        bot.send_message(message.chat.id, rand)
     # about developer command
     if message.text == '/about':
         bot.send_message(message.chat.id, about)
