@@ -120,7 +120,7 @@ def get_text_messages(message):
         rand = db.ws(ws='Sheet1').address(address='E' + str(random.randint(1, 250)))
         bot.send_message(message.chat.id, rand)
     if message.text.upper() == 'КИНО':
-        random_film = 'https://www.kinopoisk.ru/film/' + str(random.randint(1, 999999))
+        random_film = 'https://randomfilms.ru/film/' + str(random.randint(1, 9600))
         bot.send_message(message.chat.id, random_film)
     # about developer command
     if message.text == '/about':
