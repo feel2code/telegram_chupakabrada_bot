@@ -119,6 +119,9 @@ def get_text_messages(message):
         db = xl.readxl(fn='films.xlsx', ws='Sheet1')
         rand = db.ws(ws='Sheet1').address(address='E' + str(random.randint(1, 250)))
         bot.send_message(message.chat.id, rand)
+    if message.text.upper() == 'КИНО':
+        random_film = 'https://www.kinopoisk.ru/film/999999/'+ str(random.randint(1, 999999))
+        bot.send_message(message.chat.id, random_film)
     # about developer command
     if message.text == '/about':
         bot.send_message(message.chat.id, about)
