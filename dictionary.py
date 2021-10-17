@@ -7,7 +7,6 @@ sticker_id1 = 'CAACAgIAAxkBAAP-YWA2fmSUzgbH_bVtT8VOnEYSU80AAnsOAAIDKJlKdv4m3SZDn
 o = 'ооо оо оооо'
 full = 'общем'
 hi = 'доброе добрае доброго хай хай, хаай хааай'
-ass = 'жопа'
 birthday = 'др рождения рожденья ражденья раждения'
 who_is_bot = 'каво'
 abba = 'абоба абобус амогус аабоба'
@@ -50,6 +49,7 @@ bad = 'плохо'
 good = 'хорошо харашо'
 dish = 'приятного приятнаго приятнога'
 soviet = 'совет советую советы'
+ass = 'жопа'
 
 # answer
 answer_soviet = 'Та ты миня са сваими саветами, знаешь шо?'
