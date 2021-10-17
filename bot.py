@@ -211,4 +211,4 @@ def get_audio_messages(audio):
     bot.send_message(audio.chat.id, answer_audio)
 
 
-bot.polling(none_stop=True, interval=0)
+bot.polling(none_stop=True, interval=0, timeout=123)
