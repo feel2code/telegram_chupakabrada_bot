@@ -122,9 +122,6 @@ def get_text_messages(message):
     if message.text.upper() == '/randomcinema':
         random_film = 'https://randomfilms.ru/film/' + str(random.randint(1, 9600))
         bot.send_message(message.chat.id, random_film)
-    # about developer command
-    if message.text == '/about':
-        bot.send_message(message.chat.id, about)
     # catching messages
     # bot sends message if any word sent by user exists in dictionary
     check(message, hi, answer_hi)
