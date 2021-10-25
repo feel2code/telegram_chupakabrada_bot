@@ -115,11 +115,11 @@ def get_text_messages(message):
         rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
         bot.send_message(message.chat.id, rand)
     # random films from db
-    if message.text.upper() == '/topcinema':
+    if message.text == '/top_cinema':
         db = xl.readxl(fn='films.xlsx', ws='Sheet1')
         rand = db.ws(ws='Sheet1').address(address='E' + str(random.randint(1, 250)))
         bot.send_message(message.chat.id, rand)
-    if message.text.upper() == '/randomcinema':
+    if message.text == '/random_cinema':
         random_film = 'https://randomfilms.ru/film/' + str(random.randint(1, 9600))
         bot.send_message(message.chat.id, random_film)
     # catching messages
