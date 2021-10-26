@@ -1,7 +1,18 @@
 # dictionary.py
 
 # global
-sticker_id1 = 'CAACAgIAAxkBAAP-YWA2fmSUzgbH_bVtT8VOnEYSU80AAnsOAAIDKJlKdv4m3SZDnO4hBA'
+answer_def_sticker = 'Ну вот тебе наклеечки, вот, пожалуйста:'
+sticker_id1 = 'CAACAgIAAxkBAAIE-mF3R-0imNHp8gzAEx3jPgVxIOmrAAI4AAMz-LcVd9Ll101RyeMhBA'
+sticker_id2 = 'CAACAgIAAxkBAAIE_GF3R-_gda2Jy_tYkO44G2xMgY76AAJdAAOxqAUVCsphbgQAAfqIIQQ'
+sticker_id3 = 'CAACAgIAAxkBAAIE_mF3R_Fn3XsIdUGvVWsGDXalDW90AALgAQAC64eoIUOyhgKbFWEtIQQ'
+sticker_id4 = 'CAACAgIAAxkBAAIFAAFhd0fyf3yxg2PVs2R4aVZoFWzbqgACVwAD9pS1FAOU3Drp-8qdIQQ'
+sticker_id5 = 'CAACAgIAAxkBAAIFAmF3R_ReN0tOzhfCchb8Y4V-lPsRAAK2BwACGfJ1G4-BWpjE8ErpIQQ'
+sticker_id6 = 'CAACAgIAAxkBAAIFBGF3R_eTl1m4h8EhILgutwLfsHO3AAISAAPaH5sPCzpHCGIHTPYhBA'
+sticker_id7 = 'CAACAgIAAxkBAAIFBmF3R_oy1Jhen9ESTqKxRehmITImAAKkAgACGfJ1G8JCXl-rXePUIQQ'
+sticker_id8 = 'CAACAgIAAxkBAAIFCGF3R_tad4c9-kDxariRtsKbltMsAAJWAAM_EEAIC2OSjp3Ue0khBA'
+sticker_id9 = 'CAACAgIAAxkBAAIFCmF3R_1uBHqDX-4qCcgoIPICXnaeAAKOAAOjOeoXClQ7mhc7UzkhBA'
+
+
 
 # query
 o = 'ооо оо оооо'
@@ -69,7 +80,6 @@ answer_work = 'А я чичас пакакал!'
 answer_cat = 'Кыс кыс, катафей, йаяяяя здесь!'
 answer_understand = 'Не понял?!'
 answer_penis = 'Да хто такой етот ваш пена? Я не понял.'
-answer_def_sticker = 'Ну вот тебе наклеечки, вот, пожалуйста, https://t.me/addstickers/Jessieamstaff'
 answer_hi = 'Хааааааай зяблс энд хай литл бэби бон'
 answer_who_is_bot = 'Каво?'
 answer_abba = 'А Б О Б А'

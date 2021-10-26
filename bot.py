@@ -106,6 +106,15 @@ def get_text_messages(message):
     # sticker pack on command
     if message.text == '/sticker':
         bot.send_message(message.chat.id, answer_def_sticker)
+        bot.send_sticker(message.chat.id, sticker_id1)
+        bot.send_sticker(message.chat.id, sticker_id2)
+        bot.send_sticker(message.chat.id, sticker_id3)
+        bot.send_sticker(message.chat.id, sticker_id4)
+        bot.send_sticker(message.chat.id, sticker_id5)
+        bot.send_sticker(message.chat.id, sticker_id6)
+        bot.send_sticker(message.chat.id, sticker_id7)
+        bot.send_sticker(message.chat.id, sticker_id8)
+        bot.send_sticker(message.chat.id, sticker_id9)
     # start bot
     if message.text == '/start':
         bot.send_message(message.chat.id, answer_def_start)
