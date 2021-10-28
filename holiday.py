@@ -54,6 +54,7 @@ soup = BeautifulSoup(page.text, "html.parser")
 for item in soup.select("li"):
     today.append(item.get_text())
 
+
 index = today.index('Праздники' + data.replace(str(day) + '_', ' '))
 i = index
 
