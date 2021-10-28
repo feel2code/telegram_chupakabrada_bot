@@ -54,7 +54,6 @@ def weather_ekb():
 
 
 chat = '-1001173893696'
-bot.send_message(chat_id=chat, text='Вот вам ваша пагода па расписанию, палучаица:')
 weather_kzn()
 weather_spb()
 weather_msk()
