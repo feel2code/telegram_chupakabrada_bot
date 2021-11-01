@@ -58,7 +58,8 @@ weather_kzn()
 weather_spb()
 weather_msk()
 weather_ekb()
-what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики. Вот вам ваша пагода па расписанию, палучаица:'
-what_to_send += ('\n Вот пагода в районах-харадах \n ' + k4 + ' °C Казань \n ' + p4)
+what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
+               ' \n Вот вам ваша пагода па расписанию, палучаица:'
+what_to_send += ('\n ' + k4 + ' °C Казань \n ' + p4)
 what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
 bot.send_message(chat_id=chat, text=what_to_send)
