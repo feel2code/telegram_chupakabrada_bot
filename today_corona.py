@@ -2,7 +2,6 @@ import telebot
 import requests
 from bs4 import BeautifulSoup
 from conf import *
-import json
 
 
 chat = '-1001173893696'
