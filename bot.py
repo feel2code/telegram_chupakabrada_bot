@@ -185,7 +185,7 @@ def get_text_messages(message):
         case6 = case5.replace(r"\n", "\n")
         bot.send_message(message.chat.id, text=('Сиводня палучаица ' + str(datetime.now().date()) + ': \n' + case6))
     # coronavirus info on command
-    if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
+    if message.text == '/corona' or message.text == '/corona@chupakabrada_bot':
         corona()
         bot.send_message(message.chat.id, text=what_to_send)
     # sticker pack on command
