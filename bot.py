@@ -244,7 +244,7 @@ def get_text_messages(message):
     check(message, soviet, answer_soviet)
     check(message, death, answer_death)
     random_check = random.randint(1, 100)
-    if random_check/10 > 1 or random_check < 10:
+    if random_check/10 == 1:
         check(message, god, answer_god)
     # bot sends message if only one word sent by user in chat
     msg = message.text.upper()
