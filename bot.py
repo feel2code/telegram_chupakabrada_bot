@@ -14,7 +14,6 @@ import pylightxl as xl
 import logging
 from bs4 import BeautifulSoup
 from datetime import datetime
-from holiday import m1, m2, m3, m4, m5, m6, m7, m8, m9, m10, m11, m12
 
 # global variables
 bot = telebot.TeleBot(name)
@@ -24,6 +23,18 @@ msc4 = ''
 e4 = ''
 what_to_send = ''
 data = ''
+m1 = 'января'
+m2 = 'февраля'
+m3 = 'марта'
+m4 = 'апреля'
+m5 = 'мая'
+m6 = 'июня'
+m7 = 'июля'
+m8 = 'августа'
+m9 = 'сентября'
+m10 = 'октября'
+m11 = 'ноября'
+m12 = 'декабря'
 day = datetime.now().day
 month = datetime.now().month
 # logging bot
@@ -244,7 +255,7 @@ def get_text_messages(message):
     check(message, soviet, answer_soviet)
     check(message, death, answer_death)
     random_check = random.randint(1, 100)
-    if random_check/10 == 1:
+    if int(random_check/10) == 1:
         check(message, god, answer_god)
     # bot sends message if only one word sent by user in chat
     msg = message.text.upper()
