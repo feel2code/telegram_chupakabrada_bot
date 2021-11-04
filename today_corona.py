@@ -15,7 +15,7 @@ sickChange = str(found[1]).replace('"sickChange":"', '')
 sickChange = sickChange.replace('"', '')
 diedChange = str(found[5]).replace('"diedChange":"', '')
 diedChange = diedChange.replace('"', '')
-what_to_send = 'Корона тайм зяблс. За сегодня в России: \n ' \
+what_to_send = 'Корона тайм зяблс. За сегодня в России: \n' \
                'Заболевших ' + sickChange + ' \n' \
                'Смертей ' + diedChange + ' \n'
 bot.send_message(chat_id=chat, text=what_to_send)

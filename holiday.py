@@ -53,14 +53,10 @@ page = requests.get('https://ru.wikipedia.org/wiki/' + 'Категория:Пр�
 soup = BeautifulSoup(page.text, "html.parser")
 for item in soup.select("li"):
     today.append(item.get_text())
-
-
 index = today.index('Праздники' + data.replace(str(day) + '_', ' '))
 i = index
-
 while len(today) != i:
     today.pop(index)
-
 today[0] = ' ' + today[0]
 case = str([word + '\n' for word in today])
 case1 = case.replace(',', '')

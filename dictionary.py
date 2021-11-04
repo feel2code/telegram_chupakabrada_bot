@@ -13,8 +13,8 @@ sticker_id8 = 'CAACAgIAAxkBAAIFCGF3R_tad4c9-kDxariRtsKbltMsAAJWAAM_EEAIC2OSjp3Ue
 sticker_id9 = 'CAACAgIAAxkBAAIFCmF3R_1uBHqDX-4qCcgoIPICXnaeAAKOAAOjOeoXClQ7mhc7UzkhBA'
 
 
-
 # query
+death = 'смерть смэрть смерт смэрт'
 o = 'ооо оо оооо'
 full = 'общем'
 hi = 'доброе добрае доброго хай хай, хаай хааай'
@@ -61,8 +61,11 @@ good = 'хорошо харашо'
 dish = 'приятного приятнаго приятнога'
 soviet = 'совет советую советы'
 ass = 'жопа'
+god = 'какой какая какое кокое кокая какие какому каких какими чем чему вот мы я ты не'
 
 # answer
+answer_god = 'О Божэ'
+answer_death = 'СМЭЭЭЭРТЬ'
 answer_soviet = 'Та ты миня са сваими саветами, знаешь шо?'
 answer_dish = 'Пасиииба!'
 answer_good = 'Как хаварица, харашо там - где нас нет.'
