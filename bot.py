@@ -104,6 +104,7 @@ def corona():
     sick_change = sick_change.replace('"', '')
     died_change = str(found[5]).replace('"diedChange":"', '')
     died_change = died_change.replace('"', '')
+    died_change = died_change.replace(r'\u00a', ' ')
     what_to_send = 'Корона тайм зяблс. За сегодня в России: \n' \
                    'Заболевших ' + sick_change + ' \n' \
                    'Смертей ' + died_change + ' \n'

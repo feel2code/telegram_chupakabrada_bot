@@ -15,6 +15,7 @@ sickChange = str(found[1]).replace('"sickChange":"', '')
 sickChange = sickChange.replace('"', '')
 diedChange = str(found[5]).replace('"diedChange":"', '')
 diedChange = diedChange.replace('"', '')
+diedChange = diedChange.replace(r'\u00a', ' ')
 what_to_send = 'Корона тайм зяблс. За сегодня в России: \n' \
                'Заболевших ' + sickChange + ' \n' \
                'Смертей ' + diedChange + ' \n'
