@@ -258,6 +258,7 @@ def get_text_messages(message):
     check(message, dish, answer_dish)
     check(message, soviet, answer_soviet)
     check(message, death, answer_death)
+    check(message, salt, answer_salt)
     random_check = random.randint(1, 100)
     if int(random_check/10) == 1 or int(random_check/10) == 2:
         check(message, god, answer_god)
