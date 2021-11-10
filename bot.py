@@ -11,12 +11,15 @@ Another JUST FOR FUN function - send one famous Russian YouTube streamer's quote
 import telebot
 import requests
 from conf import *
-from dictionary import *
 import random
-import pylightxl as xl
 import logging
 from bs4 import BeautifulSoup
 from datetime import datetime
+import psycopg2
+
+conn_db = psycopg2.connect(conn)
+# connect to db
+cur = conn_db.cursor()
 
 # global variables
 bot = telebot.TeleBot(name)
@@ -40,6 +43,21 @@ m11 = 'ноября'
 m12 = 'декабря'
 day = datetime.now().day
 month = datetime.now().month
+message_lol = ['ХЕХ', 'АХАХАХ', 'АХАХАХАХ', 'ЛОЛ', 'ХАХА']
+message_plus = ['+', '++', '+++', '++++']
+message_aga = ['АГА']
+message_steel = ['ЖЕСТЬ']
+message_wtf = [')', '))', ')))', '))))', ')))))']
+message_sad = ['(', '((', '(((', '((((', '(((((']
+message_a = ['А', 'АА', 'ААА', 'АААА']
+message_who = ['ХТО', 'КТО', 'КТО?', 'ХТО?']
+message_no = ['НЕ', 'НЕТ', 'НЕА', 'НЕТ(', 'НЕТ)']
+message_thanks = ['СПС', 'SPS']
+answer_def_start = 'Да шо тут гаварити, могу болтать с вами в группе или в чатике.' \
+                   ' Добавляй в чат, даб даб даб, зяблс. Могу погоду гаварить. ' \
+                   'Магу стикеры пасаветавать или фильмы, ну дя. \n ' \
+                   'Разработка и поддержка - @stealingyou \n' \
+                   'Данатики Юmoney - 4100117291947258'
 # logging bot
 log = telebot.logger
 logging.basicConfig(filename='chupakabra.log',
@@ -112,17 +130,40 @@ def corona():
 
 
 # checking does message has a word in list from dictionary
-def check(message, diction, answer):
+def check(message):
     msg_check = message.text.upper().split()
-    dictionary = diction.upper().split()
     b = len(msg_check)
     i = 0
     while i < b:
-        if msg_check[i] in dictionary:
-            bot.send_message(message.chat.id, answer)
+        quest = msg_check[i]
+        cur.execute(r"SELECT a.answer FROM questions as q join answers a "
+                    r"on q.ans_id=a.ans_id where upper(q.question)='" + quest + "' ")
+        # Retrieve query results
+        records = cur.fetchall()
+        try:
+            rec = (str(records[0]).replace("('", ""))
+            rec = rec.replace("',)", "")
+            bot.send_message(message.chat.id, rec)
             i += 1
-        else:
+        except:
             i += 1
+
+
+# query from db, get answer to send
+def query(ans_id, message):
+    cur.execute("SELECT answer FROM answers where ans_id=" + str(ans_id) + " ")
+    records = cur.fetchall()
+    rec = (str(records[0]).replace("('", ""))
+    rec = rec.replace("',)", "")
+    bot.send_message(message.chat.id, rec)
+
+
+def stick(stick_id, message):
+    cur.execute("SELECT sticker FROM stickers where sticker_id=" + str(stick_id) + " ")
+    records = cur.fetchall()
+    rec = (str(records[0]).replace("('", ""))
+    rec = rec.replace("',)", "")
+    bot.send_sticker(message.chat.id, rec)
 
 
 # catching text message or command for bot
@@ -194,122 +235,83 @@ def get_text_messages(message):
         bot.send_message(message.chat.id, text=what_to_send)
     # sticker pack on command
     if message.text == '/sticker' or message.text == '/sticker@chupakabrada_bot':
-        bot.send_message(message.chat.id, answer_def_sticker)
-        bot.send_sticker(message.chat.id, sticker_id1)
-        bot.send_sticker(message.chat.id, sticker_id2)
-        bot.send_sticker(message.chat.id, sticker_id3)
-        bot.send_sticker(message.chat.id, sticker_id4)
-        bot.send_sticker(message.chat.id, sticker_id5)
-        bot.send_sticker(message.chat.id, sticker_id6)
-        bot.send_sticker(message.chat.id, sticker_id7)
-        bot.send_sticker(message.chat.id, sticker_id8)
-        bot.send_sticker(message.chat.id, sticker_id9)
+        query(51, message)
+        for i in range(1, 10):
+            stick(i, message)
     # start bot
     if message.text == '/start' or message.text == '/start@chupakabrada_bot':
         bot.send_message(message.chat.id, answer_def_start)
     # random quotes from db
     if message.text == '/quote' or message.text == '/quote@chupakabrada_bot':
-        db = xl.readxl(fn='quotes.xlsx', ws='Sheet1')
-        rand = db.ws(ws='Sheet1').address(address='A' + str(random.randint(1, 180)))
-        bot.send_message(message.chat.id, rand)
+        cur.execute("select quote from quotes where quote_id=" + str(random.randint(1, 180)) + " ")
+        records = cur.fetchall()
+        rec = (str(records[0]).replace("('", ""))
+        rec = rec.replace("',)", "")
+        bot.send_message(message.chat.id, rec)
     # random films from db
     if message.text == '/top_cinema' or message.text == '/top_cinema@chupakabrada_bot':
-        db = xl.readxl(fn='films.xlsx', ws='Sheet1')
-        rand = db.ws(ws='Sheet1').address(address='E' + str(random.randint(1, 250)))
-        bot.send_message(message.chat.id, rand)
+        cur.execute("select film from films where film_id=" + str(random.randint(1, 250)) + " ")
+        records = cur.fetchall()
+        rec = (str(records[0]).replace("('", ""))
+        rec = rec.replace("',)", "")
+        bot.send_message(message.chat.id, rec)
     if message.text == '/random_cinema' or message.text == '/random_cinema@chupakabrada_bot':
         random_film = 'https://randomfilms.ru/film/' + str(random.randint(1, 9600))
         bot.send_message(message.chat.id, random_film)
     # catching messages
-    # bot sends message if any word sent by user exists in dictionary
-    check(message, hi, answer_hi)
-    check(message, who_is_bot, answer_who_is_bot)
-    check(message, abba, answer_abba)
-    check(message, o, answer_o)
-    check(message, full, answer_full)
-    check(message, ass, answer_ass)
-    check(message, note, answer_note)
-    check(message, sorry, answer_sorry)
-    check(message, birthday, answer_birthday)
-    check(message, hello, answer_hello)
-    check(message, dog, answer_dog)
-    check(message, what, answer_what)
-    check(message, smoke, answer_smoke)
-    check(message, auto, answer_auto)
-    check(message, grease, answer_grease)
-    check(message, bull, answer_bull)
-    check(message, u, answer_u)
-    check(message, insta, answer_insta)
-    check(message, penis, answer_penis)
-    check(message, understand, answer_understand)
-    check(message, cat, answer_cat)
-    check(message, work, answer_work)
-    check(message, serial, answer_serial)
-    check(message, peace_death, answer_peace_death)
-    check(message, steal, answer_steal)
-    check(message, fool, answer_fool)
-    check(message, sleep, answer_sleep)
-    check(message, cake, answer_cake)
-    check(message, how_are, answer_how_are)
-    check(message, dream, answer_dream)
-    check(message, old, answer_old)
-    check(message, bad, answer_bad)
-    check(message, good, answer_good)
-    check(message, dish, answer_dish)
-    check(message, soviet, answer_soviet)
-    check(message, death, answer_death)
-    check(message, salt, answer_salt)
-    check(message, grass, answer_grass)
-    random_check = random.randint(1, 100)
-    if int(random_check/10) == 1 or int(random_check/10) == 2:
-        check(message, god, answer_god)
+    # bot sends message if any word sent by user exists in DB
+    check(message)
     # bot sends message if only one word sent by user in chat
     msg = message.text.upper()
     if msg in message_lol:
-        bot.send_message(message.chat.id, answer_message_lol)
+        query(39, message)
     elif msg in message_plus:
-        bot.send_message(message.chat.id, answer_message_plus)
+        query(40, message)
     elif msg in message_aga:
-        bot.send_message(message.chat.id, answer_message_aga)
+        query(41, message)
     elif msg in message_steel:
-        bot.send_message(message.chat.id, answer_message_steel)
+        query(42, message)
     elif msg in message_wtf:
-        bot.send_message(message.chat.id, answer_message_wtf)
+        query(43, message)
     elif msg in message_sad:
-        bot.send_message(message.chat.id, answer_message_sad)
+        query(44, message)
     elif msg in message_a:
-        bot.send_message(message.chat.id, answer_message_a)
+        query(45, message)
     elif msg in message_no:
-        bot.send_message(message.chat.id, answer_message_no)
+        query(46, message)
     elif msg in message_thanks:
-        bot.send_message(message.chat.id, answer_message_thanks)
+        query(47, message)
     elif msg in message_who:
-        bot.send_message(message.chat.id, answer_message_who)
-        bot.send_sticker(message.chat.id, sticker_id1)
-    # simple dialog with bot - first step
-    elif message.text.upper() == bunny:
-        bot.send_message(message.chat.id, what_bunny)
-        bot.register_next_step_handler(message, get_bunny)
-
-
-# simple dialog with bot - second step
-def get_bunny(message):
-    if message.text.upper() == yes:
-        bot.send_message(message.chat.id, no_you_bunny)
-    else:
-        bot.send_message(message.chat.id, spit)
+        query(48, message)
 
 
 # catching audio files
 @bot.message_handler(content_types=['voice'])
 def get_voice_messages(voice):
-    bot.send_message(voice.chat.id, answer_voice)
+    query(49, voice)
 
 
 # catching audio files
 @bot.message_handler(content_types=['audio'])
 def get_audio_messages(audio):
-    bot.send_message(audio.chat.id, answer_audio)
+    query(50, audio)
 
+
+# auxiliary.py
+'''
+# for getting sticker id
+@bot.message_handler(content_types=["sticker"])
+def send_sticker(message):
+    sticker_id = message.sticker.file_id
+    bot.send_message(message.chat.id, sticker_id)
+
+
+# for getting chat id
+@bot.message_handler(content_types=["text"])
+def chat_id(message):
+    if message.text == 'chat':
+        chat_id_var = message.chat.id
+        bot.send_message(message.chat.id, chat_id_var)
+'''
 
 bot.polling(none_stop=True, interval=0, timeout=123)
