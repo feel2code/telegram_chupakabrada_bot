@@ -78,6 +78,7 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.films
     OWNER to postgres;
 
+
 insert into answers (answer)
 values('Хааааааай зяблс энд хай литл бэби бон'),
 ('Каво?'),
