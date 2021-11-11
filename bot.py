@@ -12,7 +12,6 @@ import telebot
 import requests
 from conf import *
 import random
-import logging
 from bs4 import BeautifulSoup
 from datetime import datetime
 import psycopg2
@@ -58,13 +57,6 @@ answer_def_start = 'Да шо тут гаварити, могу болтать �
                    'Магу стикеры пасаветавать или фильмы, ну дя. \n ' \
                    'Разработка и поддержка - @stealingyou \n' \
                    'Данатики Юmoney - 4100117291947258'
-# logging bot
-log = telebot.logger
-logging.basicConfig(filename='chupakabra.log',
-                    filemode='a',
-                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                    datefmt='%H:%M:%S',
-                    level=logging.DEBUG)
 
 
 def weather_kzn():
