@@ -2,9 +2,10 @@ import telebot
 import requests
 from bs4 import BeautifulSoup
 from conf import *
+from sys import argv
 
+script, chat = argv
 
-chat = '-1001173893696'
 bot = telebot.TeleBot(name)
 page = requests.get('https://стопкоронавирус.рф/information/')
 soup = BeautifulSoup(page.text, "html.parser")

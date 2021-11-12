@@ -9,12 +9,10 @@ Another JUST FOR FUN function - send one famous Russian YouTube streamer's quote
 """
 
 import telebot
-import requests
 from conf import *
 import random
-from bs4 import BeautifulSoup
-from datetime import datetime
 import psycopg2
+import os
 
 conn_db = psycopg2.connect(conn)
 # connect to db
@@ -22,26 +20,6 @@ cur = conn_db.cursor()
 
 # global variables
 bot = telebot.TeleBot(name)
-k4 = ''
-p4 = ''
-msc4 = ''
-e4 = ''
-what_to_send = ''
-data = ''
-m1 = 'января'
-m2 = 'февраля'
-m3 = 'марта'
-m4 = 'апреля'
-m5 = 'мая'
-m6 = 'июня'
-m7 = 'июля'
-m8 = 'августа'
-m9 = 'сентября'
-m10 = 'октября'
-m11 = 'ноября'
-m12 = 'декабря'
-day = datetime.now().day
-month = datetime.now().month
 message_lol = ['ХЕХ', 'АХАХАХ', 'АХАХАХАХ', 'ЛОЛ', 'ХАХА']
 message_plus = ['+', '++', '+++', '++++']
 message_aga = ['АГА']
@@ -56,69 +34,7 @@ answer_def_start = 'Да шо тут гаварити, могу болтать �
                    ' Добавляй в чат, даб даб даб, зяблс. Могу погоду гаварить. ' \
                    'Магу стикеры пасаветавать или фильмы, ну дя. \n ' \
                    'Разработка и поддержка - @stealingyou \n' \
-                   'Данатики Юmoney - 4100117291947258'
-
-
-def weather_kzn():
-    global k4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=kazan&appid='+go_weather)
-    k = r.json()
-    k1 = k['main']
-    k2 = k1['temp']
-    k3 = int(k2 - 273)
-    k4 = str(k3)
-    return k4
-
-
-def weather_spb():
-    global p4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?id=498817&appid='+go_weather)
-    p = r.json()
-    p1 = p['main']
-    p2 = p1['temp']
-    p3 = int(p2 - 273)
-    p4 = str(p3)
-    return p4
-
-
-def weather_msk():
-    global msc4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=moscow&appid='+go_weather)
-    m = r.json()
-    msc1 = m['main']
-    msc2 = msc1['temp']
-    msc3 = int(msc2 - 273)
-    msc4 = str(msc3)
-    return msc4
-
-
-def weather_ekb():
-    global e4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?id=1486209&appid='+go_weather)
-    e = r.json()
-    e1 = e['main']
-    e2 = e1['temp']
-    e3 = int(e2 - 273)
-    e4 = str(e3)
-    return e4
-
-
-def corona():
-    global what_to_send
-    page = requests.get('https://стопкоронавирус.рф/information/')
-    soup = BeautifulSoup(page.text, "html.parser")
-    found = soup.select('cv-stats-virus')
-    found = str(found).split(':stats-data=')
-    found = str(found[1]).split(',')
-    sick_change = str(found[1]).replace('"sickChange":"', '')
-    sick_change = sick_change.replace('"', '')
-    died_change = str(found[5]).replace('"diedChange":"', '')
-    died_change = died_change.replace('"', '')
-    died_change = died_change.replace(r'\u00a0', ' ')
-    what_to_send = 'Корона тайм зяблс. За сегодня в России: \n' \
-                   'Заболевших ' + sick_change + ' \n' \
-                   'Смертей ' + died_change + ' \n'
-    return what_to_send
+                   'Данатики Юмани - 4100117291947258'
 
 
 # checking does message has a word in list from dictionary
@@ -127,7 +43,7 @@ def check(message):
     b = len(msg_check)
     i = 0
     while i < b:
-        quest = msg_check[i]
+        quest = ''  # msg_check[i]
         cur.execute(r"SELECT a.answer FROM questions as q join answers a "
                     r"on q.ans_id=a.ans_id where upper(q.question)='" + quest + "' ")
         # Retrieve query results
@@ -137,7 +53,7 @@ def check(message):
             rec = rec.replace("',)", "")
             bot.send_message(message.chat.id, rec)
             i += 1
-        except:
+        except IndexError:
             i += 1
 
 
@@ -147,6 +63,7 @@ def query(ans_id, message):
     records = cur.fetchall()
     rec = (str(records[0]).replace("('", ""))
     rec = rec.replace("',)", "")
+    rec = rec.replace(")", "")
     bot.send_message(message.chat.id, rec)
 
 
@@ -162,69 +79,15 @@ def stick(stick_id, message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     # catching command
-    global k4
-    global p4
-    global msc4
-    global e4
-    global what_to_send
-    global data
     # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
-        weather_kzn()
-        weather_spb()
-        weather_msk()
-        weather_ekb()
-        what_to_send = ('Пагода в районах-харадах \n '+k4+' °C Казань \n ' + p4)
-        what_to_send += (' °C Питер \n ' + msc4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
-        bot.send_message(message.chat.id, what_to_send)
+        os.system('python3 weather.py ' + str(message.chat.id))
     # holiday on command
     if message.text == '/holiday' or message.text == '/holiday@chupakabrada_bot':
-        today = []
-        if month == 1:
-            data = str(day) + '_' + m1
-        elif month == 2:
-            data = str(day) + '_' + m2
-        elif month == 3:
-            data = str(day) + '_' + m3
-        elif month == 4:
-            data = str(day) + '_' + m4
-        elif month == 5:
-            data = str(day) + '_' + m5
-        elif month == 6:
-            data = str(day) + '_' + m6
-        elif month == 7:
-            data = str(day) + '_' + m7
-        elif month == 8:
-            data = str(day) + '_' + m8
-        elif month == 9:
-            data = str(day) + '_' + m9
-        elif month == 10:
-            data = str(day) + '_' + m10
-        elif month == 11:
-            data = str(day) + '_' + m11
-        elif month == 12:
-            data = str(day) + '_' + m12
-        page = requests.get('https://ru.wikipedia.org/wiki/' + 'Категория:Праздники_' + data)
-        soup = BeautifulSoup(page.text, "html.parser")
-        for item in soup.select("li"):
-            today.append(item.get_text())
-        index = today.index('Праздники' + data.replace(str(day) + '_', ' '))
-        i = index
-        while len(today) != i:
-            today.pop(index)
-        today[0] = ' ' + today[0]
-        case = str([word + '\n' for word in today])
-        case1 = case.replace(',', '')
-        case2 = case1.replace('[', '')
-        case3 = case2.replace(']', '')
-        case4 = case3.replace('[', '')
-        case5 = case4.replace("'", "")
-        case6 = case5.replace(r"\n", "\n")
-        bot.send_message(message.chat.id, text=('Сиводня палучаица ' + str(datetime.now().date()) + ': \n' + case6))
+        os.system('python3 holiday.py ' + str(message.chat.id))
     # coronavirus info on command
     if message.text == '/corona' or message.text == '/corona@chupakabrada_bot':
-        corona()
-        bot.send_message(message.chat.id, text=what_to_send)
+        os.system('python3 today_corona.py ' + str(message.chat.id))
     # sticker pack on command
     if message.text == '/sticker' or message.text == '/sticker@chupakabrada_bot':
         query(51, message)

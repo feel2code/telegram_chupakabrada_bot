@@ -1,6 +1,9 @@
 import telebot
 import requests
 from conf import *
+from sys import argv
+
+script, chat = argv
 
 bot = telebot.TeleBot(name)
 k4 = ''
@@ -11,7 +14,7 @@ e4 = ''
 
 def weather_kzn():
     global k4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=kazan&appid='+go_weather)
+    r = requests.get('https://api.openweathermap.org/data/2.5/weather?q=kazan&appid='+go_weather)
     k = r.json()
     k1 = k['main']
     k2 = k1['temp']
@@ -22,7 +25,7 @@ def weather_kzn():
 
 def weather_spb():
     global p4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?id=498817&appid='+go_weather)
+    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=498817&appid='+go_weather)
     p = r.json()
     p1 = p['main']
     p2 = p1['temp']
@@ -33,7 +36,7 @@ def weather_spb():
 
 def weather_msk():
     global m4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?q=moscow&appid='+go_weather)
+    r = requests.get('https://api.openweathermap.org/data/2.5/weather?q=moscow&appid='+go_weather)
     m = r.json()
     m1 = m['main']
     m2 = m1['temp']
@@ -44,7 +47,7 @@ def weather_msk():
 
 def weather_ekb():
     global e4
-    r = requests.get('http://api.openweathermap.org/data/2.5/weather?id=1486209&appid='+go_weather)
+    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=1486209&appid='+go_weather)
     e = r.json()
     e1 = e['main']
     e2 = e1['temp']
@@ -53,13 +56,15 @@ def weather_ekb():
     return e4
 
 
-chat = '-1001173893696'
 weather_kzn()
 weather_spb()
 weather_msk()
 weather_ekb()
-what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
-               ' \n Вот вам ваша пагода па расписанию, палучаица:'
+if chat == '-1001173893696':
+    what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
+                   ' \n Вот вам ваша пагода па расписанию, палучаица:'
+else:
+    what_to_send = 'Вот вам ваша пагода, блин, ню да, палучаица:'
 what_to_send += ('\n ' + k4 + ' °C Казань \n ' + p4)
 what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
 bot.send_message(chat_id=chat, text=what_to_send)

@@ -3,7 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 from conf import *
 from datetime import datetime
+from sys import argv
 
+script, chat = argv
 
 day = datetime.now().day
 month = datetime.now().month
@@ -46,7 +48,6 @@ elif month == 12:
     data = str(day) + '_' + m12
 
 
-chat = '-1001173893696'
 today = []
 bot = telebot.TeleBot(name)
 page = requests.get('https://ru.wikipedia.org/wiki/' + 'Категория:Праздники_' + data)
