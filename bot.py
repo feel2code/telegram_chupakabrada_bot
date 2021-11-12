@@ -81,13 +81,13 @@ def get_text_messages(message):
     # catching command
     # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
-        os.system('python3 weather.py ' + str(message.chat.id))
+        os.system('python3 /root/telegram_chupakabrada_bot/weather.py ' + str(message.chat.id))
     # holiday on command
     if message.text == '/holiday' or message.text == '/holiday@chupakabrada_bot':
-        os.system('python3 holiday.py ' + str(message.chat.id))
+        os.system('python3 /root/telegram_chupakabrada_bot/holiday.py ' + str(message.chat.id))
     # coronavirus info on command
     if message.text == '/corona' or message.text == '/corona@chupakabrada_bot':
-        os.system('python3 today_corona.py ' + str(message.chat.id))
+        os.system('python3 /root/telegram_chupakabrada_bot/today_corona.py ' + str(message.chat.id))
     # sticker pack on command
     if message.text == '/sticker' or message.text == '/sticker@chupakabrada_bot':
         query(51, message)
