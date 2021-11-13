@@ -43,7 +43,7 @@ def check(message):
     b = len(msg_check)
     i = 0
     while i < b:
-        quest = ''  # msg_check[i]
+        msg_check[i]
         cur.execute(r"SELECT a.answer FROM questions as q join answers a "
                     r"on q.ans_id=a.ans_id where upper(q.question)='" + quest + "' ")
         # Retrieve query results
