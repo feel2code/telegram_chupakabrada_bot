@@ -13,6 +13,7 @@ from conf import *
 import random
 import psycopg2
 import os
+from datetime import datetime
 
 conn_db = psycopg2.connect(conn)
 # connect to db
@@ -138,6 +139,15 @@ def get_text_messages(message):
         query(47, message)
     elif msg in message_who:
         query(48, message)
+    # analytics
+    st_chat_id = str(message.chat.id)
+    st_chat_mbr = str(message.chat.username)
+    st_name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
+    st_nick = str(message.from_user.username)
+    st_date = datetime.now()
+    cur.execute("insert into stats (st_chat_id, st_chat_mbr, st_name, st_nick, st_date) "
+                "values (%s, %s, %s, %s, %s )", (st_chat_id, st_chat_mbr, st_name, st_nick, st_date))
+    conn_db.commit()
 
 
 # catching audio files
