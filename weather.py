@@ -11,6 +11,7 @@ p4 = ''
 m4 = ''
 e4 = ''
 b4 = ''
+sochi = ''
 
 
 def weather_kzn():
@@ -68,11 +69,21 @@ def weather_batumi():
     return b4
 
 
+def weather_sochi():
+    global sochi
+    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=491422&appid='+go_weather)
+    b = r.json()
+    sochi1 = b['main']
+    sochi = str(int(sochi1['temp'] - 273))
+    return sochi
+
+
 weather_kzn()
 weather_spb()
 weather_msk()
 weather_ekb()
 weather_batumi()
+weather_sochi()
 if chat == '-1001173893696':
     what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
                    ' \n Вот вам ваша пагода па расписанию, палучаица:'
@@ -81,4 +92,5 @@ else:
 what_to_send += ('\n ' + k4 + ' °C Казань \n ' + p4)
 what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
 what_to_send += (b4 + ' °C Батуми \n ')
+what_to_send += (sochi + ' °C Сочи \n ')
 bot.send_message(chat_id=chat, text=what_to_send)
