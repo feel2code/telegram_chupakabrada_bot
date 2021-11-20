@@ -114,6 +114,8 @@ def get_text_messages(message):
     if message.text == '/random_cinema' or message.text == '/random_cinema@chupakabrada_bot':
         random_film = 'https://randomfilms.ru/film/' + str(random.randint(1, 9600))
         bot.send_message(message.chat.id, random_film)
+    if message.text == key_for_stats:
+        os.system('python3 /root/telegram_chupakabrada_bot/stats.py')
     # catching messages
     # bot sends message if any word sent by user exists in DB
     check(message)
