@@ -785,7 +785,7 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <IntrospectionStateNumber>809</IntrospectionStateNumber>
+      <IntrospectionStateNumber>825</IntrospectionStateNumber>
       <StartupTime>1637398927</StartupTime>
     </root>
     <database id="2" parent="1" name="felixmac">
@@ -806,7 +806,7 @@ false Zulu
 13655||-9223372036854775808|U|G
 13655||10|U|G</Grants>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>810</IntrospectionStateNumber>
+      <IntrospectionStateNumber>826</IntrospectionStateNumber>
       <Current>1</Current>
       <Relations>sequence|table|16399|16394|1
 sequence|table|16405|16400|1
@@ -814,6 +814,7 @@ sequence|table|16411|16406|1
 sequence|table|16417|16412|1
 sequence|table|16423|16418|1
 sequence|table|16429|16424|1
+sequence|table|16449|16450|1
 </Relations>
     </database>
     <role id="4" parent="1" name="felixmac">
@@ -894,7 +895,7 @@ sequence|table|16429|16424|1
       <Comment>standard public schema</Comment>
       <StateNumber>526</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>810</IntrospectionStateNumber>
+      <IntrospectionStateNumber>826</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="22" parent="3" name="plpgsql">
@@ -1007,67 +1008,85 @@ sequence|table|16429|16424|1
       <StateNumber>768</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
-    <sequence id="36" parent="21" name="questions_que_id_seq">
+    <sequence id="36" parent="21" name="messages_msg_id_seq">
+      <ObjectId>16449</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>823</StateNumber>
+      <DataType>bigint|0s</DataType>
+    </sequence>
+    <sequence id="37" parent="21" name="questions_que_id_seq">
       <ObjectId>16411</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>771</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
-    <sequence id="37" parent="21" name="quotes_quote_id_seq">
+    <sequence id="38" parent="21" name="quotes_quote_id_seq">
       <ObjectId>16417</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>774</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
-    <sequence id="38" parent="21" name="stats_stat_id_seq">
+    <sequence id="39" parent="21" name="stats_stat_id_seq">
       <ObjectId>16423</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>777</StateNumber>
       <DataType>bigint|0s</DataType>
     </sequence>
-    <sequence id="39" parent="21" name="stickers_sticker_id_seq">
+    <sequence id="40" parent="21" name="stickers_sticker_id_seq">
       <ObjectId>16429</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>780</StateNumber>
       <DataType>integer|0s</DataType>
     </sequence>
-    <table id="40" parent="21" name="answers">
+    <table id="41" parent="21" name="answers">
       <ObjectId>16394</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>763</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="41" parent="21" name="films">
+    <table id="42" parent="21" name="films">
       <ObjectId>16400</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>766</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="42" parent="21" name="questions">
+    <table id="43" parent="21" name="messages">
+      <ObjectId>16450</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>823</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="44" parent="21" name="questions">
       <ObjectId>16406</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>769</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="43" parent="21" name="quotes">
+    <table id="45" parent="21" name="quotes">
       <ObjectId>16412</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>772</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="44" parent="21" name="stats">
+    <table id="46" parent="21" name="start_q">
+      <ObjectId>16444</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>812</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="47" parent="21" name="stats">
       <ObjectId>16418</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>775</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="45" parent="21" name="stickers">
+    <table id="48" parent="21" name="stickers">
       <ObjectId>16424</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>778</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <column id="46" parent="40" name="ans_id">
+    <column id="49" parent="41" name="ans_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1075,14 +1094,14 @@ sequence|table|16429|16424|1
       <TypeId>23</TypeId>
       <IdentityKind>always</IdentityKind>
     </column>
-    <column id="47" parent="40" name="answer">
+    <column id="50" parent="41" name="answer">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>763</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <index id="48" parent="40" name="answers_pkey">
+    <index id="51" parent="41" name="answers_pkey">
       <ObjectId>16430</ObjectId>
       <StateNumber>793</StateNumber>
       <ColNames>ans_id</ColNames>
@@ -1092,14 +1111,14 @@ sequence|table|16429|16424|1
       <ClassIds>1978</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="49" parent="40" name="answers_pkey">
+    <key id="52" parent="41" name="answers_pkey">
       <ObjectId>16431</ObjectId>
       <StateNumber>793</StateNumber>
       <ColNames>ans_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>answers_pkey</UnderlyingIndexName>
     </key>
-    <column id="50" parent="41" name="film_id">
+    <column id="53" parent="42" name="film_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1107,14 +1126,14 @@ sequence|table|16429|16424|1
       <TypeId>23</TypeId>
       <IdentityKind>always</IdentityKind>
     </column>
-    <column id="51" parent="41" name="film">
+    <column id="54" parent="42" name="film">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>766</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <index id="52" parent="41" name="films_pkey">
+    <index id="55" parent="42" name="films_pkey">
       <ObjectId>16432</ObjectId>
       <StateNumber>794</StateNumber>
       <ColNames>film_id</ColNames>
@@ -1124,14 +1143,53 @@ sequence|table|16429|16424|1
       <ClassIds>1978</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="53" parent="41" name="films_pkey">
+    <key id="56" parent="42" name="films_pkey">
       <ObjectId>16433</ObjectId>
       <StateNumber>794</StateNumber>
       <ColNames>film_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>films_pkey</UnderlyingIndexName>
     </key>
-    <column id="54" parent="42" name="que_id">
+    <column id="57" parent="43" name="msg_id">
+      <Position>1</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>823</StateNumber>
+      <TypeId>20</TypeId>
+      <IdentityKind>always</IdentityKind>
+    </column>
+    <column id="58" parent="43" name="msg_txt">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>823</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="59" parent="43" name="ans_id">
+      <Position>3</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>823</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <index id="60" parent="43" name="messages_pkey">
+      <ObjectId>16455</ObjectId>
+      <StateNumber>823</StateNumber>
+      <ColNames>msg_id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>0</CollationIds>
+      <ClassIds>3124</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="61" parent="43" name="messages_pkey">
+      <ObjectId>16456</ObjectId>
+      <StateNumber>823</StateNumber>
+      <ColNames>msg_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>messages_pkey</UnderlyingIndexName>
+    </key>
+    <column id="62" parent="44" name="que_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1139,21 +1197,21 @@ sequence|table|16429|16424|1
       <TypeId>23</TypeId>
       <IdentityKind>by-default</IdentityKind>
     </column>
-    <column id="55" parent="42" name="ans_id">
+    <column id="63" parent="44" name="ans_id">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>769</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="56" parent="42" name="question">
+    <column id="64" parent="44" name="question">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>769</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <index id="57" parent="42" name="questions_pkey">
+    <index id="65" parent="44" name="questions_pkey">
       <ObjectId>16434</ObjectId>
       <StateNumber>795</StateNumber>
       <ColNames>que_id</ColNames>
@@ -1163,14 +1221,14 @@ sequence|table|16429|16424|1
       <ClassIds>1978</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="58" parent="42" name="questions_pkey">
+    <key id="66" parent="44" name="questions_pkey">
       <ObjectId>16435</ObjectId>
       <StateNumber>795</StateNumber>
       <ColNames>que_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>questions_pkey</UnderlyingIndexName>
     </key>
-    <column id="59" parent="43" name="quote_id">
+    <column id="67" parent="45" name="quote_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1178,14 +1236,14 @@ sequence|table|16429|16424|1
       <TypeId>23</TypeId>
       <IdentityKind>always</IdentityKind>
     </column>
-    <column id="60" parent="43" name="quote">
+    <column id="68" parent="45" name="quote">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>772</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <index id="61" parent="43" name="quotes_pkey">
+    <index id="69" parent="45" name="quotes_pkey">
       <ObjectId>16436</ObjectId>
       <StateNumber>796</StateNumber>
       <ColNames>quote_id</ColNames>
@@ -1195,14 +1253,28 @@ sequence|table|16429|16424|1
       <ClassIds>1978</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="62" parent="43" name="quotes_pkey">
+    <key id="70" parent="45" name="quotes_pkey">
       <ObjectId>16437</ObjectId>
       <StateNumber>796</StateNumber>
       <ColNames>quote_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>quotes_pkey</UnderlyingIndexName>
     </key>
-    <column id="63" parent="44" name="stat_id">
+    <column id="71" parent="46" name="start_id">
+      <Position>1</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>812</StateNumber>
+      <TypeId>20</TypeId>
+    </column>
+    <column id="72" parent="46" name="start_text">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>812</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <column id="73" parent="47" name="stat_id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
@@ -1210,37 +1282,37 @@ sequence|table|16429|16424|1
       <TypeId>20</TypeId>
       <IdentityKind>always</IdentityKind>
     </column>
-    <column id="64" parent="44" name="st_chat_id">
+    <column id="74" parent="47" name="st_chat_id">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="65" parent="44" name="st_chat_mbr">
+    <column id="75" parent="47" name="st_chat_mbr">
       <Position>3</Position>
       <DataType>text|0s</DataType>
       <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="66" parent="44" name="st_name">
+    <column id="76" parent="47" name="st_name">
       <Position>4</Position>
       <DataType>text|0s</DataType>
       <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="67" parent="44" name="st_nick">
+    <column id="77" parent="47" name="st_nick">
       <Position>5</Position>
       <DataType>text|0s</DataType>
       <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="68" parent="44" name="st_date">
+    <column id="78" parent="47" name="st_date">
       <Position>6</Position>
       <DataType>timestamp|0s</DataType>
       <StateNumber>775</StateNumber>
       <TypeId>1114</TypeId>
     </column>
-    <index id="69" parent="44" name="stats_pkey">
+    <index id="79" parent="47" name="stats_pkey">
       <ObjectId>16438</ObjectId>
       <StateNumber>797</StateNumber>
       <ColNames>stat_id</ColNames>
@@ -1250,14 +1322,14 @@ sequence|table|16429|16424|1
       <ClassIds>3124</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="70" parent="44" name="stats_pkey">
+    <key id="80" parent="47" name="stats_pkey">
       <ObjectId>16439</ObjectId>
       <StateNumber>797</StateNumber>
       <ColNames>stat_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>stats_pkey</UnderlyingIndexName>
     </key>
-    <column id="71" parent="45" name="sticker_id">
+    <column id="81" parent="48" name="sticker_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1265,14 +1337,14 @@ sequence|table|16429|16424|1
       <TypeId>23</TypeId>
       <IdentityKind>always</IdentityKind>
     </column>
-    <column id="72" parent="45" name="sticker">
+    <column id="82" parent="48" name="sticker">
       <Position>2</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>778</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <index id="73" parent="45" name="stickers_pkey">
+    <index id="83" parent="48" name="stickers_pkey">
       <ObjectId>16440</ObjectId>
       <StateNumber>798</StateNumber>
       <ColNames>sticker</ColNames>
@@ -1283,7 +1355,7 @@ sequence|table|16429|16424|1
       <ClassIds>3126</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="74" parent="45" name="stickers_pkey">
+    <key id="84" parent="48" name="stickers_pkey">
       <ObjectId>16441</ObjectId>
       <StateNumber>798</StateNumber>
       <ColNames>sticker</ColNames>

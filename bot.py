@@ -15,30 +15,14 @@ import psycopg2
 import os
 from datetime import datetime
 
+# connection to Bot
+bot = telebot.TeleBot(name)
+# connection to DB
 conn_db = psycopg2.connect(conn)
-# connect to db
 cur = conn_db.cursor()
 
-# global variables
-bot = telebot.TeleBot(name)
-message_lol = ['ХЕХ', 'АХАХАХ', 'АХАХАХАХ', 'ЛОЛ', 'ХАХА']
-message_plus = ['+', '++', '+++', '++++']
-message_aga = ['АГА']
-message_steel = ['ЖЕСТЬ']
-message_wtf = [')', '))', ')))', '))))', ')))))']
-message_sad = ['(', '((', '(((', '((((', '(((((']
-message_a = ['А', 'АА', 'ААА', 'АААА']
-message_who = ['ХТО', 'КТО', 'КТО?', 'ХТО?']
-message_no = ['НЕ', 'НЕТ', 'НЕА', 'НЕТ(', 'НЕТ)']
-message_thanks = ['СПС', 'SPS']
-answer_def_start = 'Да шо тут гаварити, могу болтать с вами в группе или в чатике.' \
-                   ' Добавляй в чат, даб даб даб, зяблс. Могу погоду гаварить. ' \
-                   'Магу стикеры пасаветавать или фильмы, ну дя. \n ' \
-                   'Разработка и поддержка - @stealingyou \n' \
-                   'Данатики Юмани - 4100117291947258'
 
-
-# checking does message has a word in list from dictionary
+# checking does message has any word in list from dictionary
 def check(message):
     msg_check = message.text.upper().split()
     b = len(msg_check)
@@ -50,8 +34,7 @@ def check(message):
         # Retrieve query results
         records = cur.fetchall()
         try:
-            rec = (str(records[0]).replace("('", ""))
-            rec = rec.replace("',)", "")
+            rec = (str(records[0]).replace("('", "")).replace("',)", "")
             bot.send_message(message.chat.id, rec)
             i += 1
         except IndexError:
@@ -62,24 +45,15 @@ def check(message):
 def query(ans_id, message):
     cur.execute("SELECT answer FROM answers where ans_id=" + str(ans_id) + " ")
     records = cur.fetchall()
-    rec = (str(records[0]).replace("('", ""))
-    rec = rec.replace("',)", "")
-    rec = rec.replace(")", "")
+    rec = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
     bot.send_message(message.chat.id, rec)
-
-
-def stick(stick_id, message):
-    cur.execute("SELECT sticker FROM stickers where sticker_id=" + str(stick_id) + " ")
-    records = cur.fetchall()
-    rec = (str(records[0]).replace("('", ""))
-    rec = rec.replace("',)", "")
-    bot.send_sticker(message.chat.id, rec)
 
 
 # catching text message or command for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    # catching command
+    # CATCHING COMMANDS
+
     # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
         os.system('python3 /root/telegram_chupakabrada_bot/weather.py ' + str(message.chat.id))
@@ -92,55 +66,52 @@ def get_text_messages(message):
     # sticker pack on command
     if message.text == '/sticker' or message.text == '/sticker@chupakabrada_bot':
         query(51, message)
-        for i in range(1, 10):
-            stick(i, message)
+        for stick_id in range(1, 10):
+            cur.execute("SELECT sticker FROM stickers where sticker_id=" + str(stick_id) + " ")
+            records = cur.fetchall()
+            rec = (str(records[0]).replace("('", "")).replace("',)", "")
+            bot.send_sticker(message.chat.id, rec)
     # start bot
     if message.text == '/start' or message.text == '/start@chupakabrada_bot':
-        bot.send_message(message.chat.id, answer_def_start)
+        cur.execute("SELECT start_text FROM start_q where start_id=1")
+        records = str(cur.fetchall()).replace("[('", "").replace("',)]", "").replace("Раз", "\nРаз")
+        records = records.replace("Дан", "\nДан")
+        bot.send_message(message.chat.id, records)
     # random quotes from db
     if message.text == '/quote' or message.text == '/quote@chupakabrada_bot':
         cur.execute("select quote from quotes where quote_id=" + str(random.randint(1, 180)) + " ")
         records = cur.fetchall()
-        rec = (str(records[0]).replace("('", ""))
-        rec = rec.replace("',)", "")
+        rec = (str(records[0]).replace("('", "")).replace("',)", "")
         bot.send_message(message.chat.id, rec)
     # random films from db
     if message.text == '/top_cinema' or message.text == '/top_cinema@chupakabrada_bot':
         cur.execute("select film from films where film_id=" + str(random.randint(1, 250)) + " ")
         records = cur.fetchall()
-        rec = (str(records[0]).replace("('", ""))
-        rec = rec.replace("',)", "")
+        rec = (str(records[0]).replace("('", "")).replace("',)", "")
         bot.send_message(message.chat.id, rec)
     if message.text == '/random_cinema' or message.text == '/random_cinema@chupakabrada_bot':
         random_film = 'https://randomfilms.ru/film/' + str(random.randint(1, 9600))
         bot.send_message(message.chat.id, random_film)
     if message.text == key_for_stats:
         os.system('python3 /root/telegram_chupakabrada_bot/stats.py')
-    # catching messages
+
+    # CATCHING MESSAGES
     # bot sends message if any word sent by user exists in DB
     check(message)
-    # bot sends message if only one word sent by user in chat
+
+    # bot sends message if only one word sent by user in chat and this word is in special dictionary
     msg = message.text.upper()
-    if msg in message_lol:
-        query(39, message)
-    elif msg in message_plus:
-        query(40, message)
-    elif msg in message_aga:
-        query(41, message)
-    elif msg in message_steel:
-        query(42, message)
-    elif msg in message_wtf:
-        query(43, message)
-    elif msg in message_sad:
-        query(44, message)
-    elif msg in message_a:
-        query(45, message)
-    elif msg in message_no:
-        query(46, message)
-    elif msg in message_thanks:
-        query(47, message)
-    elif msg in message_who:
-        query(48, message)
+    cur.execute("SELECT msg_txt FROM messages")
+    msg_db = str(cur.fetchall()).replace('[', '')\
+        .replace("(\'", "").replace("\',),", " ")\
+        .replace(",),", "").replace("',)]", "").split()
+    if msg in msg_db:
+        cur.execute("SELECT a.answer FROM answers a join messages m on m.ans_id=a.ans_id where msg_txt='"
+                    + msg + "' ")
+        records = cur.fetchall()
+        rec = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
+        bot.send_message(message.chat.id, rec)
+
     # analytics
     st_chat_id = str(message.chat.id)
     st_chat_mbr = str(message.chat.username)
