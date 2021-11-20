@@ -3,14 +3,6 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.23">
     <root id="1">
       <ServerVersion>14.1</ServerVersion>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-14020||-9223372036854775808|c|G
-14020||10|c|G
-14020||10|C|G
-14020||10|T|G</Grants>
       <DateStyle>mdy</DateStyle>
       <TimeZones>true ACDT
 true ACSST
@@ -793,8 +785,8 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <IntrospectionStateNumber>737</IntrospectionStateNumber>
-      <StartupTime>1637351432</StartupTime>
+      <IntrospectionStateNumber>809</IntrospectionStateNumber>
+      <StartupTime>1637398927</StartupTime>
     </root>
     <database id="2" parent="1" name="felixmac">
       <ObjectId>16385</ObjectId>
@@ -814,9 +806,14 @@ false Zulu
 13655||-9223372036854775808|U|G
 13655||10|U|G</Grants>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>738</IntrospectionStateNumber>
+      <IntrospectionStateNumber>810</IntrospectionStateNumber>
       <Current>1</Current>
-      <Relations>sequence|table|16386|16387|1
+      <Relations>sequence|table|16399|16394|1
+sequence|table|16405|16400|1
+sequence|table|16411|16406|1
+sequence|table|16417|16412|1
+sequence|table|16423|16418|1
+sequence|table|16429|16424|1
 </Relations>
     </database>
     <role id="4" parent="1" name="felixmac">
@@ -897,7 +894,7 @@ false Zulu
       <Comment>standard public schema</Comment>
       <StateNumber>526</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>738</IntrospectionStateNumber>
+      <IntrospectionStateNumber>810</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="22" parent="3" name="plpgsql">
@@ -998,59 +995,254 @@ false Zulu
       <Handler>pg_catalog.spghandler</Handler>
       <HandlerId>334</HandlerId>
     </access-method>
-    <sequence id="34" parent="21" name="stats_stat_id_seq">
-      <ObjectId>16386</ObjectId>
+    <sequence id="34" parent="21" name="answers_ans_id_seq">
+      <ObjectId>16399</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>735</StateNumber>
+      <StateNumber>765</StateNumber>
+      <DataType>integer|0s</DataType>
+    </sequence>
+    <sequence id="35" parent="21" name="films_film_id_seq">
+      <ObjectId>16405</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>768</StateNumber>
+      <DataType>integer|0s</DataType>
+    </sequence>
+    <sequence id="36" parent="21" name="questions_que_id_seq">
+      <ObjectId>16411</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>771</StateNumber>
+      <DataType>integer|0s</DataType>
+    </sequence>
+    <sequence id="37" parent="21" name="quotes_quote_id_seq">
+      <ObjectId>16417</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>774</StateNumber>
+      <DataType>integer|0s</DataType>
+    </sequence>
+    <sequence id="38" parent="21" name="stats_stat_id_seq">
+      <ObjectId>16423</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>777</StateNumber>
       <DataType>bigint|0s</DataType>
     </sequence>
-    <table id="35" parent="21" name="stats">
-      <ObjectId>16387</ObjectId>
+    <sequence id="39" parent="21" name="stickers_sticker_id_seq">
+      <ObjectId>16429</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>735</StateNumber>
+      <StateNumber>780</StateNumber>
+      <DataType>integer|0s</DataType>
+    </sequence>
+    <table id="40" parent="21" name="answers">
+      <ObjectId>16394</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>763</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <column id="36" parent="35" name="stat_id">
+    <table id="41" parent="21" name="films">
+      <ObjectId>16400</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>766</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="42" parent="21" name="questions">
+      <ObjectId>16406</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>769</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="43" parent="21" name="quotes">
+      <ObjectId>16412</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>772</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="44" parent="21" name="stats">
+      <ObjectId>16418</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>775</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="45" parent="21" name="stickers">
+      <ObjectId>16424</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>778</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <column id="46" parent="40" name="ans_id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>765</StateNumber>
+      <TypeId>23</TypeId>
+      <IdentityKind>always</IdentityKind>
+    </column>
+    <column id="47" parent="40" name="answer">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>763</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="48" parent="40" name="answers_pkey">
+      <ObjectId>16430</ObjectId>
+      <StateNumber>793</StateNumber>
+      <ColNames>ans_id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="49" parent="40" name="answers_pkey">
+      <ObjectId>16431</ObjectId>
+      <StateNumber>793</StateNumber>
+      <ColNames>ans_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>answers_pkey</UnderlyingIndexName>
+    </key>
+    <column id="50" parent="41" name="film_id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>768</StateNumber>
+      <TypeId>23</TypeId>
+      <IdentityKind>always</IdentityKind>
+    </column>
+    <column id="51" parent="41" name="film">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>766</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="52" parent="41" name="films_pkey">
+      <ObjectId>16432</ObjectId>
+      <StateNumber>794</StateNumber>
+      <ColNames>film_id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="53" parent="41" name="films_pkey">
+      <ObjectId>16433</ObjectId>
+      <StateNumber>794</StateNumber>
+      <ColNames>film_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>films_pkey</UnderlyingIndexName>
+    </key>
+    <column id="54" parent="42" name="que_id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>771</StateNumber>
+      <TypeId>23</TypeId>
+      <IdentityKind>by-default</IdentityKind>
+    </column>
+    <column id="55" parent="42" name="ans_id">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>769</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="56" parent="42" name="question">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>769</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="57" parent="42" name="questions_pkey">
+      <ObjectId>16434</ObjectId>
+      <StateNumber>795</StateNumber>
+      <ColNames>que_id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="58" parent="42" name="questions_pkey">
+      <ObjectId>16435</ObjectId>
+      <StateNumber>795</StateNumber>
+      <ColNames>que_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>questions_pkey</UnderlyingIndexName>
+    </key>
+    <column id="59" parent="43" name="quote_id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>774</StateNumber>
+      <TypeId>23</TypeId>
+      <IdentityKind>always</IdentityKind>
+    </column>
+    <column id="60" parent="43" name="quote">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>772</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="61" parent="43" name="quotes_pkey">
+      <ObjectId>16436</ObjectId>
+      <StateNumber>796</StateNumber>
+      <ColNames>quote_id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="62" parent="43" name="quotes_pkey">
+      <ObjectId>16437</ObjectId>
+      <StateNumber>796</StateNumber>
+      <ColNames>quote_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>quotes_pkey</UnderlyingIndexName>
+    </key>
+    <column id="63" parent="44" name="stat_id">
       <Position>1</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>735</StateNumber>
+      <StateNumber>777</StateNumber>
       <TypeId>20</TypeId>
       <IdentityKind>always</IdentityKind>
     </column>
-    <column id="37" parent="35" name="st_chat_id">
+    <column id="64" parent="44" name="st_chat_id">
       <Position>2</Position>
       <DataType>text|0s</DataType>
-      <StateNumber>735</StateNumber>
+      <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="38" parent="35" name="st_chat_mbr">
+    <column id="65" parent="44" name="st_chat_mbr">
       <Position>3</Position>
       <DataType>text|0s</DataType>
-      <StateNumber>735</StateNumber>
+      <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="39" parent="35" name="st_name">
+    <column id="66" parent="44" name="st_name">
       <Position>4</Position>
       <DataType>text|0s</DataType>
-      <StateNumber>735</StateNumber>
+      <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="40" parent="35" name="st_nick">
+    <column id="67" parent="44" name="st_nick">
       <Position>5</Position>
       <DataType>text|0s</DataType>
-      <StateNumber>735</StateNumber>
+      <StateNumber>775</StateNumber>
       <TypeId>25</TypeId>
     </column>
-    <column id="41" parent="35" name="st_date">
+    <column id="68" parent="44" name="st_date">
       <Position>6</Position>
       <DataType>timestamp|0s</DataType>
-      <StateNumber>735</StateNumber>
+      <StateNumber>775</StateNumber>
       <TypeId>1114</TypeId>
     </column>
-    <index id="42" parent="35" name="stats_pkey">
-      <ObjectId>16392</ObjectId>
-      <StateNumber>735</StateNumber>
+    <index id="69" parent="44" name="stats_pkey">
+      <ObjectId>16438</ObjectId>
+      <StateNumber>797</StateNumber>
       <ColNames>stat_id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1058,12 +1250,45 @@ false Zulu
       <ClassIds>3124</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="43" parent="35" name="stats_pkey">
-      <ObjectId>16393</ObjectId>
-      <StateNumber>735</StateNumber>
+    <key id="70" parent="44" name="stats_pkey">
+      <ObjectId>16439</ObjectId>
+      <StateNumber>797</StateNumber>
       <ColNames>stat_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>stats_pkey</UnderlyingIndexName>
+    </key>
+    <column id="71" parent="45" name="sticker_id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>780</StateNumber>
+      <TypeId>23</TypeId>
+      <IdentityKind>always</IdentityKind>
+    </column>
+    <column id="72" parent="45" name="sticker">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>778</StateNumber>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="73" parent="45" name="stickers_pkey">
+      <ObjectId>16440</ObjectId>
+      <StateNumber>798</StateNumber>
+      <ColNames>sticker</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>100</CollationIds>
+      <CollationNames>default</CollationNames>
+      <ClassIds>3126</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="74" parent="45" name="stickers_pkey">
+      <ObjectId>16441</ObjectId>
+      <StateNumber>798</StateNumber>
+      <ColNames>sticker</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>stickers_pkey</UnderlyingIndexName>
     </key>
   </database-model>
 </dataSource>
