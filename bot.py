@@ -147,7 +147,7 @@ def send_sticker(message):
 # for getting chat id
 @bot.message_handler(content_types=["text"])
 def chat_id(message):
-    if message.text == 'chatid':
+    if message.text == 'chat':
         chat_id_var = message.chat.id
         bot.send_message(message.chat.id, chat_id_var)
 '''
