@@ -117,7 +117,7 @@ def get_text_messages(message):
     st_name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
     st_nick = str(message.from_user.username)
     st_date = datetime.now()
-    cur.execute("insert into stats (st_chat_id, st_chat_mbr, st_name, st_nick, st_date) "
+    cur.execute("insert into stats (st_chat_id, st_name, st_nick, st_date) "
                 "values (%s, %s, %s, %s)", (st_chat_id, st_name, st_nick, st_date))
     conn_db.commit()
 
@@ -151,4 +151,4 @@ def chat_id(message):
         bot.send_message(message.chat.id, chat_id_var)
 '''
 
-bot.polling(none_stop=True, interval=0, timeout=123)
+bot.polling(none_stop=True, interval=0, timeout=243)
