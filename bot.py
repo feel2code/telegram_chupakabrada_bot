@@ -118,8 +118,9 @@ def get_text_messages(message):
     st_name = str(message.from_user.first_name) + " " + str(message.from_user.last_name)
     st_nick = str(message.from_user.username)
     st_date = datetime.now()
-    cur.execute("insert into stats (st_chat_id, st_chat_mbr, st_name, st_nick, st_date) "
-                "values (%s, %s, %s, %s, %s )", (st_chat_id, st_chat_mbr, st_name, st_nick, st_date))
+    st_msg = str(message.text)
+    cur.execute("insert into stats (st_chat_id, st_chat_mbr, st_name, st_nick, st_date, st_msg) "
+                "values (%s, %s, %s, %s, %s, %s )", (st_chat_id, st_chat_mbr, st_name, st_nick, st_date, st_msg))
     conn_db.commit()
 
 
