@@ -152,4 +152,4 @@ def chat_id(message):
         bot.send_message(message.chat.id, chat_id_var)
 '''
 
-bot.polling(none_stop=True, interval=0, timeout=243)
+bot.polling(none_stop=True, interval=0, timeout=350)
