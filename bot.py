@@ -54,7 +54,7 @@ def query(ans_id, message):
 def city_name(message):
     city = message.text;
     what_to_send = 'Вот вам ваша пагода, блин, ню да, палучаица:'
-    req = requests.get('api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
+    req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
     city1 = req['main']
     city_temp = str(int(city1['temp'] - 273))
     what_to_send += ('\n ' + city_temp + ' °C ' + city)
