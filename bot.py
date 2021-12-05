@@ -52,12 +52,15 @@ def query(ans_id, message):
 
 
 def city_name(message):
-    city = message.text;
-    what_to_send = 'Вот вам ваша пагода, блин, ню да, палучаица:'
-    req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
-    city1 = req['main']
-    city_temp = str(int(city1['temp'] - 273))
-    what_to_send += ('\n ' + city_temp + ' °C ' + city)
+    city = message.text
+    try:
+        req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
+        city1 = req['main']
+        city_temp = str(int(city1['temp'] - 273))
+        what_to_send = 'Вот вам ваша пагода, блин, ню да, палучаица:'
+        what_to_send += ('\n ' + city_temp + ' °C ' + city)
+    except:
+        what_to_send = 'Шо то такого села я не нахожу.'
     bot.send_message(message.chat.id, what_to_send)
 
 
