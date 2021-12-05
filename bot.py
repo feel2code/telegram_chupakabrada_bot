@@ -14,6 +14,7 @@ import random
 import psycopg2
 import os
 from datetime import datetime
+import requests
 
 # connection to Bot
 bot = telebot.TeleBot(name)
@@ -50,6 +51,16 @@ def query(ans_id, message):
     bot.send_message(message.chat.id, rec)
 
 
+def city_name(message):
+    city = message.text;
+    what_to_send = 'Вот вам ваша пагода, блин, ню да, палучаица:'
+    req = requests.get('api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
+    city1 = req['main']
+    city_temp = str(int(city1['temp'] - 273))
+    what_to_send += ('\n ' + city_temp + ' °C ' + city)
+    bot.send_message(message.chat.id, what_to_send)
+
+
 # catching text message or command for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
@@ -57,7 +68,9 @@ def get_text_messages(message):
 
     # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
-        os.system('python3 /root/telegram_chupakabrada_bot/weather.py ' + str(message.chat.id))
+        bot.send_message(message.chat.id, 'А какой хород то?')
+        bot.register_next_step_handler(message, city_name)
+        # os.system('python3 /root/telegram_chupakabrada_bot/weather.py ' + str(message.chat.id))
     # holiday on command
     if message.text == '/holiday' or message.text == '/holiday@chupakabrada_bot':
         os.system('python3 /root/telegram_chupakabrada_bot/holiday.py ' + str(message.chat.id))
@@ -75,8 +88,12 @@ def get_text_messages(message):
     # start bot
     if message.text == '/start' or message.text == '/start@chupakabrada_bot':
         cur.execute("SELECT start_text FROM start_q where start_id=1")
-        records = str(cur.fetchall()).replace("[('", "").replace("',)]", "").replace("Раз", "\nРаз")
-        records = records.replace("Дан", "\nДан")
+        records = str(cur.fetchall()).replace("[('", "").replace("',)]", "")
+        bot.send_message(message.chat.id, records)
+    # about command
+    if message.text == '/about' or message.text == '/about@chupakabrada_bot':
+        cur.execute("SELECT about_text FROM about where about_id=1")
+        records = str(cur.fetchall()).replace("[('", "").replace("',)]", "")
         bot.send_message(message.chat.id, records)
     # random quotes from db
     if message.text == '/quote' or message.text == '/quote@chupakabrada_bot':
@@ -152,4 +169,4 @@ def chat_id(message):
         bot.send_message(message.chat.id, chat_id_var)
 '''
 
-bot.polling(none_stop=True, interval=0, timeout=350)
+bot.polling(none_stop=True, interval=0, timeout=400)
