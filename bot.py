@@ -14,7 +14,7 @@ import random
 import psycopg2
 import os
 from datetime import datetime
-from datetime import time
+import time
 import requests
 
 # connection to Bot
