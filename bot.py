@@ -42,19 +42,14 @@ def check(message):
                 rec = ''
                 query(103, message)
                 time.sleep(1)
-                query(104, message)
-                query(105, message)
-                query(106, message)
-                query(107, message)
-                query(108, message)
-                query(109, message)
-                query(110, message)
-                query(109, message)
-                query(108, message)
-                query(107, message)
-                query(106, message)
-                query(105, message)
-                query(104, message)
+                i_count = 104
+                while i_count < 111:
+                    query(i_count, message)
+                    i_count += 1
+                i_count = 109
+                while i_count > 103:
+                    query(i_count, message)
+                    i_count = i_count - 1
                 i += 1
             else:
                 bot.send_message(message.chat.id, rec)
@@ -77,10 +72,12 @@ def city_name(message):
         req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
         city1 = req['main']
         city_temp = str(int(city1['temp'] - 273))
-        what_to_send = 'Вот вам ваша пагода, блин, ню да, палучаица:'
+        cur.execute("SELECT answer FROM answers where ans_id=112")
+        records = cur.fetchall()
+        what_to_send = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
         what_to_send += ('\n ' + city_temp + ' °C ' + city)
     except:
-        what_to_send = 'Шо то такого села я не нахожу.'
+        query(111, message)
     bot.send_message(message.chat.id, what_to_send)
 
 
