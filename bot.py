@@ -45,10 +45,12 @@ def check(message):
                 i_count = 104
                 while i_count < 111:
                     query(i_count, message)
+                    time.sleep(0.100)
                     i_count += 1
                 i_count = 109
                 while i_count > 103:
                     query(i_count, message)
+                    time.sleep(0.100)
                     i_count = i_count - 1
                 i += 1
             else:
