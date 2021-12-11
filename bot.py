@@ -40,7 +40,7 @@ def check(message):
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
             if rec == '3 4 5 0 D':
                 rec = ''
-                query(103, message)
+                bot.send_message(message.chat.id, '3 4 5 0  D')
                 time.sleep(1)
                 query(104, message)
                 query(105, message)
