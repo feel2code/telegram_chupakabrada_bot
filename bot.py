@@ -14,6 +14,7 @@ import random
 import psycopg2
 import os
 from datetime import datetime
+from datetime import time
 import requests
 
 # connection to Bot
@@ -38,7 +39,9 @@ def check(message):
         try:
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
             if rec == '3 4 5 0 D':
+                rec = ''
                 query(103, message)
+                time.sleep(1)
                 query(104, message)
                 query(105, message)
                 query(106, message)
