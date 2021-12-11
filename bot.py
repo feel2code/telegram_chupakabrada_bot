@@ -79,7 +79,9 @@ def city_name(message):
         what_to_send = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
         what_to_send += ('\n ' + city_temp + ' °C ' + city)
     except:
-        query(111, message)
+        cur.execute("SELECT answer FROM answers where ans_id=111")
+        records = cur.fetchall()
+        what_to_send = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
     bot.send_message(message.chat.id, what_to_send)
 
 
@@ -107,6 +109,7 @@ def get_text_messages(message):
             records = cur.fetchall()
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
             bot.send_sticker(message.chat.id, rec)
+            time.sleep(0.100)
     # start bot
     if message.text == '/start' or message.text == '/start@chupakabrada_bot':
         cur.execute("SELECT start_text FROM start_q where start_id=1")
