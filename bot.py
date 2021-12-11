@@ -37,8 +37,14 @@ def check(message):
         records = cur.fetchall()
         try:
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
-            bot.send_message(message.chat.id, rec)
-            i += 1
+            if rec == '3 4 5 0 D':
+                i_count = 104
+                while i_count < 111:
+                    query(i_count, message)
+                    i_count += 1
+            else:
+                bot.send_message(message.chat.id, rec)
+                i += 1
         except IndexError:
             i += 1
 
