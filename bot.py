@@ -38,10 +38,20 @@ def check(message):
         try:
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
             if rec == '3 4 5 0 D':
-                i_count = 104
-                while i_count < 111:
-                    query(i_count, message)
-                    i_count += 1
+                query(103, message)
+                query(104, message)
+                query(105, message)
+                query(106, message)
+                query(107, message)
+                query(108, message)
+                query(109, message)
+                query(110, message)
+                query(109, message)
+                query(108, message)
+                query(107, message)
+                query(106, message)
+                query(105, message)
+                query(104, message)
             else:
                 bot.send_message(message.chat.id, rec)
                 i += 1
