@@ -101,12 +101,19 @@ max_weather = max(full_weather_list)
 # min temp
 full_weather_list1 = full_weather_list
 for l in full_weather_list1:
-    l.split()
-    if int(l) < 0:
-        l.replace('-', '')
-    if int(l) >= 0:
+    if int(l) > 0:
         full_weather_list1.remove(l)
+    elif int(l) == 0:
+        full_weather_list1.remove(l)
+for l in full_weather_list1:
+    if int(l) > 0:
+        full_weather_list1.remove(l)
+    elif int(l) == 0:
+        full_weather_list1.remove(l)
+for l in full_weather_list1:
+    l = l.replace('-', '')
 min_weather = "" + max(full_weather_list1)
+
 
 what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
                ' \n Вот вам ваша пагода па расписанию, палучаица:'
