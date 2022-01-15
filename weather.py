@@ -99,21 +99,20 @@ inverted_weather_dict = {'Казани':k4,
 # max temp
 max_weather = max(full_weather_list)
 # min temp
-full_weather_list1 = full_weather_list
-for l in full_weather_list1:
+min_weather_list = full_weather_list
+for l in min_weather_list:
     if int(l) > 0:
-        full_weather_list1.remove(l)
+        min_weather_list.remove(l)
     elif int(l) == 0:
-        full_weather_list1.remove(l)
-for l in full_weather_list1:
+        min_weather_list.remove(l)
+for l in min_weather_list:
     if int(l) > 0:
-        full_weather_list1.remove(l)
+        min_weather_list.remove(l)
     elif int(l) == 0:
-        full_weather_list1.remove(l)
-for l in full_weather_list1:
-    l = l.replace('-', '')
-min_weather = "" + max(full_weather_list1)
-
+        min_weather_list.remove(l)
+min_weather_list = str(min_weather_list).replace('-', '').replace('[', '').replace(']', '').replace("'", '').replace(',', '')
+min_weather_list = min_weather_list.split()
+min_weather = "-" + max(min_weather_list)
 
 what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
                ' \n Вот вам ваша пагода па расписанию, палучаица:'
