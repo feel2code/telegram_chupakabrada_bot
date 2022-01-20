@@ -111,8 +111,11 @@ for l in min_weather_list:
     elif int(l) == 0:
         min_weather_list.remove(l)
 min_weather_list = str(min_weather_list).replace('-', '').replace('[', '').replace(']', '').replace("'", '').replace(',', '')
+print(min_weather_list)
 min_weather_list = min_weather_list.split()
-min_weather = "-" + max(min_weather_list)
+result_min_weather_list = [int(item) for item in min_weather_list]
+min_weather = "-" + str(max(result_min_weather_list))
+
 
 what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
                ' \n Вот вам ваша пагода па расписанию, палучаица:'
@@ -120,6 +123,6 @@ what_to_send += ('\n ' + k4 + ' °C Казань \n ' + p4)
 what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
 what_to_send += (b4 + ' °C Батуми \n ')
 what_to_send += (t4 + ' °C Тбилиси \n ')
-what_to_send += ('Самая харошая пагода в ' + full_weather_dict[max_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[max_weather])])
-what_to_send += ('\nА самая мерзлючная пагода в ' + full_weather_dict[min_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[min_weather])])
+what_to_send += ('Самая харошая пагода в ' + full_weather_dict[max_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[max_weather])] + ' °C')
+what_to_send += ('\nА самая мерзлючная пагода в ' + full_weather_dict[min_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[min_weather])] + ' °C')
 bot.send_message(chat_id=chat, text=what_to_send)
