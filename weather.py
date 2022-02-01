@@ -102,6 +102,7 @@ inverted_weather_dict = {'Казани':k4,
 max_weather = max(full_weather_list)
 # min temp
 min_weather = min(full_weather_list)
+print(min_weather)
 '''min_weather_list = full_weather_list
 for l in min_weather_list:
     if int(l) > 0:
