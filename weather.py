@@ -88,7 +88,8 @@ weather_batumi()
 weather_tbilisi()
 
 # find max and min weather in cities list
-full_weather_list: int = [k4, p4, m4, e4, b4, t4]
+full_weather_list = [k4, p4, m4, e4, b4, t4]
+result_min_weather_list = [int(item) for item in full_weather_list]
 # full_weather_list = [k4, p4, m4, e4, b4, t4]
 full_weather_dict = {k4:'Казани',
 p4: 'Питере', m4: 'Москве', e4: 'Екб', b4: 'Батуми',
