@@ -88,7 +88,8 @@ weather_batumi()
 weather_tbilisi()
 
 # find max and min weather in cities list
-full_weather_list = [k4, p4, m4, e4, b4, t4]
+full_weather_list: int = [k4, p4, m4, e4, b4, t4]
+# full_weather_list = [k4, p4, m4, e4, b4, t4]
 full_weather_dict = {k4:'Казани',
 p4: 'Питере', m4: 'Москве', e4: 'Екб', b4: 'Батуми',
 t4:'Тбилиси'}
@@ -99,7 +100,8 @@ inverted_weather_dict = {'Казани':k4,
 # max temp
 max_weather = max(full_weather_list)
 # min temp
-min_weather_list = full_weather_list
+min_weather = min(full_weather_list)
+'''min_weather_list = full_weather_list
 for l in min_weather_list:
     if int(l) > 0:
         min_weather_list.remove(l)
@@ -114,7 +116,7 @@ min_weather_list = str(min_weather_list).replace('-', '').replace('[', '').repla
 print(min_weather_list)
 min_weather_list = min_weather_list.split()
 result_min_weather_list = [int(item) for item in min_weather_list]
-min_weather = "-" + str(max(result_min_weather_list))
+min_weather = "-" + str(max(result_min_weather_list))'''
 
 
 what_to_send = ('Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
