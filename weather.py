@@ -4,7 +4,6 @@ from conf import *
 from sys import argv
 
 script, chat = argv
-
 bot = telebot.TeleBot(name)
 k4 = ''
 p4 = ''
@@ -89,7 +88,7 @@ weather_tbilisi()
 
 # find max and min weather in cities list
 full_weather_list = [k4, p4, m4, e4, b4, t4]
-result_min_weather_list = [int(item) for item in full_weather_list]
+full_weather_list = [int(item) for item in full_weather_list]
 # full_weather_list = [k4, p4, m4, e4, b4, t4]
 full_weather_dict = {k4:'Казани',
 p4: 'Питере', m4: 'Москве', e4: 'Екб', b4: 'Батуми',
@@ -102,51 +101,33 @@ inverted_weather_dict = {'Казани':k4,
 max_weather = max(full_weather_list)
 # min temp
 min_weather = min(full_weather_list)
-print(min_weather)
-'''min_weather_list = full_weather_list
-for l in min_weather_list:
-    if int(l) > 0:
-        min_weather_list.remove(l)
-    elif int(l) == 0:
-        min_weather_list.remove(l)
-for l in min_weather_list:
-    if int(l) > 0:
-        min_weather_list.remove(l)
-    elif int(l) == 0:
-        min_weather_list.remove(l)
-min_weather_list = str(min_weather_list).replace('-', '').replace('[', '').replace(']', '').replace("'", '').replace(',', '')
-print(min_weather_list)
-min_weather_list = min_weather_list.split()
-result_min_weather_list = [int(item) for item in min_weather_list]
-min_weather = "-" + str(max(result_min_weather_list))'''
 
 
 what_to_send = ('Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
                 'Вот вам ваша пагода па расписанию, палучаица:\n')
+
 what_to_send += ('\n' + k4 + ' °C · Казань')
-if full_weather_dict[min_weather] == 'Казань': what_to_send += '❄️'
-elif full_weather_dict[max_weather] == 'Казань': what_to_send += '🔥'
+if full_weather_dict[str(min_weather)] == 'Казань': what_to_send += '❄️'
+elif full_weather_dict[str(max_weather)] == 'Казань': what_to_send += '🔥'
 
 what_to_send += ('\n' + p4 + ' °C · Питер')
-if full_weather_dict[min_weather] == 'Питер': what_to_send += '❄️'
-elif full_weather_dict[max_weather] == 'Питер': what_to_send += '🔥'
+if full_weather_dict[str(min_weather)] == 'Питер': what_to_send += '❄️'
+elif full_weather_dict[str(max_weather)] == 'Питер': what_to_send += '🔥'
 
 what_to_send += ('\n' + m4 + ' °C · Москва')
-if full_weather_dict[min_weather] == 'Москва': what_to_send += '❄️'
-elif full_weather_dict[max_weather] == 'Москва': what_to_send += '🔥'
+if full_weather_dict[str(min_weather)] == 'Москва': what_to_send += '❄️'
+elif full_weather_dict[str(max_weather)] == 'Москва': what_to_send += '🔥'
 
 what_to_send += ('\n' + e4 + ' °C · Екб')
-if full_weather_dict[min_weather] == 'Екб': what_to_send += '❄️'
-elif full_weather_dict[max_weather] == 'Екб': what_to_send += '🔥'
+if full_weather_dict[str(min_weather)] == 'Екб': what_to_send += '❄️'
+elif full_weather_dict[str(max_weather)] == 'Екб': what_to_send += '🔥'
 
 what_to_send += ('\n' + b4 + ' °C · Батуми')
-if full_weather_dict[min_weather] == 'Батуми': what_to_send += '❄️'
-elif full_weather_dict[max_weather] == 'Батуми': what_to_send += '🔥'
+if full_weather_dict[str(min_weather)] == 'Батуми': what_to_send += '❄️'
+elif full_weather_dict[str(max_weather)] == 'Батуми': what_to_send += '🔥'
 
 what_to_send += ('\n' + t4 + ' °C · Тбилиси')
-if full_weather_dict[min_weather] == 'Тбилиси': what_to_send += '❄️'
-elif full_weather_dict[max_weather] == 'Тбилиси': what_to_send += '🔥'
+if full_weather_dict[str(min_weather)] == 'Тбилиси': what_to_send += '❄️'
+elif full_weather_dict[str(max_weather)] == 'Тбилиси': what_to_send += '🔥'
 
-# what_to_send += ('Самая харошая пагода в ' + full_weather_dict[max_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[max_weather])] + ' °C')
-# what_to_send += ('\nА самая мерзлючная пагода в ' + full_weather_dict[min_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[min_weather])] + ' °C')
 bot.send_message(chat_id=chat, text=what_to_send)
