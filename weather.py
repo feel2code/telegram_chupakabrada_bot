@@ -117,12 +117,32 @@ result_min_weather_list = [int(item) for item in min_weather_list]
 min_weather = "-" + str(max(result_min_weather_list))
 
 
-what_to_send = 'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!' \
-               ' \n Вот вам ваша пагода па расписанию, палучаица:'
-what_to_send += ('\n ' + k4 + ' °C Казань \n ' + p4)
-what_to_send += (' °C Питер \n ' + m4 + ' °C Москва \n ' + e4 + ' °C Екб \n ')
-what_to_send += (b4 + ' °C Батуми \n ')
-what_to_send += (t4 + ' °C Тбилиси \n ')
-what_to_send += ('Самая харошая пагода в ' + full_weather_dict[max_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[max_weather])] + ' °C')
-what_to_send += ('\nА самая мерзлючная пагода в ' + full_weather_dict[min_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[min_weather])] + ' °C')
+what_to_send = ('Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
+                'Вот вам ваша пагода па расписанию, палучаица:\n')
+what_to_send += ('\n' + k4 + ' °C · Казань')
+if full_weather_dict[min_weather] == 'Казань': what_to_send += '❄️'
+elif full_weather_dict[max_weather] == 'Казань': what_to_send += '🔥'
+
+what_to_send += ('\n' + p4 + ' °C · Питер')
+if full_weather_dict[min_weather] == 'Питер': what_to_send += '❄️'
+elif full_weather_dict[max_weather] == 'Питер': what_to_send += '🔥'
+
+what_to_send += ('\n' + m4 + ' °C · Москва')
+if full_weather_dict[min_weather] == 'Москва': what_to_send += '❄️'
+elif full_weather_dict[max_weather] == 'Москва': what_to_send += '🔥'
+
+what_to_send += ('\n' + e4 + ' °C · Екб')
+if full_weather_dict[min_weather] == 'Екб': what_to_send += '❄️'
+elif full_weather_dict[max_weather] == 'Екб': what_to_send += '🔥'
+
+what_to_send += ('\n' + b4 + ' °C · Батуми')
+if full_weather_dict[min_weather] == 'Батуми': what_to_send += '❄️'
+elif full_weather_dict[max_weather] == 'Батуми': what_to_send += '🔥'
+
+what_to_send += ('\n' + t4 + ' °C · Тбилиси')
+if full_weather_dict[min_weather] == 'Тбилиси': what_to_send += '❄️'
+elif full_weather_dict[max_weather] == 'Тбилиси': what_to_send += '🔥'
+
+# what_to_send += ('Самая харошая пагода в ' + full_weather_dict[max_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[max_weather])] + ' °C')
+# what_to_send += ('\nА самая мерзлючная пагода в ' + full_weather_dict[min_weather] + ' там чичас ' + inverted_weather_dict[(full_weather_dict[min_weather])] + ' °C')
 bot.send_message(chat_id=chat, text=what_to_send)
