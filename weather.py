@@ -5,6 +5,7 @@ from sys import argv
 
 script, chat = argv
 bot = telebot.TeleBot(name)
+weather_url = 'https://api.openweathermap.org/data/2.5/weather?'
 k4 = ''
 p4 = ''
 m4 = ''
@@ -15,7 +16,7 @@ t4 = ''
 
 def weather_kzn():
     global k4
-    r = requests.get('https://api.openweathermap.org/data/2.5/weather?q=kazan&appid='+go_weather)
+    r = requests.get(weather_url + 'q=kazan&appid=' + go_weather)
     k = r.json()
     k1 = k['main']
     k2 = k1['temp']
@@ -26,7 +27,7 @@ def weather_kzn():
 
 def weather_spb():
     global p4
-    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=498817&appid='+go_weather)
+    r = requests.get(weather_url + 'id=498817&appid=' + go_weather)
     p = r.json()
     p1 = p['main']
     p2 = p1['temp']
@@ -37,7 +38,7 @@ def weather_spb():
 
 def weather_msk():
     global m4
-    r = requests.get('https://api.openweathermap.org/data/2.5/weather?q=moscow&appid='+go_weather)
+    r = requests.get(weather_url + 'q=moscow&appid=' + go_weather)
     m = r.json()
     m1 = m['main']
     m2 = m1['temp']
@@ -48,7 +49,7 @@ def weather_msk():
 
 def weather_ekb():
     global e4
-    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=1486209&appid='+go_weather)
+    r = requests.get(weather_url + 'id=1486209&appid=' + go_weather)
     e = r.json()
     e1 = e['main']
     e2 = e1['temp']
@@ -59,7 +60,7 @@ def weather_ekb():
 
 def weather_batumi():
     global b4
-    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=615532&appid='+go_weather)
+    r = requests.get(weather_url + 'id=615532&appid='+go_weather)
     b = r.json()
     b1 = b['main']
     b2 = b1['temp']
@@ -70,7 +71,7 @@ def weather_batumi():
 
 def weather_tbilisi():
     global t4
-    r = requests.get('https://api.openweathermap.org/data/2.5/weather?id=611717&appid='+go_weather)
+    r = requests.get(weather_url + 'id=611717&appid='+go_weather)
     t = r.json()
     t1 = t['main']
     t2 = t1['temp']
@@ -90,12 +91,12 @@ weather_tbilisi()
 full_weather_list = [k4, p4, m4, e4, b4, t4]
 full_weather_list = [int(item) for item in full_weather_list]
 # full_weather_list = [k4, p4, m4, e4, b4, t4]
-full_weather_dict = {k4:'Казани',
-p4: 'Питере', m4: 'Москве', e4: 'Екб', b4: 'Батуми',
-t4:'Тбилиси'}
-inverted_weather_dict = {'Казани':k4,
-'Питере':p4, 'Москве':m4 , 'Екб':e4 , 'Батуми':b4,
-'Тбилиси':t4}
+full_weather_dict = {k4: 'Казань', p4: 'Питер',
+                     m4: 'Москва', e4: 'Екб',
+                     b4: 'Батуми', t4: 'Тбилиси'}
+inverted_weather_dict = {'Казань': k4, 'Питер': p4,
+                         'Москва': m4, 'Екб': e4,
+                         'Батуми': b4, 'Тбилиси': t4}
 
 # max temp
 max_weather = max(full_weather_list)
@@ -103,31 +104,39 @@ max_weather = max(full_weather_list)
 min_weather = min(full_weather_list)
 
 
-what_to_send = ('Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
-                'Вот вам ваша пагода па расписанию, палучаица:\n')
+what_to_send = (
+    'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
+    'Вот вам ваша пагода па расписанию, палучаица:\n')
 
-what_to_send += ('\n' + k4 + ' °C · Казань')
-if full_weather_dict[str(min_weather)] == 'Казань': what_to_send += '❄️'
-elif full_weather_dict[str(max_weather)] == 'Казань': what_to_send += '🔥'
+if int(k4) > 0 and int(k4) < 10: tk4 = k4.replace(k4, ' ' + k4)
+what_to_send += ('\n' + tk4 + ' °C · Казань')
+if full_weather_dict[str(min_weather)] == 'Казань': what_to_send += ' ❄️'
+elif full_weather_dict[str(max_weather)] == 'Казань': what_to_send += ' 🔥'
 
-what_to_send += ('\n' + p4 + ' °C · Питер')
-if full_weather_dict[str(min_weather)] == 'Питер': what_to_send += '❄️'
-elif full_weather_dict[str(max_weather)] == 'Питер': what_to_send += '🔥'
+if int(p4) > 0 and int(p4) < 10: tp4 = p4.replace(p4, ' ' + p4)
+what_to_send += ('\n' + tp4 + ' °C · Питер')
+if full_weather_dict[str(min_weather)] == 'Питер': what_to_send += ' ❄️'
+elif full_weather_dict[str(max_weather)] == 'Питер': what_to_send += ' 🔥'
 
-what_to_send += ('\n' + m4 + ' °C · Москва')
-if full_weather_dict[str(min_weather)] == 'Москва': what_to_send += '❄️'
-elif full_weather_dict[str(max_weather)] == 'Москва': what_to_send += '🔥'
+if int(m4) > 0 and int(m4) < 10: tm4 = m4.replace(m4, ' ' + m4)
+what_to_send += ('\n' + tm4 + ' °C · Москва')
+if full_weather_dict[str(min_weather)] == 'Москва': what_to_send += ' ❄️'
+elif full_weather_dict[str(max_weather)] == 'Москва': what_to_send += ' 🔥'
 
-what_to_send += ('\n' + e4 + ' °C · Екб')
-if full_weather_dict[str(min_weather)] == 'Екб': what_to_send += '❄️'
-elif full_weather_dict[str(max_weather)] == 'Екб': what_to_send += '🔥'
+if int(e4) > 0 and int(e4) < 10: te4 = e4.replace(e4, ' ' + e4)
+what_to_send += ('\n' + te4 + ' °C · Екб')
+if full_weather_dict[str(min_weather)] == 'Екб': what_to_send += ' ❄️'
+elif full_weather_dict[str(max_weather)] == 'Екб': what_to_send += ' 🔥'
 
-what_to_send += ('\n' + b4 + ' °C · Батуми')
-if full_weather_dict[str(min_weather)] == 'Батуми': what_to_send += '❄️'
-elif full_weather_dict[str(max_weather)] == 'Батуми': what_to_send += '🔥'
+if int(b4) > 0 and int(b4) < 10: tb4 = b4.replace(b4, ' ' + b4)
+what_to_send += ('\n' + tb4 + ' °C · Батуми')
+if full_weather_dict[str(min_weather)] == 'Батуми': what_to_send += ' ❄️'
+elif full_weather_dict[str(max_weather)] == 'Батуми': what_to_send += ' 🔥'
 
-what_to_send += ('\n' + t4 + ' °C · Тбилиси')
-if full_weather_dict[str(min_weather)] == 'Тбилиси': what_to_send += '❄️'
-elif full_weather_dict[str(max_weather)] == 'Тбилиси': what_to_send += '🔥'
+if int(t4) > 0 and int(t4) < 10: tt4 = t4.replace(t4, ' ' + t4)
+what_to_send += ('\n' + tt4 + ' °C · Тбилиси')
+if full_weather_dict[str(min_weather)] == 'Тбилиси': what_to_send += ' ❄️'
+elif full_weather_dict[str(max_weather)] == 'Тбилиси': what_to_send += ' 🔥'
+
 
 bot.send_message(chat_id=chat, text=what_to_send)
