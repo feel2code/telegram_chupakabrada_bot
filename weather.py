@@ -108,6 +108,14 @@ what_to_send = (
     'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
     'Вот вам ваша пагода па расписанию, палучаица:\n')
 
+# adding temp variables
+tk4 = k4
+tp4 = p4
+tm4 = m4
+te4 = e4
+tb4 = b4
+tt4 = t4
+
 if int(k4) > 0 and int(k4) < 10: tk4 = k4.replace(k4, ' ' + k4)
 what_to_send += ('\n' + tk4 + ' °C · Казань')
 if full_weather_dict[str(min_weather)] == 'Казань': what_to_send += ' ❄️'
