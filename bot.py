@@ -68,8 +68,8 @@ def query(ans_id, message):
     bot.send_message(message.chat.id, rec)
 
 
-def city_name(message):
-    city = message.text
+def get_city_name(message, city):
+    # city = message.text
     try:
         req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
         city1 = req['main']
@@ -90,10 +90,22 @@ def city_name(message):
 def get_text_messages(message):
     # CATCHING COMMANDS
 
+
+
     # weather on command
-    if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
-        bot.send_message(message.chat.id, 'А какой хород то?')
-        bot.register_next_step_handler(message, city_name)
+    
+    if message.text.split()[0] == '/weather' or message.text.split()[0] == '/weather@chupakabrada_bot':
+        city = message.text.split()[1]
+        # print(message.text)
+        # bot.send_message(message.chat.id, 'А какой хород то?')
+        bot.register_next_step_handler(message, get_city_name(message, city))
+
+
+
+    # weather on command
+    # if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
+    #     bot.send_message(message.chat.id, 'А какой хород то?')
+    #     bot.register_next_step_handler(message, city_name)
         # os.system('python3 /root/telegram_chupakabrada_bot/weather.py ' + str(message.chat.id))
     # holiday on command
     if message.text == '/holiday' or message.text == '/holiday@chupakabrada_bot':
