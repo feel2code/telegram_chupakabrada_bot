@@ -32,11 +32,10 @@ def check(message):
     i = 0
     while i < b:
         quest = msg_check[i]
-        cur.execute(r"SELECT a.answer FROM questions as q join answers a on q.ans_id=a.ans_id where upper(q.question)='"
-                    + quest + "' ")
-        # Retrieve query results
-        records = cur.fetchall()
         try:
+            cur.execute(r"SELECT a.answer FROM questions as q join answers a on q.ans_id=a.ans_id where upper(q.question)='"
+                        + quest + "' ")
+            records = cur.fetchall()
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
             if rec == '3 4 5 0 D':
                 rec = ''
@@ -68,8 +67,8 @@ def query(ans_id, message):
     bot.send_message(message.chat.id, rec)
 
 
-def get_city_name(message, city):
-    # city = message.text
+def get_city_name(message):
+    city = message.text.replace('/weather ', '').replace(' ', '-')
     try:
         req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
         city1 = req['main']
@@ -88,17 +87,12 @@ def get_city_name(message, city):
 # catching text message or command for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    # CATCHING COMMANDS
-
-
-
+    '''CATCHING COMMANDS'''
     # weather on command
-    
-    if message.text.split()[0] == '/weather' or message.text.split()[0] == '/weather@chupakabrada_bot':
-        city = message.text.split()[1]
-        # print(message.text)
-        # bot.send_message(message.chat.id, 'А какой хород то?')
-        bot.register_next_step_handler(message, get_city_name(message, city))
+    if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
+        bot.send_message(message.chat.id, 'Пиши камандю так: /weather город')
+    elif message.text.split()[0] == '/weather' or message.text.split()[0] == '/weather@chupakabrada_bot':
+        bot.register_next_step_handler(message, get_city_name)
 
 
 
@@ -206,4 +200,8 @@ def chat_id(message):
         bot.send_message(message.chat.id, chat_id_var)
 '''
 
-bot.polling(none_stop=True, interval=0, timeout=500)
+while True:
+    try:
+        bot.polling(none_stop=True, interval=0, timeout=500)
+    except:
+        pass
