@@ -49,7 +49,7 @@ def weather_send(temp: str):
     temp_send = str(temp)
     if int(temp) >= 0 and int(temp) < 10:
         temp_send = temp.replace(temp, '  ' + temp)
-    elif int(temp) < 0 and int(temp) > - 10:
+    elif int(temp) < 0 and int(temp) > -10:
         temp_send = temp.replace(temp, ' ' + temp)
     elif int(temp) > 10:
         temp_send = temp.replace(temp, ' ' + temp)
