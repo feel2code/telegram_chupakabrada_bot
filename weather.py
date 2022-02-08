@@ -17,10 +17,10 @@ def weather(id: str) -> str:
     temp_farenheit = (requestings['main'])['temp']
     temp_celsius = str(int(temp_farenheit - 273))
     return temp_celsius
-
+https://api.openweathermap.org/data/2.5/weather?q=saint-petersburg&appid=2442aef27fcf9e00ea6399da11e428e8
 
 k4 = weather('q=kazan')
-p4 = weather('q=saint-petersburg')
+p4 = weather('q=petersburg')
 m4 = weather('q=moscow')
 e4 = weather('id=1486209')
 b4 = weather('id=615532')
