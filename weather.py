@@ -54,7 +54,7 @@ def weather_send(temp: str):
     elif int(temp) > 10:
         temp_send = temp.replace(temp, ' ' + temp)
     what_to_send += (
-        "\n ``` " + temp_send + "° · " + full_weather_dict[temp] + " ```")
+        "\n ` " + temp_send + "° · " + full_weather_dict[temp] + " `")
     if full_weather_dict[str(min_weather)] == full_weather_dict[temp]:
         what_to_send += ' ❄️'
     elif full_weather_dict[str(max_weather)] == full_weather_dict[temp]:
