@@ -20,7 +20,7 @@ def weather(id: str) -> str:
 
 
 k4 = weather('q=kazan')
-p4 = weather('id=498817')
+p4 = weather('q=saint-petersburg')
 m4 = weather('q=moscow')
 e4 = weather('id=1486209')
 b4 = weather('id=615532')
