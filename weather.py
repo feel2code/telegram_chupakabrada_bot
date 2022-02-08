@@ -48,11 +48,11 @@ def weather_send(temp: str):
     temp = str(temp)
     temp_send = str(temp)
     if int(temp) >= 0 and int(temp) < 10:
-        temp_send = temp.replace(temp, '  ' + temp)
+        temp_send = temp.replace(temp, '   ' + temp)
     elif int(temp) < 0 and int(temp) > - 10:
-        temp_send = temp.replace(temp, ' ' + temp)
+        temp_send = temp.replace(temp, '  ' + temp)
     elif int(temp) > 10:
-        temp_send = temp.replace(temp, ' ' + temp)
+        temp_send = temp.replace(temp, '  ' + temp)
     what_to_send += ('\n' + temp_send + ' °C · ' + full_weather_dict[temp])
     if full_weather_dict[str(min_weather)] == full_weather_dict[temp]:
         what_to_send += ' ❄️'
