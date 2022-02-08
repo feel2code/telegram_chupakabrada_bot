@@ -1,9 +1,10 @@
 import telebot
 import requests
 from conf import *
-from sys import argv
+# from sys import argv
 
-script, chat = argv
+chat = "442295142"
+# script, chat = argv
 bot = telebot.TeleBot(name)
 
 
@@ -48,12 +49,13 @@ def weather_send(temp: str):
     temp = str(temp)
     temp_send = str(temp)
     if int(temp) >= 0 and int(temp) < 10:
-        temp_send = temp.replace(temp, '   ' + temp)
+        temp_send = temp.replace(temp, '  ' + temp)
     elif int(temp) < 0 and int(temp) > - 10:
-        temp_send = temp.replace(temp, '  ' + temp)
+        temp_send = temp.replace(temp, ' ' + temp)
     elif int(temp) > 10:
-        temp_send = temp.replace(temp, '  ' + temp)
-    what_to_send += ('\n' + temp_send + ' °C · ' + full_weather_dict[temp])
+        temp_send = temp.replace(temp, ' ' + temp)
+    what_to_send += (
+        "\n ``` " + temp_send + "° · " + full_weather_dict[temp] + " ```")
     if full_weather_dict[str(min_weather)] == full_weather_dict[temp]:
         what_to_send += ' ❄️'
     elif full_weather_dict[str(max_weather)] == full_weather_dict[temp]:
@@ -63,4 +65,4 @@ def weather_send(temp: str):
 for city_weather in full_weather_list:
     weather_send(city_weather)
 
-bot.send_message(chat_id=chat, text=what_to_send)
+bot.send_message(chat_id=chat, text=what_to_send, parse_mode='Markdown')
