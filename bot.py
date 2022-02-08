@@ -81,9 +81,10 @@ def get_city_name(message):
 
 
 def add_city(message):
-    city = message.text.replace('/add ', '').replace(' ', '-')
-    cur.execute("insert into cities(chat_id, city_name) "
-                "values (%s, %s)"), (message.chat.id, city)
+    chat_id = message.chat.id
+    city_name = message.text.replace('/add ', '').replace(' ', '-')
+    cur.execute("insert into cities (chat_id, city_name) "
+                "values (%s, %s)"), (chat_id, city_name)
     conn_db.commit()
     what_to_send = 'Хорад горадок добавлен, ХУЯнДОК!'
     bot.send_message(message.chat.id, what_to_send)
