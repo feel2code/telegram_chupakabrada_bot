@@ -80,10 +80,24 @@ def get_city_name(message):
     bot.send_message(message.chat.id, what_to_send)
 
 
+def add_city(message):
+    city = message.text.replace('/add ', '').replace(' ', '-')
+    cur.execute(r"insert into cities(chat_id, city_name) values "
+                r"('" + message.chat.id
+                + "', '" + city + "'); ")
+    what_to_send = 'Хорад горадок добавлен, ХУЯнДОК!'
+    bot.send_message(message.chat.id, what_to_send)
+
+
 # catching text message or command for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     '''CATCHING COMMANDS'''
+    # add city
+    if message.text == '/add' or message.text == '/add@chupakabrada_bot':
+        bot.send_message(message.chat.id, 'Пиши камандю так: /add город')
+    elif message.text.split()[0] == '/add' or message.text.split()[0] == '/add@chupakabrada_bot':
+        bot.register_next_step_handler(message, add_city)
     # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
         bot.send_message(message.chat.id, 'Пиши камандю так: /weather город')

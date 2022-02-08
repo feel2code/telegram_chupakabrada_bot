@@ -17,7 +17,7 @@ def weather(id: str) -> str:
     temp_farenheit = (requestings['main'])['temp']
     temp_celsius = str(int(temp_farenheit - 273))
     return temp_celsius
-# https://api.openweathermap.org/data/2.5/weather?q=saint-petersburg&appid=2442aef27fcf9e00ea6399da11e428e8
+
 
 k4 = weather('q=kazan')
 p4 = weather('q=petersburg')
@@ -42,7 +42,7 @@ what_to_send = (
     'Вот вам ваша пагода па расписанию, палучаица:\n')
 
 
-def weather_send(temp: str):
+def weather_send(temp):
     '''Checking max or min temp and send emoji near temp'''
     global what_to_send
     temp = str(temp)
