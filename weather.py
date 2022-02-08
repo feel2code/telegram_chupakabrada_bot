@@ -1,10 +1,9 @@
 import telebot
 import requests
 from conf import *
-# from sys import argv
+from sys import argv
 
-chat = "442295142"
-# script, chat = argv
+script, chat = argv
 bot = telebot.TeleBot(name)
 
 
