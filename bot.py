@@ -80,14 +80,114 @@ def get_city_name(message):
     bot.send_message(message.chat.id, what_to_send)
 
 
+def weather(id: str) -> str:
+    requestings = requests.get(
+        'https://api.openweathermap.org/data/2.5/weather?q=' + id +
+        (
+             '&appid=' + go_weather
+        )
+    ).json()
+    temp_farenheit = (requestings['main'])['temp']
+    temp_celsius = str(int(temp_farenheit - 273))
+    return temp_celsius
+
+
+def get_weather_list(message):
+    global what_to_send
+    what_to_send = (
+        'Вот вам ваша пагода па списачку, палучаица:\n')
+    cur.execute("SELECT city_name FROM cities "
+                "where chat_id='" + str(message.chat.id) + "';")
+    fetched_from_db = cur.fetchall()
+    weathers_dict = {}
+    for i in range(0, len(fetched_from_db)):
+        city_db = str(fetched_from_db[i]).replace("('", "").replace("',)", "")
+        temp_key = weather(city_db)
+        weathers_dict[temp_key] = city_db
+
+    # find max and min weather in cities list
+    full_weather_list = list(weathers_dict.keys())
+    full_weather_list = [int(item) for item in full_weather_list]
+    if len(full_weather_list) != 0:
+        # max/min temp
+        max_weather = max(full_weather_list)
+        min_weather = min(full_weather_list)
+        for city_weather in full_weather_list:
+            weather_send(city_weather, weathers_dict, max_weather, min_weather)
+        bot.send_message(
+            chat_id=message.chat.id,
+            text=what_to_send,
+            parse_mode='Markdown')
+    else:
+        bot.send_message(
+            chat_id=message.chat.id,
+            text='Так нету харадов!',
+            parse_mode='Markdown')
+
+
+def weather_send(temp, weathers_dict, max_weather, min_weather):
+    global what_to_send
+    '''Checking max or min temp and send emoji near temp'''
+    temp = str(temp)
+    temp_send = str(temp)
+    if int(temp) >= 0 and int(temp) < 10:
+        temp_send = temp.replace(temp, '  ' + temp)
+    elif int(temp) < 0 and int(temp) > -10:
+        temp_send = temp.replace(temp, ' ' + temp)
+    elif int(temp) > 10:
+        temp_send = temp.replace(temp, ' ' + temp)
+    what_to_send += (
+        "\n ` " + temp_send + "° · " + weathers_dict[temp] + " `")
+    if weathers_dict[str(min_weather)] == weathers_dict[temp]:
+        what_to_send += ' ❄️'
+    elif weathers_dict[str(max_weather)] == weathers_dict[temp]:
+        what_to_send += ' 🔥'
+
+
 def add_city(message):
-    chat_id = message.chat.id
-    city_name = message.text.replace('/add ', '').replace(' ', '-')
-    cur.execute("insert into cities (chat_id, city_name) "
-                "values (%s, %s)"), (chat_id, city_name)
-    conn_db.commit()
-    what_to_send = 'Хорад горадок добавлен, ХУЯнДОК!'
+    chat_id = str(message.chat.id)
+    city_name = str(message.text).replace('/add ', '').replace(' ', '-').upper()
+    # checking if city not exists
+    try:
+        requestings = requests.get(
+            'https://api.openweathermap.org/data/2.5/weather?q=' + city_name +
+            (
+                '&appid=' + go_weather
+            )
+        ).json()
+        temp_farenheit = (requestings['main'])['temp']
+        temp_celsius_test = str(int(temp_farenheit - 273))
+    except:
+        temp_celsius_test = '999'
+    if temp_celsius_test != '999':
+        cur.execute("insert into cities (chat_id, city_name) "
+                    "values (%s, %s)", (chat_id, city_name))
+        conn_db.commit()
+        what_to_send = city_name + ' горадок добавлен, ХУЯнДОК!'
+    else:
+        what_to_send = 'Нету такова хорада, брехун!'
     bot.send_message(message.chat.id, what_to_send)
+
+
+def delete_city(message):
+    chat_id = str(message.chat.id)
+    city_name = message.text.replace('/delete ', '').replace(' ', '-').upper()
+    try:
+        cur.execute("SELECT city_name FROM cities where upper(city_name)='" + city_name + "'; ")
+        records = str(cur.fetchall())
+        if records != '[]':
+            try:
+                cur.execute("delete from cities where chat_id='" + chat_id
+                        + "' and upper(city_name)='" + city_name + "';")
+                conn_db.commit()
+                what_to_send = city_name + ' горадок удален, ХУЯнДОК!'
+                bot.send_message(message.chat.id, what_to_send)
+            except:
+                pass
+        else:
+            bot.send_message(message.chat.id, 'Шо та пашло ни па плану!')
+    except:
+        bot.send_message(message.chat.id, 'Шо та пашло ни па плану!')
 
 
 # catching text message or command for bot
@@ -98,12 +198,20 @@ def get_text_messages(message):
     if message.text == '/add' or message.text == '/add@chupakabrada_bot':
         bot.send_message(message.chat.id, 'Пиши камандю так: /add город')
     elif message.text.split()[0] == '/add' or message.text.split()[0] == '/add@chupakabrada_bot':
-        bot.register_next_step_handler(message, add_city)
+        add_city(message)
+    # delete city
+    if message.text == '/delete' or message.text == '/delete@chupakabrada_bot':
+        bot.send_message(message.chat.id, 'Пиши камандю так: /delete город')
+    elif message.text.split()[0] == '/delete' or message.text.split()[0] == '/delete@chupakabrada_bot':
+        delete_city(message)
     # weather on command
     if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
         bot.send_message(message.chat.id, 'Пиши камандю так: /weather город')
     elif message.text.split()[0] == '/weather' or message.text.split()[0] == '/weather@chupakabrada_bot':
-        bot.register_next_step_handler(message, get_city_name)
+        get_city_name(message)
+
+    if message.text == '/weather_list' or message.text == '/weather_list@chupakabrada_bot':
+        get_weather_list(message)
 
     # holiday on command
     if message.text == '/holiday' or message.text == '/holiday@chupakabrada_bot':
@@ -204,8 +312,5 @@ def chat_id(message):
         bot.send_message(message.chat.id, chat_id_var)
 '''
 
-while True:
-    try:
-        bot.polling(none_stop=True, interval=0, timeout=500)
-    except:
-        pass
+
+bot.polling(none_stop=True, interval=0, timeout=500)
