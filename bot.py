@@ -1,13 +1,3 @@
-"""
-This is funny bot for Telegram.
-Bot can dialog with user in private or group chats, can reply for  often used words and phrases in chat,
-can recommend stickers in chat by command.
-Bot can send weather info by command and by CRON at definite time,
-can send which holiday today in Russia by command and by CRON at definite time,
-can send coronavirus actual info in Russia by command and by CRON at definite time.
-Another JUST FOR FUN function - send one famous Russian YouTube streamer's quotes.
-"""
-
 import telebot
 from conf import *
 import random
@@ -33,7 +23,8 @@ def check(message):
     while i < b:
         quest = msg_check[i]
         try:
-            cur.execute(r"SELECT a.answer FROM questions as q join answers a on q.ans_id=a.ans_id where upper(q.question)='"
+            cur.execute(r"SELECT a.answer FROM questions as q join answers a "
+                        r"on q.ans_id=a.ans_id where upper(q.question)='"
                         + quest + "' ")
             records = cur.fetchall()
             rec = (str(records[0]).replace("('", "")).replace("',)", "")
@@ -63,24 +54,29 @@ def check(message):
 def query(ans_id, message):
     cur.execute("SELECT answer FROM answers where ans_id=" + str(ans_id) + " ")
     records = cur.fetchall()
-    rec = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
+    rec = (str(records[0]).replace("('", "")
+           ).replace("',)", "").replace(")", "")
     bot.send_message(message.chat.id, rec)
 
 
 def get_city_name(message):
     city = message.text.replace('/weather ', '').replace(' ', '-')
     try:
-        req = requests.get('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&appid=' + go_weather).json()
+        req = requests.get(
+            'https://api.openweathermap.org/data/2.5/weather?q=' + city
+            + '&appid=' + go_weather).json()
         city1 = req['main']
         city_temp = str(int(city1['temp'] - 273))
         cur.execute("SELECT answer FROM answers where ans_id=112")
         records = cur.fetchall()
-        what_to_send = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
+        what_to_send = (str(records[0]).replace("('", "")
+                        ).replace("',)", "").replace(")", "")
         what_to_send += ('\n ' + city_temp + ' °C ' + city)
     except:
         cur.execute("SELECT answer FROM answers where ans_id=111")
         records = cur.fetchall()
-        what_to_send = (str(records[0]).replace("('", "")).replace("',)", "").replace(")", "")
+        what_to_send = (str(records[0]).replace("('", "")
+                        ).replace("',)", "").replace(")", "")
     bot.send_message(message.chat.id, what_to_send)
 
 
@@ -94,13 +90,6 @@ def get_text_messages(message):
     elif message.text.split()[0] == '/weather' or message.text.split()[0] == '/weather@chupakabrada_bot':
         bot.register_next_step_handler(message, get_city_name)
 
-
-
-    # weather on command
-    # if message.text == '/weather' or message.text == '/weather@chupakabrada_bot':
-    #     bot.send_message(message.chat.id, 'А какой хород то?')
-    #     bot.register_next_step_handler(message, city_name)
-        # os.system('python3 /root/telegram_chupakabrada_bot/weather.py ' + str(message.chat.id))
     # holiday on command
     if message.text == '/holiday' or message.text == '/holiday@chupakabrada_bot':
         os.system('python3 /root/telegram_chupakabrada_bot/holiday.py ' + str(message.chat.id))
