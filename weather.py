@@ -1,5 +1,5 @@
 import telebot
-from conf import *
+from conf import name, conn, go_weather
 import psycopg2
 import requests
 from sys import argv

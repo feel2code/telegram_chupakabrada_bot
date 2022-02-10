@@ -1,7 +1,7 @@
 import telebot
 import requests
 from bs4 import BeautifulSoup
-from conf import *
+from conf import name
 from sys import argv
 
 script, chat = argv
@@ -21,16 +21,3 @@ what_to_send = 'Корона тайм зяблс. За сегодня в Рос�
                'Заболевших ' + sickChange + ' \n' \
                'Смертей ' + diedChange + ' \n'
 bot.send_message(chat_id=chat, text=what_to_send)
-
-'''
-# данные за сутки
-found = str(found).replace("[<cv-stats-virus :charts-data='[", '')
-found = found.replace("'></cv-stats-virus>", '')
-found = found.split(',')
-while len(found) != 4:
-    found.pop(4)
-sick = str(found[1]).replace('"sick":', '')
-healed = str(found[2]).replace('"healed":', '')
-died = str(found[3]).replace('"died":', '')
-died = died.replace('}', '')
-'''

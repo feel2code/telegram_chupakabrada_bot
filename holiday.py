@@ -1,7 +1,7 @@
 import telebot
 import requests
 from bs4 import BeautifulSoup
-from conf import *
+from conf import name
 from datetime import datetime
 from sys import argv
 
@@ -50,7 +50,8 @@ elif month == 12:
 
 today = []
 bot = telebot.TeleBot(name)
-page = requests.get('https://ru.wikipedia.org/wiki/' + 'Категория:Праздники_' + data)
+page = requests.get(
+    'https://ru.wikipedia.org/wiki/' + 'Категория:Праздники_' + data)
 soup = BeautifulSoup(page.text, "html.parser")
 for item in soup.select("li"):
     today.append(item.get_text())
@@ -66,4 +67,5 @@ case3 = case2.replace(']', '')
 case4 = case3.replace('[', '')
 case5 = case4.replace("'", "")
 case6 = case5.replace(r"\n", "\n")
-bot.send_message(chat_id=chat, text=('Сиводня палучаица ' + str(datetime.now().date()) + ': \n' + case6))
+bot.send_message(chat_id=chat, text=(
+    'Сиводня палучаица ' + str(datetime.now().date()) + ': \n' + case6))

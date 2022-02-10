@@ -1,5 +1,5 @@
 import telebot
-from conf import *
+from conf import name, conn, go_weather, key_for_stats
 import random
 import psycopg2
 import os
@@ -214,7 +214,7 @@ def get_weather_list(message):
     else:
         bot.send_message(
             chat_id=message.chat.id,
-            text='Так нету харадов!',
+            text='Так нету харадов! Добавь командой /add <город>',
             parse_mode='Markdown')
 
 
