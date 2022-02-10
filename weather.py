@@ -1,17 +1,23 @@
 import telebot
-import requests
 from conf import *
+import psycopg2
+import requests
 from sys import argv
 
 script, chat = argv
+# connection to Bot
 bot = telebot.TeleBot(name)
+
+# connection to DB
+conn_db = psycopg2.connect(conn)
+cur = conn_db.cursor()
 
 
 def weather(id: str) -> str:
     requestings = requests.get(
-        'https://api.openweathermap.org/data/2.5/weather?' + id +
+        'https://api.openweathermap.org/data/2.5/weather?q=' + id +
         (
-            '&appid=' + go_weather
+             '&appid=' + go_weather
         )
     ).json()
     temp_farenheit = (requestings['main'])['temp']
@@ -19,49 +25,81 @@ def weather(id: str) -> str:
     return temp_celsius
 
 
-k4 = weather('q=kazan')
-p4 = weather('q=petersburg')
-m4 = weather('q=moscow')
-e4 = weather('id=1486209')
-b4 = weather('id=615532')
-t4 = weather('id=611717')
-
-# find max and min weather in cities list
-full_weather_list = [k4, p4, m4, e4, b4, t4]
-full_weather_list = [int(item) for item in full_weather_list]
-full_weather_dict = {k4: 'Казань', p4: 'Питер',
-                     m4: 'Москва', e4: 'Екб',
-                     b4: 'Батуми', t4: 'Тбилиси'}
-
-# max/min temp
-max_weather = max(full_weather_list)
-min_weather = min(full_weather_list)
-
-what_to_send = (
-    'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
-    'Вот вам ваша пагода па расписанию, палучаица:\n')
+def add_temp_to_db(city_name, chat):
+    temp = weather(city_name)
+    cur.execute("update cities set temp=" + str(temp)
+                + " where city_name='" + city_name
+                + "' and chat_id='" + str(chat)
+                + "'; ")
+    conn_db.commit()
 
 
-def weather_send(temp):
-    '''Checking max or min temp and send emoji near temp'''
+def weather_send(city_db, min_weather, max_weather, length):
     global what_to_send
-    temp = str(temp)
-    temp_send = str(temp)
-    if int(temp) >= 0 and int(temp) < 10:
-        temp_send = temp.replace(temp, '  ' + temp)
-    elif int(temp) < 0 and int(temp) > -10:
-        temp_send = temp.replace(temp, ' ' + temp)
-    elif int(temp) > 10:
-        temp_send = temp.replace(temp, ' ' + temp)
+    '''Checking max or min temp and send emoji near temp'''
+    cur.execute("SELECT temp FROM cities where chat_id='"
+                + str(chat) + "' and city_name='"
+                + str(city_db) + "'; ")
+    temp = int(str(cur.fetchall()).replace('[(', '').replace(',)]', ''))
+    if temp >= 0 and temp < 10:
+        temp_spaces = '  '
+    elif (temp < 0 and int(temp) > -10) or temp > 10:
+        temp_spaces = ' '
+    else:
+        temp_spaces = ''
     what_to_send += (
-        "\n ` " + temp_send + "° · " + full_weather_dict[temp] + " `")
-    if full_weather_dict[str(min_weather)] == full_weather_dict[temp]:
-        what_to_send += ' ❄️'
-    elif full_weather_dict[str(max_weather)] == full_weather_dict[temp]:
-        what_to_send += ' 🔥'
+        "\n ` " + temp_spaces + str(temp) + "° · " + city_db + " `")
+    if length > 1:
+        if temp == min_weather:
+            what_to_send += ' ❄️'
+        elif temp == max_weather:
+            what_to_send += ' 🔥'
 
 
-for city_weather in full_weather_list:
-    weather_send(city_weather)
+def get_weather_list(chat):
+    global what_to_send
+    what_to_send = (
+        'Ну шо, с добрим утречком всех, мои зяблики, маи родненькие!\n\n'
+        'Вот вам ваша пагода па расписанию, палучаица:\n')
+    # getting cities list from DB
+    cur.execute("SELECT city_name FROM cities "
+                "where chat_id='" + str(chat) + "';")
+    fetched_from_db = cur.fetchall()
 
-bot.send_message(chat_id=chat, text=what_to_send, parse_mode='Markdown')
+    # updating temperatures in DB
+    for i in range(0, len(fetched_from_db)):
+        city_db = str(fetched_from_db[i]).replace("('", "").replace("',)", "")
+        add_temp_to_db(city_db, chat)
+
+    # find max and min weather in cities list
+    if len(fetched_from_db) != 0:
+        # max/min temp
+        cur.execute("SELECT max(temp) FROM cities "
+                    "where chat_id='" + str(chat) + "';")
+        max_weather = int(
+            str(cur.fetchall()).replace('[(', '').replace(',)]', ''))
+        cur.execute("SELECT min(temp) FROM cities "
+                    "where chat_id='" + str(chat) + "';")
+        min_weather = int(
+            str(cur.fetchall()).replace('[(', '').replace(',)]', ''))
+        # parsing each city and temp from db
+        for i in range(0, len(fetched_from_db)):
+            city_db = str(
+                fetched_from_db[i]).replace("('", "").replace("',)", "")
+            weather_send(city_db,
+                         min_weather,
+                         max_weather,
+                         len(fetched_from_db))
+
+        bot.send_message(
+            chat_id=chat,
+            text=what_to_send,
+            parse_mode='Markdown')
+    else:
+        bot.send_message(
+            chat_id=chat,
+            text='Так нету харадов!',
+            parse_mode='Markdown')
+
+
+get_weather_list(chat)
