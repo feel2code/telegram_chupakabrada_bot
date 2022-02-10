@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 import time
 import requests
+from hru import hru_list
 
 # connection to Bot
 bot = telebot.TeleBot(name)
@@ -222,6 +223,10 @@ def get_weather_list(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     '''CATCHING COMMANDS'''
+    # hru
+    if message.text == '/хрю':
+        hru = hru_list[random.randint(0, 21)]
+        bot.send_sticker(message.chat.id, hru)
     # add city
     if message.text == '/add' or message.text == '/add@chupakabrada_bot':
         bot.send_message(message.chat.id, 'Пиши камандю так: /add город')
