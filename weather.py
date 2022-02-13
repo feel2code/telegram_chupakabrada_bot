@@ -7,7 +7,6 @@ from sys import argv
 script, chat = argv
 # connection to Bot
 bot = telebot.TeleBot(name)
-
 # connection to DB
 conn_db = psycopg2.connect(conn)
 cur = conn_db.cursor()

@@ -73,7 +73,7 @@ def get_city_name(message):
         what_to_send = (str(records[0]).replace("('", "")
                         ).replace("',)", "").replace(")", "")
         what_to_send += ('\n ' + city_temp + ' °C ' + city)
-    except:
+    except KeyError:
         cur.execute("SELECT answer FROM answers where ans_id=111")
         records = cur.fetchall()
         what_to_send = (str(records[0]).replace("('", "")
@@ -107,7 +107,7 @@ def add_city(message):
         ).json()
         temp_farenheit = (requestings['main'])['temp']
         temp_celsius_test = str(int(temp_farenheit - 273))
-    except:
+    except KeyError:
         temp_celsius_test = '999'
     if temp_celsius_test != '999':
         cur.execute("insert into cities (chat_id, city_name) "
@@ -134,11 +134,11 @@ def delete_city(message):
                 conn_db.commit()
                 what_to_send = city_name + ' горадок удален, ХУЯнДОК!'
                 bot.send_message(message.chat.id, what_to_send)
-            except:
+            except KeyError:
                 pass
         else:
             bot.send_message(message.chat.id, 'Шо та пашло ни па плану!')
-    except:
+    except KeyError:
         bot.send_message(message.chat.id, 'Шо та пашло ни па плану!')
 
 

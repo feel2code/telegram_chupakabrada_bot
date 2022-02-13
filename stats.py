@@ -3,7 +3,6 @@ from conf import name, conn
 import psycopg2
 from tabulate import tabulate
 
-
 bot = telebot.TeleBot(name)
 conn_db = psycopg2.connect(conn)
 cur = conn_db.cursor()

@@ -7,10 +7,8 @@ import psycopg2
 
 script, chat = argv
 bot = telebot.TeleBot(name)
-
 conn_db = psycopg2.connect(conn)
 cur = conn_db.cursor()
-
 
 time.sleep(random.randint(1, 15800))
 cur.execute(
