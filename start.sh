@@ -11,4 +11,6 @@ fi
 # copying starting script loaded from github
 cp /root/telegram_chupakabrada_bot/start.sh /root/start.sh
 chmod +x /root/start.sh
+python3 install pip
+pip install -r requirements.txt
 screen -dm python3 /root/telegram_chupakabrada_bot/bot.py
