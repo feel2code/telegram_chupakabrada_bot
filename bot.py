@@ -220,12 +220,11 @@ def get_weather_list(message):
 
 
 def get_top_films(message):
-    bot.send_message(message.chat.id, 'Какова хода фильм нужен?')
     year = int(message.text)
-    cur.execute("select count(1) from films "
+    cur.execute("select min(id), max(id) from films "
                 f"where year='{year}'")
-    count_films = (cur.fetchall()[0])[0]
-    random_id = str(random.randint(0, count_films + 1))
+    count_films = cur.fetchall()[0]
+    random_id = str(random.randint(count_films[0], count_films[1] + 1))
     if year in range(2017, 2023):
         cur.execute("select film_name, year, link from films "
                     f"where id={random_id} and year='{year}'")
@@ -319,6 +318,10 @@ def get_text_messages(message):
     # random films from db
     if message.text == '/top_cinema' or message.text == (
             '/top_cinema@chupakabrada_bot'):
+        bot.send_message(
+            message.chat.id,
+            'Какова хода фильм нужен? В базе тока последние 5 годиков.'
+        )
         bot.register_next_step_handler(message, get_top_films)
     if message.text == '/random_cinema' or message.text == (
             '/random_cinema@chupakabrada_bot'):
@@ -336,9 +339,19 @@ def get_text_messages(message):
     # in chat and this word is in special dictionary
     msg = message.text.upper()
     cur.execute("SELECT msg_txt FROM messages")
-    msg_db = str(cur.fetchall()).replace('[', '')\
-        .replace("(\'", "").replace("\',),", " ")\
-        .replace(",),", "").replace("',)]", "").split()
+    msg_db = str(
+        cur.fetchall()
+        ).replace(
+            '[', ''
+        ).replace(
+            "(\'", ""
+        ).replace(
+            "\',),", " "
+        ).replace(
+            ",),", ""
+        ).replace(
+            "',)]", ""
+        ).split()
     if msg in msg_db:
         cur.execute("SELECT a.answer FROM answers a join messages m "
                     "on m.ans_id=a.ans_id where msg_txt='"
