@@ -219,6 +219,34 @@ def get_weather_list(message):
             parse_mode='Markdown')
 
 
+def get_top_films(message):
+    bot.send_message(message.chat.id, 'Какова хода фильм нужен?')
+    year = int(message.text)
+    cur.execute("select count(1) from films "
+                f"where year='{year}'")
+    count_films = (cur.fetchall()[0])[0]
+    random_id = str(random.randint(0, count_films + 1))
+    if year in range(2017, 2023):
+        cur.execute("select film_name, year, link from films "
+                    f"where id={random_id} and year='{year}'")
+        records = cur.fetchall()
+        print(records)
+        rec = (str(
+            records[0]
+            )).replace(
+                "('", ""
+            ).replace(
+                "',)", ""
+            ).replace(
+                "'", ""
+            ).replace(
+                ",", ' '
+            )
+        bot.send_message(message.chat.id, rec)
+    else:
+        bot.send_message(message.chat.id, 'Каво ти хочеш абманушки?')
+
+
 # catching text message or command for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
@@ -291,11 +319,7 @@ def get_text_messages(message):
     # random films from db
     if message.text == '/top_cinema' or message.text == (
             '/top_cinema@chupakabrada_bot'):
-        cur.execute("select film from films where "
-                    "film_id=" + str(random.randint(1, 250)) + " ")
-        records = cur.fetchall()
-        rec = (str(records[0]).replace("('", "")).replace("',)", "")
-        bot.send_message(message.chat.id, rec)
+        bot.register_next_step_handler(message, get_top_films)
     if message.text == '/random_cinema' or message.text == (
             '/random_cinema@chupakabrada_bot'):
         random_film = ('https://randomfilms.ru/film/'
