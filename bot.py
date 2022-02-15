@@ -26,7 +26,7 @@ def check(message):
             cur.execute(r"SELECT a.answer FROM questions as q join answers a "
                         r"on q.ans_id=a.ans_id where upper(q.question)='"
                         + quest + "' ")
-            rec = (cur.fetchone())[0]
+            rec = (cur.fetchall()[0])[0]
             if rec == '3 4 5 0 D':
                 rec = ''
                 query(103, message)
