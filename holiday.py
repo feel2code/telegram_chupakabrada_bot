@@ -1,22 +1,22 @@
 import telebot
 import requests
 from bs4 import BeautifulSoup
-from conf import name, conn
+from conf import bot_token, db_name
 from datetime import datetime
 from sys import argv
 import psycopg2
 
 script, chat = argv
-conn_db = psycopg2.connect(conn)
+conn_db = psycopg2.connect(db_name)
 cur = conn_db.cursor()
 day = datetime.now().day
 month = datetime.now().month
+bot = telebot.TeleBot(bot_token)
 
 cur.execute("SELECT month_name FROM months where id=" + str(month) + "; ")
 fetched_month_name = str(cur.fetchall()).replace("[('", "").replace("',)]", "")
 data = str(day) + '_' + fetched_month_name
 today = []
-bot = telebot.TeleBot(name)
 page = requests.get(
     'https://ru.wikipedia.org/wiki/' + 'Категория:Праздники_' + data)
 soup = BeautifulSoup(page.text, "html.parser")

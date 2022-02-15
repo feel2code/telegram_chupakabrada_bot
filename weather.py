@@ -1,14 +1,14 @@
 import telebot
-from conf import name, conn, go_weather
+from conf import bot_token, db_name, weather_token
 import psycopg2
 import requests
 from sys import argv
 
 script, chat = argv
 # connection to Bot
-bot = telebot.TeleBot(name)
+bot = telebot.TeleBot(bot_token)
 # connection to DB
-conn_db = psycopg2.connect(conn)
+conn_db = psycopg2.connect(db_name)
 cur = conn_db.cursor()
 
 
@@ -16,7 +16,7 @@ def weather(id: str) -> str:
     requestings = requests.get(
         'https://api.openweathermap.org/data/2.5/weather?q=' + id +
         (
-             '&appid=' + go_weather
+             '&appid=' + weather_token
         )
     ).json()
     temp_farenheit = (requestings['main'])['temp']

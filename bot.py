@@ -1,19 +1,18 @@
 import telebot
-from conf import name, conn, go_weather, key_for_stats
+from conf import bot_token, db_name, weather_token, key_for_stats
 import random
 import psycopg2
 import os
 from datetime import datetime
 import time
 import requests
-from hru import hru_list
 
+TEMPERATURE_NOT_EXIST = '999'
 # connection to Bot
-bot = telebot.TeleBot(name)
-
+bot = telebot.TeleBot(bot_token)
 # connection to DB
-conn_db = psycopg2.connect(conn)
-cur = conn_db.cursor()
+conn_db = psycopg2.connect(db_name)
+cur = psycopg2.connect(db_name).cursor()
 
 
 # checking does message has any word in list from dictionary
@@ -27,8 +26,7 @@ def check(message):
             cur.execute(r"SELECT a.answer FROM questions as q join answers a "
                         r"on q.ans_id=a.ans_id where upper(q.question)='"
                         + quest + "' ")
-            records = cur.fetchall()
-            rec = (str(records[0]).replace("('", "")).replace("',)", "")
+            rec = cur.fetchone()[0]
             if rec == '3 4 5 0 D':
                 rec = ''
                 query(103, message)
@@ -51,13 +49,32 @@ def check(message):
             i += 1
 
 
+def one_message(message):
+    cur.execute('select count(1) from messages')
+    msg_length = (cur.fetchall()[0])[0]
+    cur.execute("SELECT msg_txt FROM messages")
+    msg_db = cur.fetchall()
+    msg_list = []
+    for i in range(0, msg_length):
+        msg_list.append((msg_db[i])[0])
+    if message.text.upper() in msg_list:
+        cur.execute(f"SELECT a.answer FROM answers a join messages m on "
+                    f"m.ans_id=a.ans_id where "
+                    f"msg_txt='{message.text.upper()}'")
+        records = cur.fetchone()[0]
+        bot.send_message(message.chat.id, records)
+
+
 # query from db, get answer to send
 def query(ans_id, message):
-    cur.execute("SELECT answer FROM answers where ans_id=" + str(ans_id) + " ")
-    records = cur.fetchall()
-    rec = (str(records[0]).replace("('", "")
-           ).replace("',)", "").replace(")", "")
-    bot.send_message(message.chat.id, rec)
+    cur.execute(f"SELECT answer FROM answers where ans_id={ans_id}")
+    result = cur.fetchone()[0]
+    bot.send_message(message.chat.id, result)
+
+
+def simple_query(ans_id):
+    cur.execute(f"SELECT answer FROM answers where ans_id={ans_id}")
+    return cur.fetchone()[0]
 
 
 def get_city_name(message):
@@ -65,28 +82,22 @@ def get_city_name(message):
     try:
         req = requests.get(
             'https://api.openweathermap.org/data/2.5/weather?q=' + city
-            + '&appid=' + go_weather).json()
+            + '&appid=' + weather_token).json()
         city1 = req['main']
         city_temp = str(int(city1['temp'] - 273))
         cur.execute("SELECT answer FROM answers where ans_id=112")
-        records = cur.fetchall()
-        what_to_send = (str(records[0]).replace("('", "")
-                        ).replace("',)", "").replace(")", "")
+        what_to_send = (cur.fetchall()[0])[0]
         what_to_send += ('\n ' + city_temp + ' °C ' + city)
     except KeyError:
         cur.execute("SELECT answer FROM answers where ans_id=111")
-        records = cur.fetchall()
-        what_to_send = (str(records[0]).replace("('", "")
-                        ).replace("',)", "").replace(")", "")
+        what_to_send = (cur.fetchall()[0])[0]
     bot.send_message(message.chat.id, what_to_send)
 
 
 def weather(id: str) -> str:
     requestings = requests.get(
-        'https://api.openweathermap.org/data/2.5/weather?q=' + id +
-        (
-             '&appid=' + go_weather
-        )
+        f'https://api.openweathermap.org/data/2.5/'
+        f'weather?q={id}&appid={weather_token}'
     ).json()
     temp_farenheit = (requestings['main'])['temp']
     temp_celsius = str(int(temp_farenheit - 273))
@@ -102,20 +113,20 @@ def add_city(message):
         requestings = requests.get(
             'https://api.openweathermap.org/data/2.5/weather?q=' + city_name +
             (
-                '&appid=' + go_weather
+                '&appid=' + weather_token
             )
         ).json()
         temp_farenheit = (requestings['main'])['temp']
         temp_celsius_test = str(int(temp_farenheit - 273))
     except KeyError:
-        temp_celsius_test = '999'
-    if temp_celsius_test != '999':
+        temp_celsius_test = TEMPERATURE_NOT_EXIST
+    if temp_celsius_test != TEMPERATURE_NOT_EXIST:
         cur.execute("insert into cities (chat_id, city_name) "
                     "values (%s, %s)", (chat_id, city_name))
         conn_db.commit()
-        what_to_send = city_name + ' горадок добавлен, ХУЯнДОК!'
+        what_to_send = city_name + ' ' + simple_query(121)
     else:
-        what_to_send = 'Нету такова хорада, брехун!'
+        what_to_send = simple_query(119)
     bot.send_message(message.chat.id, what_to_send)
 
 
@@ -132,14 +143,14 @@ def delete_city(message):
                 cur.execute("delete from cities where chat_id='" + chat_id
                             + "' and upper(city_name)='" + city_name + "';")
                 conn_db.commit()
-                what_to_send = city_name + ' горадок удален, ХУЯнДОК!'
+                what_to_send = city_name + ' ' + simple_query(121)
                 bot.send_message(message.chat.id, what_to_send)
             except KeyError:
                 pass
         else:
-            bot.send_message(message.chat.id, 'Шо та пашло ни па плану!')
+            bot.send_message(message.chat.id, simple_query(115))
     except KeyError:
-        bot.send_message(message.chat.id, 'Шо та пашло ни па плану!')
+        bot.send_message(message.chat.id, simple_query(115))
 
 
 def add_temp_to_db(city_name, chat):
@@ -157,7 +168,7 @@ def weather_send(message, city_db, min_weather, max_weather, length):
     cur.execute("SELECT temp FROM cities where chat_id='"
                 + str(message.chat.id) + "' and city_name='"
                 + str(city_db) + "'; ")
-    temp = int(str(cur.fetchall()).replace('[(', '').replace(',)]', ''))
+    temp = int(cur.fetchone()[0])
     if temp >= 0 and temp < 10:
         temp_spaces = '  '
     elif (temp < 0 and int(temp) > -10) or temp > 10:
@@ -175,8 +186,7 @@ def weather_send(message, city_db, min_weather, max_weather, length):
 
 def get_weather_list(message):
     global what_to_send
-    what_to_send = (
-        'Вот вам ваша пагода па списачку, палучаица:\n')
+    what_to_send = simple_query(122) + '\n'
     # getting cities list from DB
     cur.execute("SELECT city_name FROM cities "
                 "where chat_id='" + str(message.chat.id) + "';")
@@ -184,7 +194,7 @@ def get_weather_list(message):
 
     # updating temperatures in DB
     for i in range(0, len(fetched_from_db)):
-        city_db = str(fetched_from_db[i]).replace("('", "").replace("',)", "")
+        city_db = str((fetched_from_db[i])[0])
         add_temp_to_db(city_db, message.chat.id)
 
     # find max and min weather in cities list
@@ -192,16 +202,13 @@ def get_weather_list(message):
         # max/min temp
         cur.execute("SELECT max(temp) FROM cities "
                     "where chat_id='" + str(message.chat.id) + "';")
-        max_weather = int(
-            str(cur.fetchall()).replace('[(', '').replace(',)]', ''))
+        max_weather = int((cur.fetchall()[0])[0])
         cur.execute("SELECT min(temp) FROM cities "
                     "where chat_id='" + str(message.chat.id) + "';")
-        min_weather = int(
-            str(cur.fetchall()).replace('[(', '').replace(',)]', ''))
+        min_weather = int((cur.fetchall()[0])[0])
         # parsing each city and temp from db
         for i in range(0, len(fetched_from_db)):
-            city_db = str(
-                fetched_from_db[i]).replace("('", "").replace("',)", "")
+            city_db = str((fetched_from_db[i])[0])
             weather_send(message,
                          city_db,
                          min_weather,
@@ -215,7 +222,7 @@ def get_weather_list(message):
     else:
         bot.send_message(
             chat_id=message.chat.id,
-            text='Так нету харадов! Добавь командой /add <город>',
+            text=simple_query(116),
             parse_mode='Markdown')
 
 
@@ -229,24 +236,19 @@ def get_top_films(message):
             random_id = str(random.randint(count_films[0], count_films[1] + 1))
             cur.execute("select film_name, year, link from films "
                         f"where id={random_id} and year='{year}'")
-            records = cur.fetchall()
-            print(records)
-            rec = (str(
-                records[0]
-                )).replace(
-                    "('", ""
-                ).replace(
-                    "',)", ""
-                ).replace(
-                    "'", ""
-                ).replace(
-                    ",", ' '
-                )
-            bot.send_message(message.chat.id, rec)
+            records = ' '.join(cur.fetchall()[0])
+            bot.send_message(message.chat.id, records)
         else:
-            bot.send_message(message.chat.id, 'Каво ти хочеш абманушки?')
+            bot.send_message(message.chat.id, simple_query(117))
     except ValueError:
-        bot.send_message(message.chat.id, 'Каво ти хочеш абманушки?')
+        bot.send_message(message.chat.id, simple_query(117))
+
+
+def hru(message):
+    random_id = str(random.randint(1, 23))
+    cur.execute(f"SELECT sticker_id FROM pig_stickers where id={random_id}")
+    sticker_id = (cur.fetchall()[0])[0]
+    bot.send_sticker(message.chat.id, sticker_id)
 
 
 # catching text message or command for bot
@@ -255,24 +257,23 @@ def get_text_messages(message):
     '''CATCHING COMMANDS'''
     # hru
     if message.text == '/хрю':
-        hru = hru_list[random.randint(0, 21)]
-        bot.send_sticker(message.chat.id, hru)
+        hru(message)
     # add city
     if message.text == '/add' or message.text == '/add@chupakabrada_bot':
-        bot.send_message(message.chat.id, 'Пиши камандю так: /add город')
+        bot.send_message(message.chat.id, simple_query(123))
     elif message.text.split()[0] == '/add' or message.text.split()[0] == (
             '/add@chupakabrada_bot'):
         add_city(message)
     # delete city
     if message.text == '/delete' or message.text == '/delete@chupakabrada_bot':
-        bot.send_message(message.chat.id, 'Пиши камандю так: /delete город')
+        bot.send_message(message.chat.id, simple_query(124))
     elif message.text.split()[0] == '/delete' or message.text.split()[0] == (
             '/delete@chupakabrada_bot'):
         delete_city(message)
     # weather on command
     if message.text == '/weather' or message.text == (
             '/weather@chupakabrada_bot'):
-        bot.send_message(message.chat.id, 'Пиши камандю так: /weather город')
+        bot.send_message(message.chat.id, simple_query(125))
     elif message.text.split()[0] == '/weather' or message.text.split()[0] == (
             '/weather@chupakabrada_bot'):
         get_city_name(message)
@@ -295,42 +296,35 @@ def get_text_messages(message):
             '/sticker@chupakabrada_bot'):
         query(51, message)
         for stick_id in range(1, 10):
-            cur.execute("SELECT sticker FROM stickers "
-                        "where sticker_id=" + str(stick_id) + " ")
-            records = cur.fetchall()
-            rec = (str(records[0]).replace("('", "")).replace("',)", "")
-            bot.send_sticker(message.chat.id, rec)
+            cur.execute(f"SELECT sticker FROM stickers "
+                        f"where sticker_id={stick_id} ")
+            records = cur.fetchone()[0]
+            bot.send_sticker(message.chat.id, records)
             time.sleep(0.100)
     # start bot
     if message.text == '/start' or message.text == '/start@chupakabrada_bot':
         cur.execute("SELECT start_text FROM start_q where start_id=1")
-        records = str(cur.fetchall()).replace("[('", "").replace("',)]", "")
+        records = cur.fetchone()[0]
         bot.send_message(message.chat.id, records)
     # about command
     if message.text == '/about' or message.text == '/about@chupakabrada_bot':
         cur.execute("SELECT about_text FROM about where about_id=1")
-        records = str(cur.fetchall()).replace("[('", "").replace("',)]", "")
+        records = cur.fetchone()[0]
         bot.send_message(message.chat.id, records)
     # random quotes from db
     if message.text == '/quote' or message.text == '/quote@chupakabrada_bot':
         cur.execute("select quote from quotes where quote_id="
                     + str(random.randint(1, 180)) + " ")
-        records = cur.fetchall()
-        rec = (str(records[0]).replace("('", "")).replace("',)", "")
-        bot.send_message(message.chat.id, rec)
+        records = cur.fetchone()[0]
+        bot.send_message(message.chat.id, records)
     # random films from db
     if message.text == '/top_cinema' or message.text == (
             '/top_cinema@chupakabrada_bot'):
         bot.send_message(
             message.chat.id,
-            'Какова хода фильм нужен? В базе тока последние 5 годиков.'
+            simple_query(118)
         )
         bot.register_next_step_handler(message, get_top_films)
-    if message.text == '/random_cinema' or message.text == (
-            '/random_cinema@chupakabrada_bot'):
-        random_film = ('https://randomfilms.ru/film/'
-                       + str(random.randint(1, 9600)))
-        bot.send_message(message.chat.id, random_film)
     if message.text == key_for_stats:
         os.system('python3 /root/telegram_chupakabrada_bot/stats.py')
 
@@ -340,29 +334,7 @@ def get_text_messages(message):
 
     # bot sends message if only one word sent by user
     # in chat and this word is in special dictionary
-    msg = message.text.upper()
-    cur.execute("SELECT msg_txt FROM messages")
-    msg_db = str(
-        cur.fetchall()
-        ).replace(
-            '[', ''
-        ).replace(
-            "(\'", ""
-        ).replace(
-            "\',),", " "
-        ).replace(
-            ",),", ""
-        ).replace(
-            "',)]", ""
-        ).split()
-    if msg in msg_db:
-        cur.execute("SELECT a.answer FROM answers a join messages m "
-                    "on m.ans_id=a.ans_id where msg_txt='"
-                    + msg + "' ")
-        records = cur.fetchall()
-        rec = (str(
-            records[0]).replace("('", "")).replace("',)", "").replace(")", "")
-        bot.send_message(message.chat.id, rec)
+    one_message(message)
 
     # analytics
     st_chat_id = str(message.chat.id)

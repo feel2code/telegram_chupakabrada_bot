@@ -1,12 +1,12 @@
 import telebot
 import requests
 from bs4 import BeautifulSoup
-from conf import name
+from conf import bot_token
 from sys import argv
 
 script, chat = argv
 
-bot = telebot.TeleBot(name)
+bot = telebot.TeleBot(bot_token)
 page = requests.get('https://стопкоронавирус.рф/information/')
 soup = BeautifulSoup(page.text, "html.parser")
 found = str(soup.select('cv-stats-virus')).split(':stats-data=')

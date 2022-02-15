@@ -1,10 +1,10 @@
 import telebot
-from conf import name, conn
+from conf import bot_token, db_name, admin_chat
 import psycopg2
 from tabulate import tabulate
 
-bot = telebot.TeleBot(name)
-conn_db = psycopg2.connect(conn)
+bot = telebot.TeleBot(bot_token)
+conn_db = psycopg2.connect(db_name)
 cur = conn_db.cursor()
 cur.execute("select * from (select '1' as Номер, "
             "'Всего отсылок' as Статистика, "
@@ -25,5 +25,4 @@ cur.execute("select * from (select '1' as Номер, "
             "order by Номер ")
 records = cur.fetchall()
 what_to_send = (tabulate(records))
-chat = "442295142"
-bot.send_message(chat_id=chat, text=what_to_send)
+bot.send_message(chat_id=admin_chat, text=what_to_send)
