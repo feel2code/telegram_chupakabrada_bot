@@ -220,29 +220,32 @@ def get_weather_list(message):
 
 
 def get_top_films(message):
-    year = int(message.text)
-    cur.execute("select min(id), max(id) from films "
-                f"where year='{year}'")
-    count_films = cur.fetchall()[0]
-    random_id = str(random.randint(count_films[0], count_films[1] + 1))
-    if year in range(2017, 2023):
-        cur.execute("select film_name, year, link from films "
-                    f"where id={random_id} and year='{year}'")
-        records = cur.fetchall()
-        print(records)
-        rec = (str(
-            records[0]
-            )).replace(
-                "('", ""
-            ).replace(
-                "',)", ""
-            ).replace(
-                "'", ""
-            ).replace(
-                ",", ' '
-            )
-        bot.send_message(message.chat.id, rec)
-    else:
+    try:
+        year = int(message.text)
+        if year in range(2017, 2023):
+            cur.execute("select min(id), max(id) from films "
+                        f"where year='{year}'")
+            count_films = cur.fetchall()[0]
+            random_id = str(random.randint(count_films[0], count_films[1] + 1))
+            cur.execute("select film_name, year, link from films "
+                        f"where id={random_id} and year='{year}'")
+            records = cur.fetchall()
+            print(records)
+            rec = (str(
+                records[0]
+                )).replace(
+                    "('", ""
+                ).replace(
+                    "',)", ""
+                ).replace(
+                    "'", ""
+                ).replace(
+                    ",", ' '
+                )
+            bot.send_message(message.chat.id, rec)
+        else:
+            bot.send_message(message.chat.id, 'Каво ти хочеш абманушки?')
+    except ValueError:
         bot.send_message(message.chat.id, 'Каво ти хочеш абманушки?')
 
 
