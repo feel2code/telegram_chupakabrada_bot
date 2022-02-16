@@ -245,8 +245,15 @@ def get_top_films(message):
 
 
 def hru(message):
-    random_id = str(random.randint(1, 23))
+    random_id = str(random.randint(1, 12))
     cur.execute(f"SELECT sticker_id FROM pig_stickers where id={random_id}")
+    sticker_id = (cur.fetchall()[0])[0]
+    bot.send_sticker(message.chat.id, sticker_id)
+
+
+def gav(message):
+    random_id = str(random.randint(1, 23))
+    cur.execute(f"SELECT sticker_id FROM dog_stickers where id={random_id}")
     sticker_id = (cur.fetchall()[0])[0]
     bot.send_sticker(message.chat.id, sticker_id)
 
@@ -258,6 +265,9 @@ def get_text_messages(message):
     # hru
     if message.text == '/хрю':
         hru(message)
+    # gav
+    if message.text == '/гав':
+        gav(message)
     # add city
     if message.text == '/add' or message.text == '/add@chupakabrada_bot':
         bot.send_message(message.chat.id, simple_query(123))
@@ -365,12 +375,12 @@ def get_audio_messages(audio):
 
 
 # auxiliary.py
-'''
 # for getting sticker id
+'''
 @bot.message_handler(content_types=["sticker"])
 def send_sticker(message):
     sticker_id = message.sticker.file_id
-    bot.send_message(message.chat.id, sticker_id)
+    print(sticker_id)
 
 
 # for getting chat id
