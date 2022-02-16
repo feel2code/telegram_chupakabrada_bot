@@ -245,14 +245,14 @@ def get_top_films(message):
 
 
 def hru(message):
-    random_id = str(random.randint(1, 23))
+    random_id = str(random.randint(1, 22))
     cur.execute(f"SELECT sticker_id FROM pig_stickers where id={random_id}")
     sticker_id = (cur.fetchall()[0])[0]
     bot.send_sticker(message.chat.id, sticker_id)
 
 
 def gav(message):
-    random_id = str(random.randint(1, 12))
+    random_id = str(random.randint(1, 11))
     cur.execute(f"SELECT sticker_id FROM dog_stickers where id={random_id}")
     sticker_id = (cur.fetchall()[0])[0]
     bot.send_sticker(message.chat.id, sticker_id)
