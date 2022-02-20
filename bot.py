@@ -125,7 +125,6 @@ def add_city(message):
         cur.execute("insert into cities (chat_id, city_name) "
                     "values (%s, %s)", (chat_id, city_name))
         conn_db.commit()
-        conn_db.close()
         what_to_send = city_name + ' ' + simple_query(121)
     else:
         what_to_send = simple_query(119)
