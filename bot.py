@@ -1,5 +1,5 @@
 import telebot
-from conf import bot_token, db_name, weather_token, key_for_stats
+from conf import db_name, bot_token, weather_token, key_for_stats
 import random
 import psycopg2
 import os
@@ -7,12 +7,13 @@ from datetime import datetime
 import time
 import requests
 
+
 TEMPERATURE_NOT_EXIST = '999'
 # connection to Bot
 bot = telebot.TeleBot(bot_token)
 # connection to DB
 conn_db = psycopg2.connect(db_name)
-cur = psycopg2.connect(db_name).cursor()
+cur = conn_db.cursor()
 
 
 # checking does message has any word in list from dictionary
@@ -124,6 +125,7 @@ def add_city(message):
         cur.execute("insert into cities (chat_id, city_name) "
                     "values (%s, %s)", (chat_id, city_name))
         conn_db.commit()
+        conn_db.close()
         what_to_send = city_name + ' ' + simple_query(121)
     else:
         what_to_send = simple_query(119)
@@ -143,7 +145,7 @@ def delete_city(message):
                 cur.execute("delete from cities where chat_id='" + chat_id
                             + "' and upper(city_name)='" + city_name + "';")
                 conn_db.commit()
-                what_to_send = city_name + ' ' + simple_query(121)
+                what_to_send = city_name + ' ' + simple_query(126)
                 bot.send_message(message.chat.id, what_to_send)
             except KeyError:
                 pass
@@ -354,10 +356,9 @@ def get_text_messages(message):
     )
     st_nick = str(message.from_user.username)
     st_date = datetime.now()
-    cur.execute("insert into stats (st_chat_id, st_name, st_nick, st_date) "
-                "values (%s, %s, %s, %s)", (
-                    st_chat_id, st_name, st_nick, st_date
-                    )
+    cur.execute(f"insert into stats (st_chat_id, st_name, st_nick, st_date) "
+                f"values ('{st_chat_id}', '{st_name}', "
+                f"'{st_nick}', '{st_date}');"
                 )
     conn_db.commit()
 
