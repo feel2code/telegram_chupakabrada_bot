@@ -172,7 +172,7 @@ def weather_send(message, city_db, min_weather, max_weather, length):
     temp = int(cur.fetchone()[0])
     if temp >= 0 and temp < 10:
         temp_spaces = '  '
-    elif (temp < 0 and int(temp) > -10) or temp > 10:
+    elif (temp < 0 and int(temp) > -10) or temp >= 10:
         temp_spaces = ' '
     else:
         temp_spaces = ''
