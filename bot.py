@@ -325,7 +325,7 @@ def get_text_messages(message):
     # random films from db
     if message.text == '/top_cinema' or message.text == (
             '/top_cinema@chupakabrada_bot'):
-        query(118)
+        query(118, message)
         bot.register_next_step_handler(message, get_top_films)
     if message.text == key_for_stats:
         os.system('python3 /root/telegram_chupakabrada_bot/stats.py')
