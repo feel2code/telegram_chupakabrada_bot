@@ -9,6 +9,11 @@ import requests
 
 
 TEMPERATURE_NOT_EXIST = '999'
+GODZILLA = '3 4 5 0 D'
+ZOO_DICT = {
+    'pig_stickers': 22,
+    'dog_stickers': 11,
+}
 # connection to Bot
 bot = telebot.TeleBot(bot_token)
 # connection to DB
@@ -19,16 +24,16 @@ cur = conn_db.cursor()
 # checking does message has any word in list from dictionary
 def check(message):
     msg_check = message.text.upper().split()
-    b = len(msg_check)
     i = 0
-    while i < b:
+    while i < len(msg_check):
         quest = msg_check[i]
         try:
-            cur.execute(r"SELECT a.answer FROM questions as q join answers a "
-                        r"on q.ans_id=a.ans_id where upper(q.question)='"
-                        + quest + "' ")
+            cur.execute(
+                f"SELECT a.answer FROM questions as q join answers a on "
+                f"q.ans_id=a.ans_id where upper(q.question)='{quest}' "
+            )
             rec = (cur.fetchall()[0])[0]
-            if rec == '3 4 5 0 D':
+            if rec == GODZILLA:
                 rec = ''
                 query(103, message)
                 time.sleep(1)
@@ -66,16 +71,15 @@ def one_message(message):
         bot.send_message(message.chat.id, records)
 
 
-# query from db, get answer to send
-def query(ans_id, message):
-    cur.execute(f"SELECT answer FROM answers where ans_id={ans_id}")
-    result = cur.fetchone()[0]
-    bot.send_message(message.chat.id, result)
-
-
 def simple_query(ans_id):
     cur.execute(f"SELECT answer FROM answers where ans_id={ans_id}")
     return cur.fetchone()[0]
+
+
+# query from db, get answer to send
+def query(ans_id, message):
+    result = simple_query(ans_id)
+    bot.send_message(message.chat.id, result)
 
 
 def get_city_name(message):
@@ -163,11 +167,11 @@ def add_temp_to_db(city_name, chat):
     conn_db.commit()
 
 
-def weather_send(message, city_db, min_weather, max_weather, length):
+def weather_send(chat_id, city_db, min_weather, max_weather, length):
     global what_to_send
     '''Checking max or min temp and send emoji near temp'''
     cur.execute("SELECT temp FROM cities where chat_id='"
-                + str(message.chat.id) + "' and city_name='"
+                + str(chat_id) + "' and city_name='"
                 + str(city_db) + "'; ")
     temp = int(cur.fetchone()[0])
     if temp >= 0 and temp < 10:
@@ -185,46 +189,42 @@ def weather_send(message, city_db, min_weather, max_weather, length):
             what_to_send += ' 🔥'
 
 
-def get_weather_list(message):
+def get_weather_list(chat_id):
     global what_to_send
     what_to_send = simple_query(122) + '\n'
     # getting cities list from DB
     cur.execute("SELECT city_name FROM cities "
-                "where chat_id='" + str(message.chat.id) + "';")
+                "where chat_id='" + str(chat_id) + "';")
     fetched_from_db = cur.fetchall()
 
     # updating temperatures in DB
     for i in range(0, len(fetched_from_db)):
         city_db = str((fetched_from_db[i])[0])
-        add_temp_to_db(city_db, message.chat.id)
+        add_temp_to_db(city_db, chat_id)
 
     # find max and min weather in cities list
     if len(fetched_from_db) != 0:
         # max/min temp
         cur.execute("SELECT max(temp) FROM cities "
-                    "where chat_id='" + str(message.chat.id) + "';")
+                    "where chat_id='" + str(chat_id) + "';")
         max_weather = int((cur.fetchall()[0])[0])
         cur.execute("SELECT min(temp) FROM cities "
-                    "where chat_id='" + str(message.chat.id) + "';")
+                    "where chat_id='" + str(chat_id) + "';")
         min_weather = int((cur.fetchall()[0])[0])
         # parsing each city and temp from db
         for i in range(0, len(fetched_from_db)):
             city_db = str((fetched_from_db[i])[0])
-            weather_send(message,
+            weather_send(chat_id,
                          city_db,
                          min_weather,
                          max_weather,
                          len(fetched_from_db))
-
-        bot.send_message(
-            chat_id=message.chat.id,
-            text=what_to_send,
-            parse_mode='Markdown')
     else:
-        bot.send_message(
-            chat_id=message.chat.id,
-            text=simple_query(116),
-            parse_mode='Markdown')
+        what_to_send = simple_query(116)
+    bot.send_message(
+        chat_id=chat_id,
+        text=what_to_send,
+        parse_mode='Markdown')
 
 
 def get_top_films(message):
@@ -237,24 +237,18 @@ def get_top_films(message):
             random_id = str(random.randint(count_films[0], count_films[1] + 1))
             cur.execute("select film_name, year, link from films "
                         f"where id={random_id} and year='{year}'")
-            records = ' '.join(cur.fetchall()[0])
-            bot.send_message(message.chat.id, records)
+            what_to_send = ' '.join(cur.fetchall()[0])
         else:
-            bot.send_message(message.chat.id, simple_query(117))
+            what_to_send = simple_query(117)
     except ValueError:
-        bot.send_message(message.chat.id, simple_query(117))
+        what_to_send = simple_query(117)
+    bot.send_message(message.chat.id, what_to_send)
 
 
-def hru(message):
-    random_id = str(random.randint(1, 22))
-    cur.execute(f"SELECT sticker_id FROM pig_stickers where id={random_id}")
-    sticker_id = (cur.fetchall()[0])[0]
-    bot.send_sticker(message.chat.id, sticker_id)
-
-
-def gav(message):
-    random_id = str(random.randint(1, 11))
-    cur.execute(f"SELECT sticker_id FROM dog_stickers where id={random_id}")
+def zoo(message, sticker_family, counter):
+    random_id = str(random.randint(1, counter))
+    cur.execute(f"SELECT sticker_id FROM {sticker_family}"
+                f" where id={random_id}")
     sticker_id = (cur.fetchall()[0])[0]
     bot.send_sticker(message.chat.id, sticker_id)
 
@@ -265,10 +259,10 @@ def get_text_messages(message):
     '''CATCHING COMMANDS'''
     # hru
     if message.text == '/хрю':
-        hru(message)
+        zoo(message, list(ZOO_DICT)[0], ZOO_DICT['pig_stickers'])
     # gav
     if message.text == '/гав':
-        gav(message)
+        zoo(message, list(ZOO_DICT)[1], ZOO_DICT['dog_stickers'])
     # add city
     if message.text == '/add' or message.text == '/add@chupakabrada_bot':
         bot.send_message(message.chat.id, simple_query(123))
@@ -291,7 +285,7 @@ def get_text_messages(message):
 
     if message.text == '/weather_list' or message.text == (
             '/weather_list@chupakabrada_bot'):
-        get_weather_list(message)
+        get_weather_list(message.chat.id)
 
     # holiday on command
     if message.text == '/holiday' or message.text == (
@@ -331,10 +325,7 @@ def get_text_messages(message):
     # random films from db
     if message.text == '/top_cinema' or message.text == (
             '/top_cinema@chupakabrada_bot'):
-        bot.send_message(
-            message.chat.id,
-            simple_query(118)
-        )
+        query(118)
         bot.register_next_step_handler(message, get_top_films)
     if message.text == key_for_stats:
         os.system('python3 /root/telegram_chupakabrada_bot/stats.py')
@@ -347,6 +338,8 @@ def get_text_messages(message):
     # in chat and this word is in special dictionary
     one_message(message)
 
+
+def analytics(message):
     # analytics
     st_chat_id = str(message.chat.id)
     st_name = (
@@ -374,22 +367,18 @@ def get_audio_messages(audio):
     query(50, audio)
 
 
-# auxiliary.py
 # for getting sticker id
-'''
-@bot.message_handler(content_types=["sticker"])
-def send_sticker(message):
-    sticker_id = message.sticker.file_id
-    print(sticker_id)
+# @bot.message_handler(content_types=["sticker"])
+# def send_sticker(message):
+#     sticker_id = message.sticker.file_id
+#     print(sticker_id)
 
 
-# for getting chat id
-@bot.message_handler(content_types=["text"])
-def chat_id(message):
-    if message.text == 'chat':
-        chat_id_var = message.chat.id
-        bot.send_message(message.chat.id, chat_id_var)
-'''
-
+# # for getting chat id
+# @bot.message_handler(content_types=["text"])
+# def chat_id(message):
+#     if message.text == 'chat':
+#         chat_id_var = message.chat.id
+#         bot.send_message(message.chat.id, chat_id_var)
 
 bot.polling(none_stop=True, interval=0, timeout=500)
