@@ -1,6 +1,6 @@
+from sqlite3 import ProgrammingError
 import telebot
 from conf import db_name, bot_token, weather_token, key_for_stats
-import random
 import psycopg2
 import os
 from datetime import datetime
@@ -10,9 +10,14 @@ import requests
 
 TEMPERATURE_NOT_EXIST = '999'
 GODZILLA = '3 4 5 0 D'
-ZOO_DICT = {
-    'pig_stickers': 22,
-    'dog_stickers': 11,
+ZOO_DICT = [
+    'pig_stickers',
+    'dog_stickers',
+]
+SELECTS = {
+    '/about': 'SELECT about_text FROM about where about_id=1',
+    '/quote': 'select quote from quotes order by random() limit 1',
+    '/start': 'SELECT start_text FROM start_q where start_id=1',
 }
 # connection to Bot
 bot = telebot.TeleBot(bot_token)
@@ -53,6 +58,8 @@ def check(message):
                 i += 1
         except IndexError:
             i += 1
+        except ProgrammingError:
+            i += 1
 
 
 def one_message(message):
@@ -72,30 +79,27 @@ def one_message(message):
 
 
 def simple_query(ans_id):
+    '''query from answers table'''
     cur.execute(f"SELECT answer FROM answers where ans_id={ans_id}")
     return cur.fetchone()[0]
 
 
-# query from db, get answer to send
 def query(ans_id, message):
-    result = simple_query(ans_id)
-    bot.send_message(message.chat.id, result)
+    '''send message to chat'''
+    bot.send_message(message.chat.id, simple_query(ans_id))
 
 
-def get_city_name(message):
+def weather_in_city(message):
     city = message.text.replace('/weather ', '').replace(' ', '-')
     try:
         req = requests.get(
             'https://api.openweathermap.org/data/2.5/weather?q=' + city
             + '&appid=' + weather_token).json()
-        city1 = req['main']
-        city_temp = str(int(city1['temp'] - 273))
-        cur.execute("SELECT answer FROM answers where ans_id=112")
-        what_to_send = (cur.fetchall()[0])[0]
+        city_temp = str(int((req['main'])['temp'] - 273))
+        what_to_send = simple_query(112)
         what_to_send += ('\n ' + city_temp + ' °C ' + city)
     except KeyError:
-        cur.execute("SELECT answer FROM answers where ans_id=111")
-        what_to_send = (cur.fetchall()[0])[0]
+        what_to_send = simple_query(111)
     bot.send_message(message.chat.id, what_to_send)
 
 
@@ -104,8 +108,7 @@ def weather(id: str) -> str:
         f'https://api.openweathermap.org/data/2.5/'
         f'weather?q={id}&appid={weather_token}'
     ).json()
-    temp_farenheit = (requestings['main'])['temp']
-    temp_celsius = str(int(temp_farenheit - 273))
+    temp_celsius = str(int((requestings['main'])['temp'] - 273))
     return temp_celsius
 
 
@@ -231,25 +234,22 @@ def get_top_films(message):
     try:
         year = int(message.text)
         if year in range(2017, 2023):
-            cur.execute("select min(id), max(id) from films "
-                        f"where year='{year}'")
-            count_films = cur.fetchall()[0]
-            random_id = str(random.randint(count_films[0], count_films[1] + 1))
             cur.execute("select film_name, year, link from films "
-                        f"where id={random_id} and year='{year}'")
+                        f"where year='{year}' order by random() limit 1")
             what_to_send = ' '.join(cur.fetchall()[0])
         else:
             what_to_send = simple_query(117)
+    except IndexError:
+        what_to_send = simple_query(117)
     except ValueError:
         what_to_send = simple_query(117)
     bot.send_message(message.chat.id, what_to_send)
 
 
-def zoo(message, sticker_family, counter):
-    random_id = str(random.randint(1, counter))
+def zoo(message, sticker_family):
     cur.execute(f"SELECT sticker_id FROM {sticker_family}"
-                f" where id={random_id}")
-    sticker_id = (cur.fetchall()[0])[0]
+                f" order by random() limit 1; ")
+    sticker_id = cur.fetchone()[0]
     bot.send_sticker(message.chat.id, sticker_id)
 
 
@@ -259,10 +259,10 @@ def get_text_messages(message):
     '''CATCHING COMMANDS'''
     # hru
     if message.text == '/хрю':
-        zoo(message, list(ZOO_DICT)[0], ZOO_DICT['pig_stickers'])
+        zoo(message, ZOO_DICT[0])
     # gav
     if message.text == '/гав':
-        zoo(message, list(ZOO_DICT)[1], ZOO_DICT['dog_stickers'])
+        zoo(message, ZOO_DICT[1])
     # add city
     if message.text == '/add' or message.text == '/add@chupakabrada_bot':
         bot.send_message(message.chat.id, simple_query(123))
@@ -281,7 +281,7 @@ def get_text_messages(message):
         bot.send_message(message.chat.id, simple_query(125))
     elif message.text.split()[0] == '/weather' or message.text.split()[0] == (
             '/weather@chupakabrada_bot'):
-        get_city_name(message)
+        weather_in_city(message)
 
     if message.text == '/weather_list' or message.text == (
             '/weather_list@chupakabrada_bot'):
@@ -305,21 +305,20 @@ def get_text_messages(message):
                         f"where sticker_id={stick_id} ")
             records = cur.fetchone()[0]
             bot.send_sticker(message.chat.id, records)
-            time.sleep(0.100)
+            time.sleep(0.200)
     # start bot
     if message.text == '/start' or message.text == '/start@chupakabrada_bot':
-        cur.execute("SELECT start_text FROM start_q where start_id=1")
+        cur.execute(SELECTS['/start'])
         records = cur.fetchone()[0]
         bot.send_message(message.chat.id, records)
     # about command
     if message.text == '/about' or message.text == '/about@chupakabrada_bot':
-        cur.execute("SELECT about_text FROM about where about_id=1")
+        cur.execute(SELECTS['/about'])
         records = cur.fetchone()[0]
         bot.send_message(message.chat.id, records)
     # random quotes from db
     if message.text == '/quote' or message.text == '/quote@chupakabrada_bot':
-        cur.execute("select quote from quotes where quote_id="
-                    + str(random.randint(1, 180)) + " ")
+        cur.execute(SELECTS['/quote'])
         records = cur.fetchone()[0]
         bot.send_message(message.chat.id, records)
     # random films from db
@@ -330,17 +329,12 @@ def get_text_messages(message):
     if message.text == key_for_stats:
         os.system('python3 /root/telegram_chupakabrada_bot/stats.py')
 
-    # CATCHING MESSAGES
-    # bot sends message if any word sent by user exists in DB
     check(message)
-
-    # bot sends message if only one word sent by user
-    # in chat and this word is in special dictionary
     one_message(message)
 
 
 def analytics(message):
-    # analytics
+    '''analytics'''
     st_chat_id = str(message.chat.id)
     st_name = (
         str(message.from_user.first_name)
@@ -355,15 +349,15 @@ def analytics(message):
     conn_db.commit()
 
 
-# catching audio files
 @bot.message_handler(content_types=['voice'])
 def get_voice_messages(voice):
+    '''catching voice'''
     query(49, voice)
 
 
-# catching audio files
 @bot.message_handler(content_types=['audio'])
 def get_audio_messages(audio):
+    '''catching audio files'''
     query(50, audio)
 
 
