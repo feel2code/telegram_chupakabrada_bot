@@ -31,7 +31,7 @@ def check_course():
         )
         connection_to_db.commit()
         bot = telebot.TeleBot(bot_token)
-        bot.send_message(chat_id=home_telega, text=f'Далар уже па {rate} руб.')
+        bot.send_message(chat_id=home_telega, text=f'Далар уже па {rate}₽')
     else:
         pass
 
