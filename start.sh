@@ -13,3 +13,4 @@ cp /root/telegram_chupakabrada_bot/start.sh /root/start.sh
 chmod +x /root/start.sh
 pip install -r /root/telegram_chupakabrada_bot/requirements.txt
 screen -dm python3 /root/telegram_chupakabrada_bot/bot.py
+screen -dm python3 /root/telegram_chupakabrada_bot/exchange.py

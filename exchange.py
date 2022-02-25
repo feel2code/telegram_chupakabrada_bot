@@ -4,9 +4,20 @@ from conf import db_name, bot_token, home_telega
 import psycopg2
 import requests
 import time
+import logging
+
 
 connection_to_db = psycopg2.connect(db_name)
 cursor = connection_to_db.cursor()
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename='exchange.log',
+    format=(
+        '%(asctime)s - %(module)s - %(levelname)s'
+        ' - %(funcName)s: %(lineno)d - %(message)s'
+        ),
+    datefmt='%H:%M:%S',
+    )
 
 
 def get_usd_course():

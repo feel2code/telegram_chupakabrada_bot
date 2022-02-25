@@ -6,6 +6,7 @@ import os
 from datetime import datetime
 import time
 import requests
+import logging
 
 
 TEMPERATURE_NOT_EXIST = '999'
@@ -19,11 +20,18 @@ SELECTS = {
     '/quote': 'select quote from quotes order by random() limit 1',
     '/start': 'SELECT start_text FROM start_q where start_id=1',
 }
-# connection to Bot
 bot = telebot.TeleBot(bot_token)
-# connection to DB
 conn_db = psycopg2.connect(db_name)
 cur = conn_db.cursor()
+logging.basicConfig(
+    level=logging.DEBUG,
+    filename='main.log',
+    format=(
+        '%(asctime)s - %(module)s - %(levelname)s'
+        ' - %(funcName)s: %(lineno)d - %(message)s'
+        ),
+    datefmt='%H:%M:%S',
+    )
 
 
 # checking does message has any word in list from dictionary
