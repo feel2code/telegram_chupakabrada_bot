@@ -22,7 +22,7 @@ logging.basicConfig(
 
 def get_usd_course():
     page = requests.get('https://quote.rbc.ru/ticker/59111')
-    time.sleep(2)
+    time.sleep(10)
     soup = BeautifulSoup(page.text, "html.parser")
     data = soup.find(
         'div', class_='chart__info__row js-ticker'
@@ -64,4 +64,4 @@ def check_course():
 
 while True:
     check_course()
-    time.sleep(10)
+    time.sleep(50)
