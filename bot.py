@@ -265,6 +265,7 @@ def zoo(message, sticker_family):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     '''CATCHING COMMANDS'''
+    analytics(message)
     # hru
     if message.text == '/хрю':
         zoo(message, ZOO_DICT[0])
