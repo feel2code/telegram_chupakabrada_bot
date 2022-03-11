@@ -1,6 +1,6 @@
 from sqlite3 import ProgrammingError
 import telebot
-from conf import db_name, bot_token, weather_token, key_for_stats
+from conf import db_name, bot_token, weather_token, key_for_stats, ban
 import psycopg2
 import os
 from datetime import datetime
@@ -46,6 +46,8 @@ def check(message):
                 f"q.ans_id=a.ans_id where upper(q.question)='{quest}' "
             )
             rec = (cur.fetchall()[0])[0]
+            if not rec:
+                break
             if rec == GODZILLA:
                 rec = ''
                 query(103, message)
@@ -340,6 +342,11 @@ def get_text_messages(message):
 
     check(message)
     one_message(message)
+    msg_check_ban: list = message.text.lower().split()
+    for word in msg_check_ban:
+        for msg_ban in ban:
+            if msg_ban in word.lower():
+                bot.delete_message(message.chat.id, message.id)
 
 
 def analytics(message):
