@@ -9,10 +9,11 @@ then
 rm -rf /root/install.sh
 fi
 # copying starting script loaded from github
-cp /root/telegram_chupakabrada_bot/start.sh /root/start.sh
-chmod +x /root/start.sh
-apt install python3-venv -yy
 cd telegram_chupakabrada_bot
+chmod +x install.sh
+chmod +x morning_messages.sh
+cp install.sh /root/install.sh
+apt install python3-venv -yy
 python3 -m venv venv
 source venv/bin/activate
 pip install -r /root/telegram_chupakabrada_bot/requirements.txt
