@@ -37,10 +37,8 @@ def add_city(message):
     # checking if city not exists
     try:
         requestings = requests.get(
-            'https://api.openweathermap.org/data/2.5/weather?q=' + city_name +
-            (
-                '&appid=' + weather_token
-            )
+            f'https://api.openweathermap.org/data/2.5/'
+            f'weather?q={city_name}&appid={weather_token}'
         ).json()
         temp_farenheit = (requestings['main'])['temp']
         temp_celsius_test = str(int(temp_farenheit - 273))

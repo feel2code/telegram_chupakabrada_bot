@@ -15,9 +15,9 @@ logging.basicConfig(
     format=(
         '%(asctime)s - %(module)s - %(levelname)s'
         ' - %(funcName)s: %(lineno)d - %(message)s'
-        ),
+    ),
     datefmt='%H:%M:%S',
-    )
+)
 
 
 def get_usd_course():
@@ -26,13 +26,15 @@ def get_usd_course():
     soup = BeautifulSoup(page.text, "html.parser")
     data = soup.find(
         'div', class_='chart__info__row js-ticker'
-        ).find('span', class_='chart__info__sum').text
+    ).find(
+        'span', class_='chart__info__sum'
+    ).text
     float_rate = float(
         data.replace('₽', '').replace(' ', '').replace(',', '.')
     )
     int_rate = int(float_rate)
     rate_remain = float_rate - int_rate
-    if int(rate_remain*10) in range(0, 4) or rate_remain in range(8, 10):
+    if int(rate_remain * 10) in range(0, 4) or rate_remain in range(8, 10):
         return int_rate
     else:
         return None

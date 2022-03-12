@@ -1,17 +1,11 @@
 import logging
 
 from connections import bot, cur
-from conf import key_for_stats, ban
+from conf import ban
 from analytics import analytics
-from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
-from holiday import holiday
-from selects import check, one_message, query, sticker_send
-from films import films_command
-from stats import send_statistics
-from today_corona import coronavirus
-from zoo import zoo
-from weather_module import (
-    weather_in_city, add_city, delete_city, get_weather_list)
+from constants import (
+    COMMANDS_FUNCS, COMMANDS_DO, COMMANDS_QUERY, SELECTS, ZOO_DICT)
+from selects import check, one_message, query, zoo
 
 
 logging.basicConfig(
@@ -20,36 +14,22 @@ logging.basicConfig(
     format=(
         '%(asctime)s - %(module)s - %(levelname)s'
         ' - %(funcName)s: %(lineno)d - %(message)s'
-        ),
+    ),
     datefmt='%H:%M:%S',
-    )
-
-
-COMMANDS_FUNCS = {
-    key_for_stats: send_statistics,
-    '/weather_list': get_weather_list,
-    '/weather_list@chupakabrada_bot': get_weather_list,
-    '/holiday': holiday,
-    '/holiday@chupakabrada_bot': holiday,
-    '/corona': coronavirus,
-    '/corona@chupakabrada_bot': coronavirus,
-    '/sticker': sticker_send,
-    '/sticker@chupakabrada_bot': sticker_send,
-}
+)
 
 
 # catching text messages or commands for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     '''CATCHING COMMANDS'''
+    deleting_msg(message)
     analytics(message)
     check(message)
     one_message(message)
 
     if message.text in SELECTS:
-        cur.execute(SELECTS[message.text])
-        records = cur.fetchone()[0]
-        bot.send_message(message.chat.id, records)
+        standard_commands(message)
 
     if message.text in COMMANDS_FUNCS:
         COMMANDS_FUNCS[message.text](message.chat.id)
@@ -59,32 +39,23 @@ def get_text_messages(message):
 
     if message.text in COMMANDS_QUERY:
         query(COMMANDS_QUERY[message.text], message.chat.id)
-    # add city
-    elif message.text.split()[0] == '/add' or message.text.split()[0] == (
-            '/add@chupakabrada_bot'):
-        add_city(message)
-    # delete city
-    elif message.text.split()[0] == '/delete' or message.text.split()[0] == (
-            '/delete@chupakabrada_bot'):
-        delete_city(message)
+    elif message.text.split()[0] in COMMANDS_DO:
+        COMMANDS_DO[message.text.split()[0]](message)
 
-    # top_cinema
-    if message.text == '/top_cinema' or message.text == (
-        '/top_cinema@chupakabrada_bot'
-    ):
-        films_command(message)
 
-    # weather on command
-    if message.text.split()[0] == '/weather' or message.text.split()[0] == (
-            '/weather@chupakabrada_bot'):
-        weather_in_city(message)
-
-    # delete unappropriate words
+def deleting_msg(message):
+    """delete unappropriate words"""
     msg_check_ban: list = message.text.lower().split()
     for word in msg_check_ban:
         for msg_ban in ban:
             if msg_ban in word.lower():
                 bot.delete_message(message.chat.id, message.id)
+
+
+def standard_commands(message):
+    cur.execute(SELECTS[message.text])
+    records = cur.fetchone()[0]
+    bot.send_message(message.chat.id, records)
 
 
 @bot.message_handler(content_types=['voice'])
