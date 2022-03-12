@@ -1,11 +1,16 @@
 import logging
 
 from connections import bot, cur
-from conf import ban
+from conf import ban, key_for_stats
 from analytics import analytics
-from constants import (
-    COMMANDS_FUNCS, COMMANDS_DO, COMMANDS_QUERY, SELECTS, ZOO_DICT)
-from selects import check, one_message, query, zoo
+from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
+from films import films_command
+from holiday import holiday
+from selects import check, one_message, query, sticker_send, zoo
+from stats import send_statistics
+from today_corona import coronavirus
+from weather_module import (
+    add_city, delete_city, get_weather_list, weather_in_city)
 
 
 logging.basicConfig(
@@ -17,6 +22,29 @@ logging.basicConfig(
     ),
     datefmt='%H:%M:%S',
 )
+
+COMMANDS_DO = {
+    '/add': add_city,
+    '/add@chupakabrada_bot': add_city,
+    '/delete': delete_city,
+    '/delete@chupakabrada_bot': delete_city,
+    '/weather': weather_in_city,
+    '/weather@chupakabrada_bot': weather_in_city,
+    '/top_cinema': films_command,
+    '/top_cinema@chupakabrada_bot': films_command,
+}
+
+COMMANDS_FUNCS = {
+    key_for_stats: send_statistics,
+    '/weather_list': get_weather_list,
+    '/weather_list@chupakabrada_bot': get_weather_list,
+    '/holiday': holiday,
+    '/holiday@chupakabrada_bot': holiday,
+    '/corona': coronavirus,
+    '/corona@chupakabrada_bot': coronavirus,
+    '/sticker': sticker_send,
+    '/sticker@chupakabrada_bot': sticker_send,
+}
 
 
 # catching text messages or commands for bot
