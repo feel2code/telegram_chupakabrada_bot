@@ -1,6 +1,5 @@
 #!/bin/bash
 killall python3
-rm -rf /root/telegram_chupakabrada_bot
 apt-get install postgresql-12 -yy
 rm -rf /etc/postgresql/12/main/pg_hba.conf
 cp pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
