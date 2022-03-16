@@ -1,31 +1,5 @@
 # Telegram Chupakabrada_bot
-                                                            
-MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMMMWK0kdk0KKKNMMMMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMMXx;..   ....,oKWMMMMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMMK:             ;xXWMMMMMMMMMMMMM
-KXXNWMMMMMMMMMMMMNl               ;0MMMMMMMMMMMMMM
-OkddxkkOKWMMMMMMWx.               .xWMMMMMMMMMMMMM
-0OkOkoc:cok0NMMMO'..'...'',;::::;'.cXMMMMMMMMMMMMM
-XXKKkoc:ccllld0Wk.'looxxdxkOOO0K0x,:KMMMMMMMMMMMMM
-XX0OxlccodxdllxXKlldddkkkkkO00KKXKooXMMMMMMMMMMMMM
-XXKOdox0KK0KXKOO0xooolooxkkkxxxk0X0OXXNWMMMMMMMMMM
-0KXXK0KXNNWMNkc::loc::;:okOkocoxOXX0kOO0WMMMMMMMMM
-WWMMMMMMMMMMWkc:;ldxxdllx00K0O0XXNXOdO0KWMMMMMMMMM
-MMMMMMMMMMMMMXxcccldol::xOOOkxk0KXKOkOXWMMMMMMMMMM
-MMMMMMMMMMMMMMWKOdoc;,',cooddoox000XNWMMMMMMMMMMMM
-MMMMMMMMMMMMMMMMMKoc;,,cddxkddxOOOXWMMMMMMMMMMMMMM
-MMMMMMMMMMMMWNKOxoc::;;:lldxkxxkkOk0WMMMMMMMMMMMMM
-MMMWNXK0Okdc;'. .;l:;,,;:cloddxkKOc:xXWMMMMMMMMMMM
-xoc;,'....      .lkdl,.',;:ok0XNO:'',:okXWMMMMMMMM
-...........    .;xOo;'.'cdkXWMWk:'''''.':oOXWMMMMM
-...........    'oOx;..,;;:oKWWk:,,''''..'',;cokKWM
-.......  ..  ..l0XKc.,;:x0O0Kk:,,,,''...''''''',cd
-....... ......'kNNx,',;xWWMWk;,,,,,'''''''''''''''
-..............cKNx'.,,,dWWW0:',,,,''''''''''''''''
-..............dXk'.';;;dNWKc',,,''''.''''''',,,'''
-.............,OK:..,;::xXKd,,''''''..',,'',,,,,'''
-
+![alt text](https://cdn4.telegram-cdn.org/file/T9_DdspedlNuVhjSsh48Wo_vS3C0PbSaqoOyFRU2u22BlPVMY3dkGIxBt3OsfDQgHB5C8v-jpadpl3LysFY4YCbzYsxlRd2IbYl7l0efcg-q2N99F7QKj5si7u08OkaiVZy9TTUB5Rmf_90bDI09C0-3Yw_G1OdJMvnB9gXmngYg5cETKRLcJJntpL8e7kBEMGc2B2FRap3UIAp2TMLftLRzerHxOHDwT2cxCUTAREmUP3drntoZVYRO35rqeNB52qNPnWCgbDS25Qu3zWcWlVXbYgleYR9wa2DbapX8Onp6D_n2xV4oGDGDhD-192WxAktH1h-HQCNOUlrzrdZeFg.jpg)
 
 ## t.me/chupakabrada_bot
 This is funny bot for Telegram.
