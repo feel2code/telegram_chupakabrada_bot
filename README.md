@@ -1,28 +1,31 @@
 # Telegram Chupakabrada_bot
                                                             
-                                                            
-                              %// /,(                       
-                        .&@@@@@@@@@@@@@(                    
-                       /@@@@@@@@@@@@@@@@/(,                 
- ../*                 .@@@@@@@@@@@@@@@@@@&                  
-/*//((((#%%#          &&@&@@@@@&&&%&&@&@&&(                 
-.. .,,,* %%(# ##     &@&/((////*,*,,,,*(#&%                 
-, ,,..,(*#%##%(#&%%  %&////*,*/*,,,,....,#%                 
- ,..,*//., . /,*/     **/*//*/*,*,,,,..../(                 
-.,,...*/,.,,     (((#(/((((####/,/#%&(**  **/*/             
-                 /((%(/**///((*,.,,*,...  ,/*.*,            
-                 ,((##(/* */((*..**,......,*/,              
-                    /((/(###%%(*(***#*,.*.(.                
-                      */(#%&(*,,,.#**,,,,                   
-                      ((((#%#((*********/%                  
-              *@@@@@@@((#%%#(((//*//***  ##/                
-  ,&&&&&&&&&&&&@@@@@@&* /((%%%%%(**,   #%#%%#%#             
-@&&&&@&&&&&&&&@&&@@&&/,..&&&&&*,      #%%%%%%%%%%%.         
-&&&&&&&&&&@@&&&@@&&&.*(/%%#####%    *###%%%%%#&%%%%%%%%.    
-&&&&&&&&&&@&&&&@&&&& . .%&%((%  .( ####%##%%%%%%%%%%%%%%%%%#
-&&&&&&&&&&&&&&&&&&% ,  (&%#(%     %#%%###%#%%%%%%%%%%%%%%%%%
-&&&&&&&&&&&&&&&&&&%,  &&&%##%.   %%%#%#%%%%%%%%%%%%%%%%%%%%%
-&&&&&&&&&&&&&&&&&%   &&&%((##, .%#%%%%%%%%%&%%%#%%%%%%%%%%%%
+MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMMMWK0kdk0KKKNMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMXx;..   ....,oKWMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMK:             ;xXWMMMMMMMMMMMMM
+KXXNWMMMMMMMMMMMMNl               ;0MMMMMMMMMMMMMM
+OkddxkkOKWMMMMMMWx.               .xWMMMMMMMMMMMMM
+0OkOkoc:cok0NMMMO'..'...'',;::::;'.cXMMMMMMMMMMMMM
+XXKKkoc:ccllld0Wk.'looxxdxkOOO0K0x,:KMMMMMMMMMMMMM
+XX0OxlccodxdllxXKlldddkkkkkO00KKXKooXMMMMMMMMMMMMM
+XXKOdox0KK0KXKOO0xooolooxkkkxxxk0X0OXXNWMMMMMMMMMM
+0KXXK0KXNNWMNkc::loc::;:okOkocoxOXX0kOO0WMMMMMMMMM
+WWMMMMMMMMMMWkc:;ldxxdllx00K0O0XXNXOdO0KWMMMMMMMMM
+MMMMMMMMMMMMMXxcccldol::xOOOkxk0KXKOkOXWMMMMMMMMMM
+MMMMMMMMMMMMMMWKOdoc;,',cooddoox000XNWMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMKoc;,,cddxkddxOOOXWMMMMMMMMMMMMMM
+MMMMMMMMMMMMWNKOxoc::;;:lldxkxxkkOk0WMMMMMMMMMMMMM
+MMMWNXK0Okdc;'. .;l:;,,;:cloddxkKOc:xXWMMMMMMMMMMM
+xoc;,'....      .lkdl,.',;:ok0XNO:'',:okXWMMMMMMMM
+...........    .;xOo;'.'cdkXWMWk:'''''.':oOXWMMMMM
+...........    'oOx;..,;;:oKWWk:,,''''..'',;cokKWM
+.......  ..  ..l0XKc.,;:x0O0Kk:,,,,''...''''''',cd
+....... ......'kNNx,',;xWWMWk;,,,,,'''''''''''''''
+..............cKNx'.,,,dWWW0:',,,,''''''''''''''''
+..............dXk'.';;;dNWKc',,,''''.''''''',,,'''
+.............,OK:..,;::xXKd,,''''''..',,'',,,,,'''
+
 
 ## t.me/chupakabrada_bot
 This is funny bot for Telegram.
