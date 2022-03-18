@@ -52,7 +52,6 @@ COMMANDS_FUNCS = {
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     '''CATCHING COMMANDS'''
-    bot.send_message(message.chat.id, markov(message))
     deleting_msg(message)
     analytics(message)
     check(message)
@@ -71,6 +70,9 @@ def get_text_messages(message):
         query(COMMANDS_QUERY[message.text], message.chat.id)
     elif message.text.split()[0] in COMMANDS_DO:
         COMMANDS_DO[message.text.split()[0]](message)
+    
+    markovcha = markov(message)
+    bot.send_message(message.chat.id, markovcha)
 
 
 def deleting_msg(message):
