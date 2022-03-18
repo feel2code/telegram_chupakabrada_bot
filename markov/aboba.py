@@ -8,4 +8,4 @@ def markov(message):
     text = open('markov/markov.txt', encoding='utf8').read()
     text_model = markovify.Text(text)
     for i in range(1):
-        return text_model.make_sentence()
+        return text_model.make_sentence(tries=50)
