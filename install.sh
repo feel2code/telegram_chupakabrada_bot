@@ -13,6 +13,7 @@ chmod +x check-run.sh
 apt install python3-pip python3-venv -yy
 python3 -m venv venv
 source venv/bin/activate
+python3 -m pip install --upgrade pip
 pip install -r /root/telegram_chupakabrada_bot/requirements.txt
 python3 /root/telegram_chupakabrada_bot/bot.py &
 sleep 3

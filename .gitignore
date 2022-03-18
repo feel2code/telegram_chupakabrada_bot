@@ -147,3 +147,4 @@ dmypy.json
 
 # configuration
 conf.py
+markov/markov.txt

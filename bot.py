@@ -6,6 +6,7 @@ from analytics import analytics
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
 from holiday import holiday
+from markov.aboba import markov
 from selects import check, one_message, query, sticker_send, zoo
 from stats import send_statistics
 from today_corona import coronavirus
@@ -51,6 +52,7 @@ COMMANDS_FUNCS = {
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     '''CATCHING COMMANDS'''
+    bot.send_message(message.chat.id, markov(message))
     deleting_msg(message)
     analytics(message)
     check(message)
@@ -96,6 +98,5 @@ def get_voice_messages(voice):
 def get_audio_messages(audio):
     '''catching audio files'''
     query(50, audio.chat.id)
-
 
 bot.polling(none_stop=True, interval=0, timeout=500)
