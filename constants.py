@@ -25,4 +25,6 @@ COMMANDS_QUERY = {
     '/delete@chupakabrada_bot': 124,
     '/weather': 125,
     '/weather@chupakabrada_bot': 125,
+    '/set': 129,
+    '/set@chupakabrada_bot': 129,
 }

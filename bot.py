@@ -6,7 +6,7 @@ from analytics import analytics
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
 from holiday import holiday
-from markov.aboba import markov
+from markov.aboba import markov, markov_hardness
 from selects import check, one_message, query, sticker_send, zoo
 from stats import send_statistics
 from today_corona import coronavirus
@@ -33,6 +33,8 @@ COMMANDS_DO = {
     '/weather@chupakabrada_bot': weather_in_city,
     '/top_cinema': films_command,
     '/top_cinema@chupakabrada_bot': films_command,
+    '/set': markov_hardness,
+    '/set@chupakabrada_bot': markov_hardness
 }
 
 COMMANDS_FUNCS = {
@@ -70,7 +72,7 @@ def get_text_messages(message):
         query(COMMANDS_QUERY[message.text], message.chat.id)
     elif message.text.split()[0] in COMMANDS_DO:
         COMMANDS_DO[message.text.split()[0]](message)
-    
+
     markovcha = markov(message)
     bot.send_message(message.chat.id, markovcha)
 
@@ -100,5 +102,6 @@ def get_voice_messages(voice):
 def get_audio_messages(audio):
     '''catching audio files'''
     query(50, audio.chat.id)
+
 
 bot.polling(none_stop=True, interval=0, timeout=500)
