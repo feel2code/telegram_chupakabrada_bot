@@ -1,7 +1,7 @@
 import logging
 
 from connections import bot, cur
-from conf import ban, key_for_stats
+from conf import ban, key_for_stats, home_telega
 from analytics import analytics
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
@@ -72,6 +72,9 @@ def get_text_messages(message):
         query(COMMANDS_QUERY[message.text], message.chat.id)
     elif message.text.split()[0] in COMMANDS_DO:
         COMMANDS_DO[message.text.split()[0]](message)
+
+    if message.text == '@all' and message.chat.id == int(home_telega):
+        query(130, home_telega)
 
     markovcha = markov(message)
     bot.send_message(message.chat.id, markovcha)
