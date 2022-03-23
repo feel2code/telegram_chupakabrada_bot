@@ -41,8 +41,9 @@ def markov_hardness(message):
         f'where chat_id={message.chat.id}'
     )
     count = cur.fetchone()[0]
+    hardness_list = ('1', '50', '100')
     if count == 1:
-        if hardness in ('10', '50', '100'):
+        if hardness in hardness_list:
             hardness = int(hardness)
             cur.execute(
                 f'update markov set hardness={hardness} '
@@ -56,7 +57,7 @@ def markov_hardness(message):
         else:
             bot.send_message(
                 message.chat.id,
-                'Выбери из: 10, 50, 100'
+                f'Выбери из: {str(hardness_list)}'
             )
     else:
         bot.send_message(
