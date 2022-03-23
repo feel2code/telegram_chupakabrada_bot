@@ -73,7 +73,7 @@ def get_text_messages(message):
     elif message.text.split()[0] in COMMANDS_DO:
         COMMANDS_DO[message.text.split()[0]](message)
 
-    if message.text == '@all' and message.chat.id == int(home_telega):
+    if '@all' in message.text and message.chat.id == int(home_telega):
         query(130, home_telega)
 
     markovcha = markov(message)
