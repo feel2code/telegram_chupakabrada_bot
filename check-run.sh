@@ -16,14 +16,14 @@ else
 }
 fi
 
-	exchange=$(ps aux | grep 'python3 /root/telegram_chupakabrada_bot/features/exchange.py' | wc -l)
+	exchange=$(ps aux | grep 'python3 /root/telegram_chupakabrada_bot/exchange.py' | wc -l)
 	if [ "$exchange" -eq 1 ]
 then {
 	echo "Running exchange.py"
         sleep 1
     cd /root/telegram_chupakabrada_bot
     source venv/bin/activate
-	python3 /root/telegram_chupakabrada_bot/features/exchange.py &
+	python3 /root/telegram_chupakabrada_bot/exchange.py &
 }
 else 
 {

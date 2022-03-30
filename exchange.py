@@ -5,7 +5,7 @@ import requests
 import time
 import logging
 
-from ..conf import db_name, bot_token, home_telega
+from conf import db_name, bot_token, home_telega
 
 connection_to_db = psycopg2.connect(db_name)
 cursor = connection_to_db.cursor()
