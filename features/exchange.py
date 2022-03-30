@@ -1,11 +1,11 @@
 import telebot
 from bs4 import BeautifulSoup
-from conf import db_name, bot_token, home_telega
 import psycopg2
 import requests
 import time
 import logging
 
+from ..conf import db_name, bot_token, home_telega
 
 connection_to_db = psycopg2.connect(db_name)
 cursor = connection_to_db.cursor()
