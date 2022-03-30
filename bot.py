@@ -109,10 +109,13 @@ def get_audio_messages(audio):
 
 @bot.message_handler(content_types=['photo'])
 def get_photo_messages(photo_message):
-    if '@all' in photo_message.caption and photo_message.chat.id == int(
-        home_telega
-    ):
-        query(130, home_telega)
+    try:
+        if '@all' in photo_message.caption and photo_message.chat.id == int(
+            home_telega
+        ):
+            query(130, home_telega)
+    except TypeError:
+        pass
 
 
 bot.polling(none_stop=True, interval=0, timeout=500)

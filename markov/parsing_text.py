@@ -9,11 +9,11 @@ for page in range(1, 4):
     for data in datas:
         data_text = str(
             data.text
-            ).replace(
-                '       ', ''
-            ).replace(
-                '\n', ''
-            )
+        ).replace(
+            '       ', ''
+        ).replace(
+            '\n', ''
+        )
         if 'http' in data_text:
             pass
         else:
