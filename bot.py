@@ -9,7 +9,7 @@ from features.holiday import holiday
 from markov.aboba import markov, markov_hardness
 from selects import check, one_message, query, sticker_send, zoo
 from analysis.stats import send_statistics
-from coronavirus.today_corona import coronavirus
+from today_corona import coronavirus
 from features.weather_module import (
     add_city, delete_city, get_weather_list, weather_in_city)
 
