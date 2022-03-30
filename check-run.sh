@@ -23,7 +23,7 @@ then {
         sleep 1
     cd /root/telegram_chupakabrada_bot
     source venv/bin/activate
-	python3 /root/telegram_chupakabrada_bot/exchange.py &
+	python3 /root/telegram_chupakabrada_bot/features/exchange.py &
 }
 else 
 {
