@@ -2,15 +2,15 @@ import logging
 
 from connections import bot, cur
 from conf import ban, key_for_stats, home_telega
-from analytics import analytics
+from analysis.analytics import analytics
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
-from films import films_command
-from holiday import holiday
+from features.films import films_command
+from features.holiday import holiday
 from markov.aboba import markov, markov_hardness
 from selects import check, one_message, query, sticker_send, zoo
-from stats import send_statistics
-from today_corona import coronavirus
-from weather_module import (
+from analysis.stats import send_statistics
+from coronavirus.today_corona import coronavirus
+from features.weather_module import (
     add_city, delete_city, get_weather_list, weather_in_city)
 
 
