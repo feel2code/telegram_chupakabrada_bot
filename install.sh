@@ -15,9 +15,5 @@ python3 -m venv venv
 source venv/bin/activate
 python3 -m pip install --upgrade pip
 pip install -r /root/telegram_chupakabrada_bot/requirements.txt
-python3 /root/telegram_chupakabrada_bot/bot.py &
-sleep 3
-python3 /root/telegram_chupakabrada_bot/exchange.py &
-sleep 3
 # run script that checking if bot and exchange apps are running
 /root/telegram_chupakabrada_bot/check-run.sh &
