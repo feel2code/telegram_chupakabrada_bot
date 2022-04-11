@@ -82,11 +82,28 @@ def get_text_messages(message):
 
 def deleting_msg(message):
     """delete unappropriate words"""
-    msg_check_ban: list = message.text.lower().split()
-    for word in msg_check_ban:
-        for msg_ban in ban:
-            if msg_ban in word.lower():
-                bot.delete_message(message.chat.id, message.id)
+    # msg_check_ban: list = message.text.lower().split()
+    full_msg_ban = str(message.text.lower())
+    # seek for digits and replace
+    for i in range(0, 10):
+        full_msg_ban = full_msg_ban.replace(f'{i}', ' ')
+    # seek for "-" symbols
+    full_msg_ban = (
+        full_msg_ban
+    ).replace(
+        ' ', ''
+    ).replace(
+        '-', ''
+    ).replace(
+        '_', ''
+    )
+    # for word in msg_check_ban:
+    #     for msg_ban in ban:
+    #         if msg_ban in word.lower():
+    #             bot.delete_message(message.chat.id, message.id)
+    for msg_ban in ban:
+        if msg_ban in full_msg_ban:
+            bot.delete_message(message.chat.id, message.id)
 
 
 def standard_commands(message):
