@@ -1,6 +1,9 @@
+from datetime import datetime
 import time
+
+from psycopg2 import ProgrammingError
 from constants import GODZILLA
-from connections import bot, cur
+from connections import bot, cur, conn_db
 
 
 # checking does message has any word in list from dictionary
@@ -14,7 +17,10 @@ def check(message):
                 f"SELECT a.answer FROM questions as q join answers a on "
                 f"q.ans_id=a.ans_id where upper(q.question)='{quest}' "
             )
-            rec = (cur.fetchall()[0])[0]
+            try:
+                rec = (cur.fetchall()[0])[0]
+            except ProgrammingError:
+                return None
             if rec == GODZILLA:
                 rec = ''
                 query(103, message.chat.id)
@@ -79,3 +85,40 @@ def zoo(message, sticker_family):
                 f" order by random() limit 1; ")
     sticker_id = cur.fetchone()[0]
     bot.send_sticker(message.chat.id, sticker_id)
+
+
+def roll(chat_id):
+    cur.execute(
+        f"select count(1) from rolls where chat_id='{chat_id}' and "
+        f"date='{datetime.today().strftime('%Y-%m-%d')}';"
+    )
+    count = cur.fetchone()[0]
+    if count == 0:
+        cur.execute(
+            f"select * from ("
+            f"select distinct st_nick from stats where "
+            f"st_chat_id='{chat_id}' and st_nick != 'None'"
+            f") as foo"
+            f" order by random() limit 1; "
+        )
+        nick = cur.fetchone()[0]
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Сиводня должен рассказать стишок @{nick}'
+        )
+        cur.execute(
+            f"insert into rolls values("
+            f"'{nick}', '{chat_id}', "
+            f"'{datetime.today().strftime('%Y-%m-%d')}');"
+        )
+        conn_db.commit()
+    else:
+        cur.execute(
+            f"select nick from rolls where chat_id='{chat_id}' and "
+            f"date='{datetime.today().strftime('%Y-%m-%d')}';"
+        )
+        nick = cur.fetchone()[0]
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Сиводня должен был уже рассказать стишок @{nick}'
+        )

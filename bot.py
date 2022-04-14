@@ -7,7 +7,7 @@ from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from features.films import films_command
 from features.holiday import holiday
 from markov.aboba import markov, markov_hardness
-from selects import check, one_message, query, sticker_send, zoo
+from selects import check, one_message, query, roll, sticker_send, zoo
 from analysis.stats import send_statistics
 from today_corona import coronavirus
 from features.weather_module import (
@@ -50,6 +50,8 @@ COMMANDS_FUNCS = {
     '/corona@chupakabrada_bot': coronavirus,
     '/sticker': sticker_send,
     '/sticker@chupakabrada_bot': sticker_send,
+    '/roll': roll,
+    '/roll@chupakabrada_bot': roll,
 }
 
 
