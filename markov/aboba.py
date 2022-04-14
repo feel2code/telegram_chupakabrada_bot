@@ -17,13 +17,13 @@ def markov(message):
         markov_text.close()
         text = open(
             f'markov/markov{str(message.chat.id)}.txt', encoding='utf8').read()
-        text_model = markovify.Text(text)
+        text_model = markovify.Text(text, state_size=int(hardness))
         for i in range(1):
-            return text_model.make_sentence(tries=hardness)
+            return text_model.make_sentence(tries=50)
     else:
         cur.execute(
             f"insert into markov (chat_id, hardness) "
-            f"values ({message.chat.id}, 50); "
+            f"values ({message.chat.id}, 1); "
         )
         conn_db.commit()
         markov_text = open(f'markov/markov{str(message.chat.id)}.txt', "a")
@@ -41,7 +41,7 @@ def markov_hardness(message):
         f'where chat_id={message.chat.id}'
     )
     count = cur.fetchone()[0]
-    hardness_list = ('1', '50', '100')
+    hardness_list = ('1', '2', '3', '4', '5', '6', '7', '8', '9')
     if count == 1:
         if hardness in hardness_list:
             hardness = int(hardness)
@@ -52,7 +52,7 @@ def markov_hardness(message):
             conn_db.commit()
             bot.send_message(
                 message.chat.id,
-                f'Изменена болтливость на {hardness}'
+                f'Умственные способности теперь на уровне {hardness}'
             )
         else:
             bot.send_message(

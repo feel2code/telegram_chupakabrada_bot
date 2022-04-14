@@ -23,6 +23,9 @@ logging.basicConfig(
     ),
     datefmt='%H:%M:%S',
 )
+logger = logging.getLogger(__name__)
+handler = logging.StreamHandler()
+logger.addHandler(handler)
 
 COMMANDS_DO = {
     '/add': add_city,
@@ -53,7 +56,7 @@ COMMANDS_FUNCS = {
 # catching text messages or commands for bot
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
-    '''CATCHING COMMANDS'''
+    '''catching messages.'''
     deleting_msg(message)
     analytics(message)
     check(message)
@@ -77,11 +80,12 @@ def get_text_messages(message):
         query(130, home_telega)
 
     markovcha = markov(message)
-    bot.send_message(message.chat.id, markovcha)
+    if markovcha is not None:
+        bot.send_message(message.chat.id, markovcha)
 
 
 def deleting_msg(message):
-    """delete unappropriate words"""
+    """delete unappropriate words."""
     # msg_check_ban: list = message.text.lower().split()
     full_msg_ban = str(message.text.lower())
     # seek for digits and replace
@@ -97,6 +101,7 @@ def deleting_msg(message):
     ).replace(
         '_', ''
     )
+    # old function for deleting messages
     # for word in msg_check_ban:
     #     for msg_ban in ban:
     #         if msg_ban in word.lower():
@@ -131,7 +136,8 @@ def get_photo_messages(photo_message):
             home_telega
         ):
             query(130, home_telega)
-    except TypeError:
+    except TypeError as error:
+        logger.error(str(error))
         pass
 
 
