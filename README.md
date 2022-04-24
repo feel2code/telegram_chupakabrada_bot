@@ -1,5 +1,4 @@
 # Telegram Chupakabrada_bot
-![alt text](https://cdn4.telegram-cdn.org/file/T9_DdspedlNuVhjSsh48Wo_vS3C0PbSaqoOyFRU2u22BlPVMY3dkGIxBt3OsfDQgHB5C8v-jpadpl3LysFY4YCbzYsxlRd2IbYl7l0efcg-q2N99F7QKj5si7u08OkaiVZy9TTUB5Rmf_90bDI09C0-3Yw_G1OdJMvnB9gXmngYg5cETKRLcJJntpL8e7kBEMGc2B2FRap3UIAp2TMLftLRzerHxOHDwT2cxCUTAREmUP3drntoZVYRO35rqeNB52qNPnWCgbDS25Qu3zWcWlVXbYgleYR9wa2DbapX8Onp6D_n2xV4oGDGDhD-192WxAktH1h-HQCNOUlrzrdZeFg.jpg)
 
 ##
 This is funny bot for Telegram.
