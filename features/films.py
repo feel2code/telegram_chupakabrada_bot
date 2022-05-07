@@ -1,5 +1,5 @@
 from connections import bot, cur
-from selects import simple_query, query
+from selects import query, simple_query
 
 
 def films_command(message):
@@ -11,8 +11,9 @@ def get_top_films(message):
     try:
         year = int(message.text)
         if year in range(2017, 2023):
-            cur.execute("select film_name, year, link from films "
-                        f"where year='{year}' order by random() limit 1")
+            cur.execute(
+                f"select film_name, year, link from films "
+                f"where year='{year}' order by random() limit 1")
             what_to_send = ' '.join(cur.fetchall()[0])
         else:
             what_to_send = simple_query(117)

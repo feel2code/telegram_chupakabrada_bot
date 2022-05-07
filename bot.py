@@ -1,18 +1,18 @@
 import logging
 
-from connections import bot, cur
-from conf import ban, key_for_stats, home_telega
 from analysis.analytics import analytics
+from analysis.stats import send_statistics
+from conf import ban, home_telega, key_for_stats
+from connections import bot, cur
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from features.films import films_command
 from features.holiday import holiday
+from features.weather_module import (add_city, delete_city, get_weather_list,
+                                     weather_in_city)
 from markov.aboba import markov, markov_hardness
-from selects import check, one_message, query, roll, sticker_send, zoo
-from analysis.stats import send_statistics
+from selects import (check, exchange, one_message, query, roll, sticker_send,
+                     zoo)
 from today_corona import coronavirus
-from features.weather_module import (
-    add_city, delete_city, get_weather_list, weather_in_city)
-
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -52,6 +52,8 @@ COMMANDS_FUNCS = {
     '/sticker@chupakabrada_bot': sticker_send,
     '/roll': roll,
     '/roll@chupakabrada_bot': roll,
+    '/dollar': exchange,
+    '/dollar@chupakabrada_bot': exchange
 }
 
 
@@ -101,12 +103,6 @@ def deleting_msg(message):
     ).replace(
         '_', ''
     )
-    ## old function for deleting messages
-    # msg_check_ban: list = message.text.lower().split()
-    # for word in msg_check_ban:
-    #     for msg_ban in ban:
-    #         if msg_ban in word.lower():
-    #             bot.delete_message(message.chat.id, message.id)
     for msg_ban in ban:
         if msg_ban in full_msg_ban:
             bot.delete_message(message.chat.id, message.id)
@@ -122,7 +118,6 @@ def standard_commands(message):
 @bot.message_handler(content_types=['voice'])
 def get_voice_messages(voice):
     """Catching voice messages for bot."""
-    '''catching voice'''
     query(49, voice.chat.id)
 
 

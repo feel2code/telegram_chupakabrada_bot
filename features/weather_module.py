@@ -1,10 +1,11 @@
-import requests
 from datetime import datetime
+
+import requests
 
 from conf import weather_token
 from connections import bot, conn_db, cur
-from selects import simple_query
 from constants import TEMPERATURE_NOT_EXIST
+from selects import simple_query
 
 
 def weather_in_city(message):
@@ -14,8 +15,7 @@ def weather_in_city(message):
             'https://api.openweathermap.org/data/2.5/weather?q=' + city
             + '&appid=' + weather_token).json()
         city_temp = str(int((req['main'])['temp'] - 273))
-        what_to_send = simple_query(112)
-        what_to_send += ('\n ' + city_temp + ' °C ' + city)
+        what_to_send = f'{simple_query(112)}\n {city_temp} °C {city}'
     except KeyError:
         what_to_send = simple_query(111)
     bot.send_message(message.chat.id, what_to_send)
@@ -59,13 +59,16 @@ def delete_city(message):
     city_name = message.text.replace('/delete ', '').replace(' ', '-').upper()
     try:
         cur.execute(
-            "SELECT city_name FROM cities where"
-            " upper(city_name)='" + city_name + "'; ")
+            f"SELECT city_name FROM cities where"
+            f" upper(city_name)='{city_name}'; "
+        )
         records = str(cur.fetchall())
         if records != '[]':
             try:
-                cur.execute("delete from cities where chat_id='" + chat_id
-                            + "' and upper(city_name)='" + city_name + "';")
+                cur.execute(
+                    f"delete from cities where chat_id='{chat_id}' and "
+                    f"upper(city_name)='{city_name}';"
+                )
                 conn_db.commit()
                 what_to_send = city_name + ' ' + simple_query(126)
                 bot.send_message(message.chat.id, what_to_send)
@@ -79,19 +82,20 @@ def delete_city(message):
 
 def add_temp_to_db(city_name, chat):
     temp = weather(city_name)
-    cur.execute("update cities set temp=" + str(temp)
-                + " where city_name='" + city_name
-                + "' and chat_id='" + str(chat)
-                + "'; ")
+    cur.execute(
+        f"update cities set temp={temp} where "
+        f"city_name='{city_name}' and chat_id='{chat}'; "
+    )
     conn_db.commit()
 
 
 def weather_send(chat_id, city_db, min_weather, max_weather, length):
     global what_to_send
-    '''Checking max or min temp and send emoji near temp'''
-    cur.execute("SELECT temp FROM cities where chat_id='"
-                + str(chat_id) + "' and city_name='"
-                + str(city_db) + "'; ")
+    """Checking max or min temp and send emoji near temp."""
+    cur.execute(
+        f"SELECT temp FROM cities where chat_id="
+        f"'{chat_id}' and city_name='{city_db}'; "
+    )
     temp = int(cur.fetchone()[0])
     if temp >= 0 and temp < 10:
         temp_spaces = '  '
@@ -99,8 +103,7 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length):
         temp_spaces = ' '
     else:
         temp_spaces = ''
-    what_to_send += (
-        "\n ` " + temp_spaces + str(temp) + "° · " + city_db + " `")
+    what_to_send += f"\n ` {temp_spaces}{temp}° · {city_db} `"
     if length > 1:
         if temp == min_weather:
             what_to_send += ' ❄️'
@@ -109,15 +112,17 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length):
 
 
 def get_weather_list(chat_id):
+    """getting cities list from DB."""
     global what_to_send
     if datetime.now().hour in range(0, 7):
         what_to_send = simple_query(128) + '\n\n'
     else:
         what_to_send = ''
     what_to_send += simple_query(122) + '\n'
-    # getting cities list from DB
-    cur.execute("SELECT city_name FROM cities "
-                "where chat_id='" + str(chat_id) + "';")
+    cur.execute(
+        f"SELECT city_name FROM cities "
+        f"where chat_id='{chat_id}';"
+    )
     fetched_from_db = cur.fetchall()
 
     # updating temperatures in DB
@@ -127,20 +132,18 @@ def get_weather_list(chat_id):
 
     # find max and min weather in cities list
     if len(fetched_from_db) != 0:
-        # max/min temp
-        cur.execute("SELECT max(temp) FROM cities "
-                    "where chat_id='" + str(chat_id) + "';")
-        max_weather = int((cur.fetchall()[0])[0])
-        cur.execute("SELECT min(temp) FROM cities "
-                    "where chat_id='" + str(chat_id) + "';")
-        min_weather = int((cur.fetchall()[0])[0])
-        # parsing each city and temp from db
+        cur.execute(
+            f"SELECT max(temp), min(temp) FROM cities "
+            f"where chat_id='{chat_id}';"
+        )
+        max_min_weather = cur.fetchall()[0]
+        # getting each city and temp from db
         for i in range(0, len(fetched_from_db)):
             city_db = str((fetched_from_db[i])[0])
             weather_send(chat_id,
                          city_db,
-                         min_weather,
-                         max_weather,
+                         int(max_min_weather[1]),
+                         int(max_min_weather[0]),
                          len(fetched_from_db))
     else:
         what_to_send = simple_query(116)

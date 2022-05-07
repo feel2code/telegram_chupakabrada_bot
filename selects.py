@@ -1,9 +1,10 @@
-from datetime import datetime
 import time
+from datetime import datetime
 
 from psycopg2 import ProgrammingError
+
+from connections import bot, conn_db, cur
 from constants import GODZILLA
-from connections import bot, cur, conn_db
 
 
 # checking does message has any word in list from dictionary
@@ -122,3 +123,14 @@ def roll(chat_id):
             chat_id=chat_id,
             text=f'Сиводня должен был уже рассказать стишок @{nick}'
         )
+
+
+def exchange(chat_id):
+    cur.execute(
+        "select course_value from course where course_name='usd'; "
+    )
+    last_rate = cur.fetchone()[0]
+    bot.send_message(
+        chat_id=chat_id,
+        text=f'Далар чичас па {last_rate} ₽'
+    )

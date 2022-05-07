@@ -1,6 +1,7 @@
+from datetime import datetime
+
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime
 
 from connections import bot, cur
 
@@ -9,13 +10,14 @@ def holiday(chat_id):
     day = datetime.now().day
     month = datetime.now().month
 
-    cur.execute("SELECT month_name FROM months where id=" + str(month) + "; ")
-    fetched_month_name = str(
-        cur.fetchall()).replace("[('", "").replace("',)]", "")
-    data = str(day) + '_' + fetched_month_name
+    cur.execute(f"SELECT month_name FROM months where id={month}; ")
+    fetched_month_name = cur.fetchone()[0]
+    data = f'{day}_{fetched_month_name}'
     today = []
     page = requests.get(
-        'https://ru.wikipedia.org/wiki/' + 'Категория:Праздники_' + data)
+        f'https://ru.wikipedia.org/wiki/Категория:Праздники_{data}'
+    )
+
     soup = BeautifulSoup(page.text, "html.parser")
     for item in soup.select("li"):
         today.append(item.get_text())
@@ -28,8 +30,12 @@ def holiday(chat_id):
         case = str([word + '\n' for word in today]).replace(
             ',', '').replace('[', '').replace(']', '').replace(
             '[', '').replace("'", "").replace(r"\n", "\n")
-        bot.send_message(chat_id=chat_id, text=(
-            'Сиводня ' + str(datetime.now().date()) + ': \n' + case))
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Сиводня {datetime.now().date()}: \n{case}'
+        )
     except ValueError:
-        bot.send_message(chat_id=chat_id, text=(
-            'Сиводня ' + str(datetime.now().date()) + ' праздников нет.'))
+        bot.send_message(
+            chat_id=chat_id,
+            text=f'Сиводня {datetime.now().date()} праздников нет.'
+        )

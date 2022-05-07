@@ -1,11 +1,11 @@
 import markovify
-from connections import cur, conn_db, bot
+
+from connections import bot, conn_db, cur
 
 
 def markov(message):
     cur.execute(
-        f'select count(1) from markov '
-        f'where chat_id={message.chat.id}'
+        f'select count(1) from markov where chat_id={message.chat.id}'
     )
     count = cur.fetchone()[0]
     if count == 1:

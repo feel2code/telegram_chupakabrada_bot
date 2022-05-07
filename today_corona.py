@@ -14,7 +14,7 @@ def coronavirus(chat):
         found[5]).replace(
             '"diedChange":"', '').replace('"', '').replace(r'\u00a0', ' ')
     what_to_send = (
-        f'Корона тайм зяблс. За сегодня в России: \n'
+        f'Корона тайм зяблс. За сегодня в России:\n'
         f'Заболевших {sickChange} \n'
         f'Смертей {diedChange} \n'
     )
