@@ -88,7 +88,7 @@ def get_text_messages(message):
 
 
 def deleting_msg(message):
-    """Delete unappropriate words."""
+    """Delete unappropriated words."""
     full_msg_ban = str(message.text.lower())
     # seek for digits and replace
     for i in range(0, 10):

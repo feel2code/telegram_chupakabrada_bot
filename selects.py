@@ -61,17 +61,18 @@ def one_message(message):
 
 
 def simple_query(ans_id):
-    '''query from answers table'''
+    """query from answers table."""
     cur.execute(f"SELECT answer FROM answers where ans_id={ans_id}")
     return cur.fetchone()[0]
 
 
 def query(ans_id, chat_id):
-    '''send message to chat'''
+    """send message to chat."""
     bot.send_message(chat_id=chat_id, text=simple_query(ans_id))
 
 
 def sticker_send(chat_id):
+    """send stickers to chat."""
     query(51, chat_id)
     for stick_id in range(1, 10):
         cur.execute(f"SELECT sticker FROM stickers "
@@ -82,6 +83,7 @@ def sticker_send(chat_id):
 
 
 def zoo(message, sticker_family):
+    """send sticker via animal-like-codeword to chat."""
     cur.execute(f"SELECT sticker_id FROM {sticker_family}"
                 f" order by random() limit 1; ")
     sticker_id = cur.fetchone()[0]
@@ -89,6 +91,7 @@ def zoo(message, sticker_family):
 
 
 def roll(chat_id):
+    """roll someone in chat."""
     cur.execute(
         f"select count(1) from rolls where chat_id='{chat_id}' and "
         f"date='{datetime.today().strftime('%Y-%m-%d')}';"
@@ -126,6 +129,7 @@ def roll(chat_id):
 
 
 def exchange(chat_id):
+    """get currency."""
     cur.execute(
         "select course_value from course where course_name='usd'; "
     )

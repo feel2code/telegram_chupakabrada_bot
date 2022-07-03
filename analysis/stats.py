@@ -4,7 +4,7 @@ from conf import admin_chat
 from connections import bot, cur
 
 
-def send_statistics(something):
+def send_statistics():
     cur.execute(
         f"select * from (select '1' as Номер, "
         f"'Всего отсылок' as Статистика, "
