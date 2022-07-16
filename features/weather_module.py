@@ -21,13 +21,33 @@ def weather_in_city(message):
     bot.send_message(message.chat.id, what_to_send)
 
 
-def weather(id: str) -> str:
-    requestings = requests.get(
+def weather(city_name: str) -> str:
+    """
+    Get current temperature
+    :param city_name: city name or id
+    :return: temp in Celsius
+    """
+    response = requests.get(
         f'https://api.openweathermap.org/data/2.5/'
-        f'weather?q={id}&appid={weather_token}'
+        f'weather?q={city_name}&appid={weather_token}'
     ).json()
-    temp_celsius = str(int((requestings['main'])['temp'] - 273))
+    temp_celsius = str(int((response['main'])['temp'] - 273))
     return temp_celsius
+
+
+def forecast(city_name: str) -> tuple:
+    """
+    Get forecast on today
+    :param city_name: city name or id
+    :return: temp on Celsius, conditions
+    """
+    response = requests.get(
+        f'https://api.openweathermap.org/data/2.5/'
+        f'forecast?q={city_name}&appid={weather_token}'
+    ).json()
+    temp_celsius = str(int((response['list'][0]['main']['feels_like']) - 273))
+    condition = response['list'][0]['weather'][0]['main']
+    return temp_celsius, condition
 
 
 def add_city(message):
@@ -36,12 +56,7 @@ def add_city(message):
         message.text).replace('/add ', '').replace(' ', '-').upper()
     # checking if city not exists
     try:
-        requestings = requests.get(
-            f'https://api.openweathermap.org/data/2.5/'
-            f'weather?q={city_name}&appid={weather_token}'
-        ).json()
-        temp_farenheit = (requestings['main'])['temp']
-        temp_celsius_test = str(int(temp_farenheit - 273))
+        temp_celsius_test = weather(city_name)
     except KeyError:
         temp_celsius_test = TEMPERATURE_NOT_EXIST
     if temp_celsius_test != TEMPERATURE_NOT_EXIST:
@@ -82,28 +97,37 @@ def delete_city(message):
 
 def add_temp_to_db(city_name, chat):
     temp = weather(city_name)
+    expected, condition = forecast(city_name)
     cur.execute(
-        f"update cities set temp={temp} where "
-        f"city_name='{city_name}' and chat_id='{chat}'; "
+        f"""update cities
+            set temp={temp}, expected_day_temp={expected},
+                condition='{condition}'
+            where city_name='{city_name}' and chat_id='{chat}';"""
     )
     conn_db.commit()
 
 
-def weather_send(chat_id, city_db, min_weather, max_weather, length):
+def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast):
     global what_to_send
     """Checking max or min temp and send emoji near temp."""
     cur.execute(
-        f"SELECT temp FROM cities where chat_id="
-        f"'{chat_id}' and city_name='{city_db}'; "
+        f"""SELECT temp, expected_day_temp, condition
+            FROM cities
+            where chat_id='{chat_id}' and city_name='{city_db}';"""
     )
-    temp = int(cur.fetchone()[0])
-    if temp >= 0 and temp < 10:
+    fetched = cur.fetchall()[0]
+    temp = int(fetched[1]) if is_forecast else int(fetched[0])
+    condition = fetched[2]
+    # todo: add emoji for each condition in dictionary
+    condition_emoji = {'Rain': '',
+                       'Clouds': ''}
+    if 0 <= temp < 10:
         temp_spaces = '  '
     elif (temp < 0 and int(temp) > -10) or temp >= 10:
         temp_spaces = ' '
     else:
         temp_spaces = ''
-    what_to_send += f"\n ` {temp_spaces}{temp}° · {city_db} `"
+    what_to_send += f"\n ` {temp_spaces}{temp}° · {city_db} ({condition})`"
     if length > 1:
         if temp == min_weather:
             what_to_send += ' ❄️'
@@ -114,22 +138,22 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length):
 def get_weather_list(chat_id):
     """getting cities list from DB."""
     global what_to_send
+    what_to_send = ''
     if datetime.now().hour in range(0, 7):
-        what_to_send = simple_query(128) + '\n\n'
+        what_to_send = simple_query(128) + '\n'
+        is_forecast = True
     else:
-        what_to_send = ''
-    what_to_send += simple_query(122) + '\n'
+        what_to_send += simple_query(122) + '\n'
+        is_forecast = False
     cur.execute(
         f"SELECT city_name FROM cities "
         f"where chat_id='{chat_id}';"
     )
     fetched_from_db = cur.fetchall()
-
     # updating temperatures in DB
-    for i in range(0, len(fetched_from_db)):
+    for i in range(len(fetched_from_db)):
         city_db = str((fetched_from_db[i])[0])
         add_temp_to_db(city_db, chat_id)
-
     # find max and min weather in cities list
     if len(fetched_from_db) != 0:
         cur.execute(
@@ -138,13 +162,14 @@ def get_weather_list(chat_id):
         )
         max_min_weather = cur.fetchall()[0]
         # getting each city and temp from db
-        for i in range(0, len(fetched_from_db)):
+        for i in range(len(fetched_from_db)):
             city_db = str((fetched_from_db[i])[0])
             weather_send(chat_id,
                          city_db,
                          int(max_min_weather[1]),
                          int(max_min_weather[0]),
-                         len(fetched_from_db))
+                         len(fetched_from_db),
+                         is_forecast)
     else:
         what_to_send = simple_query(116)
     bot.send_message(
