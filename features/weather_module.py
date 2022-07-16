@@ -43,10 +43,10 @@ def forecast(city_name: str) -> tuple:
     """
     response = requests.get(
         f'https://api.openweathermap.org/data/2.5/'
-        f'forecast?q={city_name}&appid={weather_token}'
+        f'forecast?q={city_name}&lang=ru&appid={weather_token}'
     ).json()
     temp_celsius = str(int((response['list'][0]['main']['feels_like']) - 273))
-    condition = response['list'][0]['weather'][0]['main']
+    condition = response['list'][0]['weather'][0]['description'].lower()
     return temp_celsius, condition
 
 
@@ -118,9 +118,6 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
     fetched = cur.fetchall()[0]
     temp = int(fetched[1]) if is_forecast else int(fetched[0])
     condition = fetched[2]
-    # todo: add emoji for each condition in dictionary
-    condition_emoji = {'Rain': '',
-                       'Clouds': ''}
     if 0 <= temp < 10:
         temp_spaces = '  '
     elif (temp < 0 and int(temp) > -10) or temp >= 10:
