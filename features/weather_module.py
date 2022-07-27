@@ -22,7 +22,7 @@ def weather_in_city(message):
         bot.send_message(message.chat.id, simple_query(111))
 
 
-def weather(city_name: str) -> str:
+def weather(city_name: str) -> int:
     """
     Get current temperature
     :param city_name: city name or id
@@ -30,9 +30,9 @@ def weather(city_name: str) -> str:
     """
     response = requests.get(
         f'https://api.openweathermap.org/data/2.5/'
-        f'weather?q={city_name}&appid={weather_token}'
+        f'weather?q={city_name}&units=metric&appid={weather_token}'
     ).json()
-    temp_celsius = str(int((response['main'])['temp'] - 273))
+    temp_celsius = int(response['main']['temp'])
     return temp_celsius
 
 
@@ -44,10 +44,10 @@ def forecast(city_name: str) -> tuple:
     """
     response = requests.get(
         f'https://api.openweathermap.org/data/2.5/'
-        f'forecast?q={city_name}&lang=ru&appid={weather_token}'
+        f'forecast?q={city_name}&lang=ru&units=metric&cnt=6&appid={weather_token}'
     ).json()
-    temp_celsius = str(int((response['list'][0]['main']['feels_like']) - 273))
-    condition = response['list'][0]['weather'][0]['description'].lower()
+    temp_celsius = int(response['list'][5]['main']['feels_like'])
+    condition = response['list'][5]['weather'][0]['description'].lower()
     condition_emoji = {
         'ясно': '☀️',
         'небольшая облачность': '🌤',
@@ -55,9 +55,10 @@ def forecast(city_name: str) -> tuple:
         'пасмурно': '☁️',
         'небольшой дождь': '🌦',
         'переменная облачность': '⛅',
-        'дождь': '🌨'
+        'дождь': '🌨',
+        'снег': '❄️'
     }
-    # ☀️🌤⛅️⛈🌧🌦☁️🌥🌩🌨❄️
+    # ️⛈🌧🌦☁️🌥🌩🌨
     condition = condition_emoji[condition] if condition in condition_emoji else condition
     return temp_celsius, condition
 
@@ -153,16 +154,16 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
     condition = fetched[2]
     if 0 <= temp < 10:
         temp_spaces = '  '
-    elif (temp < 0 and int(temp) > -10) or temp >= 10:
+    elif (0 > temp > -10) or temp >= 10:
         temp_spaces = ' '
     else:
         temp_spaces = ''
     what_to_send = f"\n ` {temp_spaces}{temp}° {condition} {city_db}`"
     if length > 1:
         if temp == min_weather:
-            what_to_send += '- 🥶️️'
+            what_to_send += ' 🥶️️'
         elif temp == max_weather:
-            what_to_send += '- 🥵'
+            what_to_send += ' 🥵'
     return what_to_send
 
 
