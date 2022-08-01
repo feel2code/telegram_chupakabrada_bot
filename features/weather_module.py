@@ -44,10 +44,11 @@ def forecast(city_name: str) -> tuple:
     """
     response = requests.get(
         f'https://api.openweathermap.org/data/2.5/'
-        f'forecast?q={city_name}&lang=ru&units=metric&cnt=6&appid={weather_token}'
+        f'forecast?q={city_name}&lang=ru&units=metric&cnt=4&appid={weather_token}'
     ).json()
-    temp_celsius = int(response['list'][5]['main']['feels_like'])
-    condition = response['list'][5]['weather'][0]['description'].lower()
+    print(response)
+    temp_celsius = int(response['list'][3]['main']['feels_like'])
+    condition = response['list'][3]['weather'][0]['description'].lower()
     condition_emoji = {
         'ясно': '☀️',
         'небольшая облачность': '🌤',

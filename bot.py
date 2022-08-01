@@ -15,7 +15,7 @@ from selects import (check, exchange, one_message, query, roll, sticker_send,
 from today_corona import coronavirus
 
 logging.basicConfig(
-    level=logging.DEBUG,
+    level=logging.INFO,
     filename='main.log',
     format=(
         '%(asctime)s - %(module)s - %(levelname)s'

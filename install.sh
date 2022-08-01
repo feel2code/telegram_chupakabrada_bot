@@ -4,7 +4,7 @@ rm -rf /etc/postgresql/12/main/pg_hba.conf
 cp misc/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 # copying secret conf file from root directory
 cp /root/conf.py /root/telegram_chupakabrada_bot/conf.py
-cd /root/telegram_chupakabrada_bot
+cd /root/telegram_chupakabrada_bot || exit
 chmod +x install.sh
 chmod +x morning_messages.sh
 chmod +x check-run.sh
