@@ -46,7 +46,6 @@ def forecast(city_name: str) -> tuple:
         f'https://api.openweathermap.org/data/2.5/'
         f'forecast?q={city_name}&lang=ru&units=metric&cnt=4&appid={weather_token}'
     ).json()
-    print(response)
     temp_celsius = int(response['list'][3]['main']['feels_like'])
     condition = response['list'][3]['weather'][0]['description'].lower()
     condition_emoji = {
@@ -71,8 +70,9 @@ def add_city(message):
     :return: None
     """
     chat_id = str(message.chat.id)
-    city_name = str(
-        message.text).replace('/add ', '').replace(' ', '-').upper()
+    city_name = message.text.split()
+    city_name.pop(0)
+    city_name = ' '.join(city_name).upper()
     # checking if city not exists
     try:
         temp_celsius_test = weather(city_name)
@@ -94,14 +94,15 @@ def delete_city(message):
     :return: None
     """
     chat_id = str(message.chat.id)
-    city_name = message.text.replace('/delete ', '').replace(' ', '-').upper()
+    city_name = message.text.split()
+    city_name.pop(0)
+    city_name = ' '.join(city_name).upper()
     try:
         cur.execute(
-            f"SELECT city_name FROM cities where"
-            f" upper(city_name)='{city_name}'; "
+            f"SELECT city_name FROM cities where upper(city_name)='{city_name}' and chat_id='{chat_id}'; "
         )
-        records = str(cur.fetchall())
-        if records != '[]':
+        records = cur.fetchall()
+        if len(records) != 0:
             try:
                 cur.execute(
                     f"delete from cities where chat_id='{chat_id}' and "
