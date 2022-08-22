@@ -8,36 +8,30 @@ from constants import GODZILLA
 # checking does message has any word in list from dictionary
 def check(message):
     msg_check = message.text.upper().split()
-    i = 0
-    while i < len(msg_check):
-        quest = msg_check[i]
-        try:
-            cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
-                                     where upper(q.question)='{quest}';""")
-            rec = cur.fetchone()
-            if not rec:
-                continue
-            else:
-                rec = rec[0]
-            if rec == GODZILLA:
-                query(103, message.chat.id)
-                time.sleep(1)
-                i_count = 104
-                while i_count < 111:
-                    query(i_count, message.chat.id)
-                    time.sleep(0.100)
-                    i_count += 1
-                i_count = 109
-                while i_count > 103:
-                    query(i_count, message.chat.id)
-                    time.sleep(0.100)
-                    i_count = i_count - 1
-                i += 1
-            else:
-                bot.send_message(message.chat.id, rec)
-                i += 1
-        except IndexError:
-            i += 1
+    for word in msg_check:
+        cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
+                        where upper(q.question)='{word}';""")
+        rec = cur.fetchone()
+        if not rec:
+            continue
+        else:
+            rec = rec[0]
+        if rec == GODZILLA:
+            query(103, message.chat.id)
+            time.sleep(1)
+            i_count = 104
+            while i_count < 111:
+                query(i_count, message.chat.id)
+                time.sleep(0.100)
+                i_count += 1
+            i_count = 109
+            while i_count > 103:
+                query(i_count, message.chat.id)
+                time.sleep(0.100)
+                i_count = i_count - 1
+            continue
+        else:
+            bot.send_message(message.chat.id, rec)
 
 
 def one_message(message):
