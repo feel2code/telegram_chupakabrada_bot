@@ -7,15 +7,14 @@ from connections import bot, cur
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from features.films import films_command
 from features.holiday import holiday
-from features.weather_module import (add_city, delete_city, get_weather_list,
-                                     weather_in_city)
+from features.weather_module import add_city, delete_city, get_weather_list, weather_in_city
 from markov.aboba import markov, markov_hardness
-from selects import (check, exchange, one_message, query, roll, sticker_send,
-                     zoo)
+from selects import check, exchange, one_message, query, roll, sticker_send, zoo
 from today_corona import coronavirus
+from telebot.apihelper import ApiTelegramException
 
 logging.basicConfig(
-    level=logging.INFO,
+    level=logging.DEBUG,
     filename='main.log',
     format=(
         '%(asctime)s - %(module)s - %(levelname)s'
@@ -82,30 +81,22 @@ def get_text_messages(message):
     if '@all' in message.text and message.chat.id == int(home_telega):
         query(130, home_telega)
 
-    markovcha = markov(message)
-    if markovcha is not None:
-        bot.send_message(message.chat.id, markovcha)
+    ai_message = markov(message)
+    if ai_message is not None:
+        bot.send_message(message.chat.id, ai_message)
 
 
 def deleting_msg(message):
     """Delete unappropriated words."""
-    full_msg_ban = str(message.text.lower())
-    # seek for digits and replace
-    for i in range(0, 10):
-        full_msg_ban = full_msg_ban.replace(f'{i}', ' ')
-    # seek for "-" symbols
-    full_msg_ban = (
-        full_msg_ban
-    ).replace(
-        ' ', ''
-    ).replace(
-        '-', ''
-    ).replace(
-        '_', ''
-    )
+    # seek for space and other symbols
+    for sym in (' ', '-', '_'):
+        full_msg_ban = str(message.text.lower()).replace(sym, '')
     for msg_ban in ban:
         if msg_ban in full_msg_ban:
-            bot.delete_message(message.chat.id, message.id)
+            try:
+                bot.delete_message(message.chat.id, message.id)
+            except ApiTelegramException:
+                logger.error('Issues with deleting unappropriated message.')
 
 
 def standard_commands(message):
@@ -130,14 +121,9 @@ def get_audio_messages(audio):
 @bot.message_handler(content_types=['photo'])
 def get_photo_messages(photo_message):
     """Catching messages sent with photos."""
-    try:
-        if '@all' in photo_message.caption and photo_message.chat.id == int(
-            home_telega
-        ):
+    if photo_message.caption is not None:
+        if '@all' in photo_message.caption and photo_message.chat.id == int(home_telega):
             query(130, home_telega)
-    except TypeError as error:
-        logger.error(str(error))
-        pass
 
 
 bot.polling(none_stop=True, interval=0, timeout=500)

@@ -4,7 +4,6 @@ import requests
 
 from conf import weather_token
 from connections import bot, conn_db, cur
-from constants import TEMPERATURE_NOT_EXIST
 from selects import simple_query
 
 
@@ -29,22 +28,19 @@ def weather(city_name: str) -> int:
     :return: temp in Celsius
     """
     response = requests.get(
-        f'https://api.openweathermap.org/data/2.5/'
-        f'weather?q={city_name}&units=metric&appid={weather_token}'
+        f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={weather_token}'
     ).json()
-    temp_celsius = int(response['main']['temp'])
-    return temp_celsius
+    return int(response['main']['temp'])
 
 
-def forecast(city_name: str) -> tuple:
+def forecast(city: str) -> tuple:
     """
     Get forecast on today
-    :param city_name: city name or id
+    :param city: city name or id
     :return: temp on Celsius, conditions
     """
     response = requests.get(
-        f'https://api.openweathermap.org/data/2.5/'
-        f'forecast?q={city_name}&lang=ru&units=metric&cnt=4&appid={weather_token}'
+        f'https://api.openweathermap.org/data/2.5/forecast?q={city}&lang=ru&units=metric&cnt=4&appid={weather_token}'
     ).json()
     temp_celsius = int(response['list'][3]['main']['feels_like'])
     condition = response['list'][3]['weather'][0]['description'].lower()
@@ -75,16 +71,12 @@ def add_city(message):
     city_name = ' '.join(city_name).upper()
     # checking if city not exists
     try:
-        temp_celsius_test = weather(city_name)
-    except KeyError:
-        temp_celsius_test = TEMPERATURE_NOT_EXIST
-    if temp_celsius_test != TEMPERATURE_NOT_EXIST:
-        cur.execute("insert into cities (chat_id, city_name) "
-                    "values (%s, %s)", (chat_id, city_name))
+        weather(city_name)
+        cur.execute("insert into cities (chat_id, city_name) values (%s, %s)", (chat_id, city_name))
         conn_db.commit()
         bot.send_message(message.chat.id, f'{city_name} {simple_query(121)}')
-    else:
-        bot.send_message(message.chat.id, simple_query(119))
+    except KeyError:
+        bot.send_message(message.chat.id, f'{city_name}??? {simple_query(119)}')
 
 
 def delete_city(message):
@@ -98,19 +90,13 @@ def delete_city(message):
     city_name.pop(0)
     city_name = ' '.join(city_name).upper()
     try:
-        cur.execute(
-            f"SELECT city_name FROM cities where upper(city_name)='{city_name}' and chat_id='{chat_id}'; "
-        )
+        cur.execute(f"SELECT city_name FROM cities where upper(city_name)='{city_name}' and chat_id='{chat_id}';")
         records = cur.fetchall()
         if len(records) != 0:
             try:
-                cur.execute(
-                    f"delete from cities where chat_id='{chat_id}' and "
-                    f"upper(city_name)='{city_name}';"
-                )
+                cur.execute(f"delete from cities where chat_id='{chat_id}' and upper(city_name)='{city_name}';")
                 conn_db.commit()
-                what_to_send = city_name + ' ' + simple_query(126)
-                bot.send_message(message.chat.id, what_to_send)
+                bot.send_message(message.chat.id, f'{city_name} {simple_query(126)}')
             except KeyError:
                 pass
         else:
@@ -128,9 +114,7 @@ def add_temp_to_db(city_name, chat):
     """
     temp = weather(city_name)
     expected, condition = forecast(city_name)
-    cur.execute(f"""update cities
-                    set temp={temp}, expected_day_temp={expected},
-                        condition='{condition}'
+    cur.execute(f"""update cities set temp={temp}, expected_day_temp={expected}, condition='{condition}'
                     where city_name='{city_name}' and chat_id='{chat}';""")
     conn_db.commit()
 
@@ -146,11 +130,8 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
     :param is_forecast: selects from DB forecast or current weather
     :return:
     """
-    cur.execute(
-        f"""SELECT temp, expected_day_temp, condition
-            FROM cities
-            where chat_id='{chat_id}' and city_name='{city_db}';"""
-    )
+    cur.execute(f"""select temp, expected_day_temp, condition from cities
+                    where chat_id='{chat_id}' and city_name='{city_db}';""")
     fetched = cur.fetchall()[0]
     temp = int(fetched[1]) if is_forecast else int(fetched[0])
     condition = fetched[2]
@@ -177,10 +158,7 @@ def get_weather_list(chat_id):
     else:
         weather_message = simple_query(122) + '\n'
         is_forecast = False
-    cur.execute(
-        f"SELECT city_name FROM cities "
-        f"where chat_id='{chat_id}';"
-    )
+    cur.execute(f"select city_name from cities where chat_id='{chat_id}';")
     fetched_from_db = cur.fetchall()
     # updating temperatures in DB
     for i in range(len(fetched_from_db)):
@@ -189,24 +167,13 @@ def get_weather_list(chat_id):
     # find max and min weather in cities list
     max_min_temp = 'expected_day_temp' if is_forecast else 'temp'
     if len(fetched_from_db) != 0:
-        cur.execute(
-            f"""SELECT max({max_min_temp}), min({max_min_temp})
-                FROM cities
-                where chat_id='{chat_id}';"""
-        )
+        cur.execute(f"select max({max_min_temp}), min({max_min_temp}) from cities where chat_id='{chat_id}';")
         max_min_weather = cur.fetchall()[0]
         # getting each city and temp from db
         for i in range(len(fetched_from_db)):
             city_db = str((fetched_from_db[i])[0])
-            weather_message += weather_send(chat_id,
-                                            city_db,
-                                            int(max_min_weather[1]),
-                                            int(max_min_weather[0]),
-                                            len(fetched_from_db),
-                                            is_forecast)
+            weather_message += weather_send(chat_id, city_db, int(max_min_weather[1]), int(max_min_weather[0]),
+                                            len(fetched_from_db), is_forecast)
     else:
         weather_message = simple_query(116)
-    bot.send_message(
-        chat_id=chat_id,
-        text=weather_message,
-        parse_mode='Markdown')
+    bot.send_message(chat_id=chat_id, text=weather_message, parse_mode='Markdown')

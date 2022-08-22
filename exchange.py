@@ -33,10 +33,9 @@ def get_usd_course():
     float_rate = float(
         data.replace('₽', '').replace(' ', '').replace(',', '.')
     )
-    int_rate = int(float_rate)
-    rate_remain = float_rate - int_rate
+    rate_remain = float_rate - int(float_rate)
     if int(rate_remain * 10) in range(0, 4) or rate_remain in range(8, 10):
-        return int_rate
+        return int(float_rate)
     else:
         return None
 
@@ -44,21 +43,13 @@ def get_usd_course():
 def check_course():
     rate = get_usd_course()
     if rate is not None:
-        cursor.execute(
-            "select course_value from course where course_name='usd'; "
-        )
+        cursor.execute("select course_value from course where course_name='usd';")
         last_rate = cursor.fetchone()[0]
         if rate != last_rate:
-            cursor.execute(
-                f"update course set course_value={rate} "
-                f"where course_name='usd'; "
-            )
+            cursor.execute(f"update course set course_value={rate} where course_name='usd';")
             connection_to_db.commit()
             bot = telebot.TeleBot(bot_token)
-            bot.send_message(
-                chat_id=home_telega,
-                text=f'Далар уже па {rate} ₽'
-            )
+            bot.send_message(chat_id=home_telega, text=f'Далар уже па {rate} ₽')
         else:
             pass
     else:
