@@ -12,11 +12,13 @@ def check(message):
     while i < len(msg_check):
         quest = msg_check[i]
         try:
-            status = cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
-                            where upper(q.question)='{quest}';""")
-            if not status:
+            cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
+                                     where upper(q.question)='{quest}';""")
+            rec = cur.fetchone()
+            if not rec:
                 continue
-            rec = cur.fetchone()[0]
+            else:
+                rec = rec[0]
             if rec == GODZILLA:
                 query(103, message.chat.id)
                 time.sleep(1)
