@@ -1,8 +1,6 @@
 import time
 from datetime import datetime
 
-from psycopg2 import ProgrammingError
-
 from connections import bot, conn_db, cur
 from constants import GODZILLA
 
