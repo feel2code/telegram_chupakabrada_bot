@@ -2,9 +2,9 @@ from datetime import datetime
 
 import requests
 
-from ..conf import weather_token
-from ..connections import bot, conn_db, cur
-from ..selects import simple_query
+from conf import weather_token
+from connections import bot, conn_db, cur
+from selects import simple_query
 
 
 def weather_in_city(message):

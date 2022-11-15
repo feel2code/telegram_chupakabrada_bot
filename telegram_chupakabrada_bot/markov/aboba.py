@@ -1,6 +1,6 @@
 import markovify
 
-from ..connections import bot, conn_db, cur
+from connections import bot, conn_db, cur
 
 
 def markov(message):
@@ -25,6 +25,7 @@ def markov(message):
 
 
 def markov_hardness(message):
+    """Искажения грамматики неслучайны."""
     hardness = message.text.replace('/set ', '').replace(' ', '-')
     cur.execute(f'select count(1) from markov where chat_id={message.chat.id}')
     count = cur.fetchone()[0]
@@ -35,9 +36,9 @@ def markov_hardness(message):
             cur.execute(f'update markov set hardness={hardness} where chat_id={message.chat.id}')
             conn_db.commit()
             if hardness == int(hardness_list[0]):
-                msg_send = 'Заткнуть пытаешься да? Ну тада ясна.'
+                msg_send = f'Мой ICQ уменьшился до {hardness}.'
             else:
-                msg_send = f'Я не дурачок, я теперь умнее стал на {hardness} IQ.'
+                msg_send = 'Заткнуть пытаешься да? Ну тада ясна.'
             bot.send_message(message.chat.id, msg_send)
         else:
             bot.send_message(message.chat.id, f'Выбери из промежут_очка от {hardness_list[0]} до {hardness_list[-1]}')
