@@ -1,6 +1,6 @@
 #!/bin/bash
 apt-get install postgresql-12 -yy
-rm -rf /etc/postgresql/12/main/pg_hba.conf
+mv /etc/postgresql/12/main/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf.bak
 cp misc/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
 # copying secret conf file from root directory
 cp /root/conf.py /root/telegram_chupakabrada_bot/conf.py

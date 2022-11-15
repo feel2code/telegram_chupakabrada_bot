@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import Union
 
 import psycopg2
 import requests
@@ -21,18 +22,12 @@ logging.basicConfig(
 )
 
 
-def get_usd_course():
+def get_usd_course() -> Union[int, None]:
     page = requests.get('https://quote.rbc.ru/ticker/59111')
     time.sleep(10)
     soup = BeautifulSoup(page.text, "html.parser")
-    data = soup.find(
-        'div', class_='chart__info__row js-ticker'
-    ).find(
-        'span', class_='chart__info__sum'
-    ).text
-    float_rate = float(
-        data.replace('₽', '').replace(' ', '').replace(',', '.')
-    )
+    data = soup.find('div', class_='chart__info__row js-ticker').find('span', class_='chart__info__sum').text
+    float_rate = float(data.replace('₽', '').replace(' ', '').replace(',', '.'))
     rate_remain = float_rate - int(float_rate)
     if int(rate_remain * 10) in range(0, 4) or rate_remain in range(8, 10):
         return int(float_rate)
@@ -58,4 +53,4 @@ def check_course():
 
 while True:
     check_course()
-    time.sleep(50)
+    time.sleep(60)

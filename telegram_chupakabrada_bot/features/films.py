@@ -1,5 +1,5 @@
-from connections import bot, cur
-from selects import query, simple_query
+from ..connections import bot, cur
+from ..selects import query, simple_query
 
 
 def films_command(message):

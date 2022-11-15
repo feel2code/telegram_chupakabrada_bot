@@ -2,9 +2,9 @@ from datetime import datetime
 
 import requests
 
-from conf import weather_token
-from connections import bot, conn_db, cur
-from selects import simple_query
+from ..conf import weather_token
+from ..connections import bot, conn_db, cur
+from ..selects import simple_query
 
 
 def weather_in_city(message):
@@ -106,16 +106,15 @@ def delete_city(message):
         bot.send_message(message.chat.id, simple_query(115))
 
 
-def add_temp_to_db(city_name, chat):
+def add_temp_to_db(city_name: str, chat: int):
     """
     Gets current and forecast temperatures, conditions and inserts it to DB
     :param city_name: city name or id
     :param chat: chat from telegram
     :return: None
     """
-    temp = weather(city_name)
     expected, condition = forecast(city_name)
-    cur.execute(f"""update cities set temp={temp}, expected_day_temp={expected}, condition='{condition}'
+    cur.execute(f"""update cities set temp={weather(city_name)}, expected_day_temp={expected}, condition='{condition}'
                     where city_name='{city_name}' and chat_id='{chat}';""")
     conn_db.commit()
 

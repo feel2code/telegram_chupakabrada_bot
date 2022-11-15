@@ -77,7 +77,7 @@ def zoo(message, sticker_family):
     bot.send_sticker(message.chat.id, sticker_id)
 
 
-def roll(chat_id):
+def roll(chat_id: int):
     """roll someone in chat."""
     cur.execute(
         f"select count(1) from rolls where chat_id='{chat_id}' and date='{datetime.today().strftime('%Y-%m-%d')}';"

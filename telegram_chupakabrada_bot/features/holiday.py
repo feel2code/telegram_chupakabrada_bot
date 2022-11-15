@@ -3,10 +3,11 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from connections import bot, cur
+from ..connections import bot, cur
 
 
-def holiday(chat_id):
+def holiday(chat_id: int):
+    """Все искажения грамматики неслучайны."""
     day = datetime.now().day
     month = datetime.now().month
 

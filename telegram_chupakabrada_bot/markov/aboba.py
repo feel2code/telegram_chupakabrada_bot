@@ -1,6 +1,6 @@
 import markovify
 
-from connections import bot, conn_db, cur
+from ..connections import bot, conn_db, cur
 
 
 def markov(message):
@@ -34,8 +34,12 @@ def markov_hardness(message):
             hardness = int(hardness)
             cur.execute(f'update markov set hardness={hardness} where chat_id={message.chat.id}')
             conn_db.commit()
-            bot.send_message(message.chat.id, f'Умственные способности теперь на уровне {hardness}')
+            if hardness == int(hardness_list[0]):
+                msg_send = 'Заткнуть пытаешься да? Ну тада ясна.'
+            else:
+                msg_send = f'Я не дурачок, я теперь умнее стал на {hardness} IQ.'
+            bot.send_message(message.chat.id, msg_send)
         else:
-            bot.send_message(message.chat.id, f'Выбери из: {str(hardness_list)}')
+            bot.send_message(message.chat.id, f'Выбери из промежут_очка от {hardness_list[0]} до {hardness_list[-1]}')
     else:
-        bot.send_message(message.chat.id, 'Поговори для начала са мною!')
+        bot.send_message(message.chat.id, 'Поговори для начала са мною! Зззараза.')

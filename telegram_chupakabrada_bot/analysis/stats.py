@@ -1,7 +1,7 @@
 from tabulate import tabulate
 
-from conf import admin_chat
-from connections import bot, cur
+from ..conf import admin_chat
+from ..connections import bot, cur
 
 
 def send_statistics():
