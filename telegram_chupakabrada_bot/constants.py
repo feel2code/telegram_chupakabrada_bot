@@ -6,12 +6,12 @@ ZOO_DICT = {
 }
 
 SELECTS = {
-    '/about': 'SELECT about_text FROM about where about_id=1',
-    '/about@chupakabrada_bot': 'SELECT about_text FROM about where about_id=1',
-    '/quote': 'select quote from quotes order by random() limit 1',
-    '/quote@chupakabrada_bot': 'select quote from quotes order by random() limit 1',
-    '/start': 'SELECT start_text FROM start_q where start_id=1',
-    '/start@chupakabrada_bot': 'SELECT start_text FROM start_q where start_id=1',
+    '/about': 'SELECT about_text FROM about WHERE about_id=1',
+    '/about@chupakabrada_bot': 'SELECT about_text FROM about WHERE about_id=1',
+    '/quote': 'SELECT quote FROM quotes ORDER BY random() LIMIT 1',
+    '/quote@chupakabrada_bot': 'select quote from quotes ORDER BY random() LIMIT 1',
+    '/start': 'SELECT start_text FROM start_q WHERE start_id=1',
+    '/start@chupakabrada_bot': 'SELECT start_text FROM start_q WHERE start_id=1',
 }
 
 COMMANDS_QUERY = {

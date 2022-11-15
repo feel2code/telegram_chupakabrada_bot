@@ -1,6 +1,8 @@
 import time
 from datetime import datetime
 
+import psycopg2
+
 from connections import bot, conn_db, cur
 from constants import GODZILLA
 
@@ -11,7 +13,10 @@ def check(message):
     for word in msg_check:
         cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
                         where upper(q.question)='{word}';""")
-        rec = cur.fetchone()
+        try:
+            rec = cur.fetchone()
+        except psycopg2.ProgrammingError:
+            continue
         if not rec:
             continue
         else:
@@ -36,7 +41,14 @@ def check(message):
 
 def one_message(message):
     cur.execute('select count(1) from messages')
-    msg_length = cur.fetchone()[0]
+    try:
+        msg_length = cur.fetchone()
+        if msg_length:
+            msg_length = msg_length[0]
+        else:
+            return
+    except psycopg2.ProgrammingError:
+        return
     cur.execute("select msg_txt from messages")
     msg_db = cur.fetchall()
     msg_list = []

@@ -1,8 +1,12 @@
+import os
 import psycopg2
 import telebot
 
-from conf import bot_token, db_name
+from dotenv import load_dotenv
 
-bot = telebot.TeleBot(bot_token)
-conn_db = psycopg2.connect(db_name)
+load_dotenv(f"{'/'.join(os.getcwd().split('/')[:-1])}/.env")
+
+
+bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
+conn_db = psycopg2.connect(os.getenv('DB'))
 cur = conn_db.cursor()

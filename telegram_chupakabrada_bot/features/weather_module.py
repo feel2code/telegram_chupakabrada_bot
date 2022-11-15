@@ -1,8 +1,8 @@
+import os
 from datetime import datetime
 
 import requests
 
-from conf import weather_token
 from connections import bot, conn_db, cur
 from selects import simple_query
 
@@ -27,10 +27,9 @@ def weather(city_name: str) -> int:
     :param city_name: city name or id
     :return: temp in Celsius
     """
-    response = requests.get(
-        f'https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={weather_token}'
-    ).json()
-    return int(response['main']['temp'])
+    return int((requests.get(
+        f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&units=metric&appid={os.getenv('WEATHER_TOKEN')}"
+    ).json())['main']['temp'])
 
 
 def forecast(city: str) -> tuple:
@@ -40,7 +39,8 @@ def forecast(city: str) -> tuple:
     :return: temp on Celsius, conditions
     """
     response = requests.get(
-        f'https://api.openweathermap.org/data/2.5/forecast?q={city}&lang=ru&units=metric&cnt=4&appid={weather_token}'
+        f"https://api.openweathermap.org/data/2.5/forecast?q={city}&lang=ru&units=metric&cnt=4&"
+        f"appid={os.getenv('WEATHER_TOKEN')}"
     ).json()
     temp_celsius = int(response['list'][3]['main']['feels_like'])
     condition = response['list'][3]['weather'][0]['description'].lower()

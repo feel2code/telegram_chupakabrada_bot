@@ -1,8 +1,9 @@
 import logging
+import os
+
 
 from analysis.analytics import analytics
 from analysis.stats import send_statistics
-from conf import ban, home_telega, key_for_stats
 from connections import bot, cur
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from features.films import films_command
@@ -16,7 +17,7 @@ from telebot.apihelper import ApiTelegramException
 
 logging.basicConfig(
     level=logging.DEBUG,
-    filename='main.log',
+    filename=f"{'/'.join(os.getcwd().split('/')[:-1])}/main.log",
     format=(
         '%(asctime)s - %(module)s - %(levelname)s'
         ' - %(funcName)s: %(lineno)d - %(message)s'
@@ -41,7 +42,7 @@ COMMANDS_DO = {
 }
 
 COMMANDS_FUNCS = {
-    key_for_stats: send_statistics,
+    os.getenv('KEY_FOR_STATS'): send_statistics,
     '/weather_list': get_weather_list,
     '/weather_list@chupakabrada_bot': get_weather_list,
     '/holiday': holiday,
@@ -78,8 +79,8 @@ def get_text_messages(message):
     elif message.text.split()[0] in COMMANDS_DO:
         COMMANDS_DO[message.text.split()[0]](message)
 
-    if '@all' in message.text and message.chat.id == int(home_telega):
-        query(130, home_telega)
+    if '@all' in message.text and message.chat.id == int(os.getenv('HOME_TELEGA')):
+        query(130, message.chat.id)
 
     ai_message = markov(message)
     if ai_message is not None:
@@ -91,7 +92,7 @@ def deleting_msg(message):
     # seek for space and other symbols
     for sym in (' ', '-', '_'):
         full_msg_ban = str(message.text.lower()).replace(sym, '')
-    for msg_ban in ban:
+    for msg_ban in os.getenv('BAN', None):
         if msg_ban in full_msg_ban:
             try:
                 bot.delete_message(message.chat.id, message.id)
@@ -121,8 +122,8 @@ def get_audio_messages(audio):
 def get_photo_messages(photo_message):
     """Catching messages sent with photos."""
     if photo_message.caption is not None:
-        if '@all' in photo_message.caption and photo_message.chat.id == int(home_telega):
-            query(130, home_telega)
+        if '@all' in photo_message.caption and photo_message.chat.id == int(os.getenv('HOME_TELEGA')):
+            query(130, photo_message.chat.id)
 
 
 bot.polling(none_stop=True, interval=0, timeout=500)

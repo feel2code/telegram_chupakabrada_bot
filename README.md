@@ -1,6 +1,6 @@
-<h1 align="center">🙈Telegram Chupakabrada_bot🙈</h1>
+<h1 align="center">🙈Telegram Chupakabrada bot🙈</h1>
 
-<h3 align="center"> 
+<h4 align="center"> 
     This is funny bot for Telegram.
     Bot can dialog with user in private or group chats, can reply for  often used words and phrases in chat,
     can recommend stickers in chat by command.
@@ -8,8 +8,8 @@
     can send which holiday today in Russia by command and by CRON at definite time,
     can send coronavirus actual info in Russia by command and by CRON at definite time.
     Another JUST FOR FUN function - send one famous Russian YouTube streamer's quotes.
-</h3>
-<h4 align="center"><a href="https://t.me/chupakabrada_bot">LINK TO THIS INCREDIBLE TELEGRAM BOT</a></h4>
+</h4>
+<h3 align="center"><a href="https://t.me/chupakabrada_bot">LINK TO THIS INCREDIBLE TELEGRAM BOT</a></h3>
 
 <p align="center">
     <a href="https://python.org">
@@ -26,7 +26,7 @@
     <img src="https://img.shields.io/github/stars/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor" alt="Stars">
 </p>
 
-## Installation instructions
+## Installation
 ```
 git clone https://github.com/feel2code/telegram_chupakabrada_bot/telegram_chupakabrada_bot && cd /root/telegram_chupakabrada_bot/ && chmod +x install.sh && ./install.sh
 ```

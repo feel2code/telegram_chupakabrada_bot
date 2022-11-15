@@ -1,4 +1,5 @@
 import logging
+import os
 import time
 from typing import Union
 
@@ -6,14 +7,15 @@ import psycopg2
 import requests
 import telebot
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
 
-from conf import bot_token, db_name, home_telega
+load_dotenv(f"{'/'.join(os.getcwd().split('/')[:-1])}/.env")
 
-connection_to_db = psycopg2.connect(db_name)
+connection_to_db = psycopg2.connect(os.getenv('DB'))
 cursor = connection_to_db.cursor()
 logging.basicConfig(
     level=logging.DEBUG,
-    filename='exchange.log',
+    filename=f"{'/'.join(os.getcwd().split('/')[:-1])}/exchange.log",
     format=(
         '%(asctime)s - %(module)s - %(levelname)s'
         ' - %(funcName)s: %(lineno)d - %(message)s'
@@ -36,6 +38,7 @@ def get_usd_course() -> Union[int, None]:
 
 
 def check_course():
+    """Искажения грамматики неслучайны."""
     rate = get_usd_course()
     if rate is not None:
         cursor.execute("select course_value from course where course_name='usd';")
@@ -43,8 +46,8 @@ def check_course():
         if rate != last_rate:
             cursor.execute(f"update course set course_value={rate} where course_name='usd';")
             connection_to_db.commit()
-            bot = telebot.TeleBot(bot_token)
-            bot.send_message(chat_id=home_telega, text=f'Далар уже па {rate} ₽')
+            bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
+            bot.send_message(chat_id=os.getenv('HOME_TELEGA'), text=f'Далар уже па {rate} ₽')
         else:
             pass
     else:

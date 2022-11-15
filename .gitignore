@@ -146,5 +146,7 @@ dmypy.json
 .mypy_cache
 
 # configuration
-telegram_chupakabrada_bot/conf.py
-telegram_chupakabrada_bot/markov/*.txt
+conf.py
+
+# generated files
+markov_files/

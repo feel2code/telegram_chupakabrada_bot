@@ -1,10 +1,12 @@
+import os
+
 from tabulate import tabulate
 
-from conf import admin_chat
 from connections import bot, cur
 
 
 def send_statistics():
+    admin_chat = os.getenv('ADMIN_CHAT')
     cur.execute(
         f"""select * from (select '1' as Номер,
         'Всего отсылок' as Статистика,

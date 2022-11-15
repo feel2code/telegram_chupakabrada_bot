@@ -2,8 +2,7 @@
 apt-get install postgresql-12 -yy
 mv /etc/postgresql/12/main/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf.bak
 cp misc/pg_hba.conf /etc/postgresql/12/main/pg_hba.conf
-# copying secret conf file from root directory
-cp /root/conf.py /root/telegram_chupakabrada_bot/conf.py
+mkdir /root/markov_files
 cd /root/telegram_chupakabrada_bot || exit
 chmod +x install.sh
 chmod +x morning_messages.sh

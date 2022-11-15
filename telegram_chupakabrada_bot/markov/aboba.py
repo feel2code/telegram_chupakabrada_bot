@@ -1,27 +1,34 @@
+import os
+
 import markovify
 
 from connections import bot, conn_db, cur
 
 
+markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/"
+
+
 def markov(message):
     cur.execute(f'select count(1) from markov where chat_id={message.chat.id}')
-    if cur.fetchone()[0] == 1:
-        cur.execute(f'select hardness from markov where chat_id={message.chat.id};')
-        hardness = cur.fetchone()[0]
-        markov_text = open(f'markov/markov{str(message.chat.id)}.txt', "a")
-        markov_text.write(f'{message.text}. ')
-        markov_text.close()
-        text = open(f'markov/markov{str(message.chat.id)}.txt', encoding='utf8').read()
-        text_model = markovify.Text(text, state_size=int(hardness))
-        for i in range(1):
-            return text_model.make_sentence(tries=50)
-    else:
-        cur.execute(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 1);")
-        conn_db.commit()
-        markov_text = open(f'markov/markov{str(message.chat.id)}.txt', "a")
-        markov_text.write(f'{message.text}. ')
-        markov_text.close()
-        return message.text
+    fetched = cur.fetchone()
+    if fetched:
+        if fetched[0] == 1:
+            cur.execute(f'select hardness from markov where chat_id={message.chat.id};')
+            hardness = cur.fetchone()[0]
+            markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', "a")
+            markov_text.write(f'{message.text}. ')
+            markov_text.close()
+            text = open(f'{markov_path}{str(message.chat.id)}.txt', encoding='utf8').read()
+            text_model = markovify.Text(text, state_size=int(hardness))
+            for i in range(1):
+                return text_model.make_sentence(tries=50)
+        else:
+            cur.execute(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 1);")
+            conn_db.commit()
+            markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', "a")
+            markov_text.write(f'{message.text}. ')
+            markov_text.close()
+            return message.text
 
 
 def markov_hardness(message):
