@@ -14,14 +14,18 @@ def markov(message):
     if fetched:
         if fetched[0] == 1:
             cur.execute(f'select hardness from markov where chat_id={message.chat.id};')
-            hardness = cur.fetchone()[0]
-            markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', "a")
-            markov_text.write(f'{message.text}. ')
-            markov_text.close()
-            text = open(f'{markov_path}{str(message.chat.id)}.txt', encoding='utf8').read()
-            text_model = markovify.Text(text, state_size=int(hardness))
-            for i in range(1):
-                return text_model.make_sentence(tries=50)
+            hardness = cur.fetchone()
+            if hardness:
+                hardness = hardness[0]
+                markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', 'a', encoding='utf-8')
+                markov_text.write(f'{message.text}. ')
+                markov_text.close()
+                text = open(f'{markov_path}{str(message.chat.id)}.txt', encoding='utf8').read()
+                text_model = markovify.Text(text, state_size=int(hardness))
+                for i in range(1):
+                    return text_model.make_sentence(tries=50)
+            else:
+                return
         else:
             cur.execute(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 1);")
             conn_db.commit()
@@ -42,10 +46,10 @@ def markov_hardness(message):
             hardness = int(hardness)
             cur.execute(f'update markov set hardness={hardness} where chat_id={message.chat.id}')
             conn_db.commit()
-            if hardness == int(hardness_list[0]):
-                msg_send = f'Мой ICQ уменьшился до {hardness}.'
-            else:
+            if hardness == int(hardness_list[-1]):
                 msg_send = 'Заткнуть пытаешься да? Ну тада ясна.'
+            else:
+                msg_send = f'Мой ICQ уменьшился до {hardness}.'
             bot.send_message(message.chat.id, msg_send)
         else:
             bot.send_message(message.chat.id, f'Выбери из промежут_очка от {hardness_list[0]} до {hardness_list[-1]}')
