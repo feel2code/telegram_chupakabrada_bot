@@ -8,10 +8,8 @@
     can send which holiday today in Russia by command and by CRON at definite time,
     can send coronavirus actual info in Russia by command and by CRON at definite time.
     Another JUST FOR FUN function - send one famous Russian YouTube streamer's quotes.
-      <a href="https://t.me/chupakabrada_bot">
-        LINK TO THIS INCREDIBLE TELEGRAM BOT
-    </a>
 </h3>
+<h4 align="center"><a href="https://t.me/chupakabrada_bot">LINK TO THIS INCREDIBLE TELEGRAM BOT</a></h4>
 
 <p align="center">
     <a href="https://python.org">
