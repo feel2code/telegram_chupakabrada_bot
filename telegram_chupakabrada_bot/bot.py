@@ -59,7 +59,7 @@ COMMANDS_FUNCS = {
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     """Catching text messages or commands for bot."""
-    deleting_msg(message)
+#     deleting_msg(message)
     analytics(message)
     check(message)
     one_message(message)
@@ -86,17 +86,17 @@ def get_text_messages(message):
         bot.send_message(message.chat.id, ai_message)
 
 
-def deleting_msg(message):
-    """Delete unappropriated words."""
-    # seek for space and other symbols
-    for sym in (' ', '-', '_'):
-        full_msg_ban = str(message.text.lower()).replace(sym, '')
-    for msg_ban in ban:
-        if msg_ban in full_msg_ban:
-            try:
-                bot.delete_message(message.chat.id, message.id)
-            except ApiTelegramException:
-                logger.error('Issues with deleting unappropriated message.')
+# def deleting_msg(message):
+#     """Delete unappropriated words."""
+#     # seek for space and other symbols
+#     for sym in (' ', '-', '_'):
+#         full_msg_ban = str(message.text.lower()).replace(sym, '')
+#     for msg_ban in ban:
+#         if msg_ban in full_msg_ban:
+#             try:
+#                 bot.delete_message(message.chat.id, message.id)
+#             except ApiTelegramException:
+#                 logger.error('Issues with deleting unappropriated message.')
 
 
 def standard_commands(message):
