@@ -52,7 +52,8 @@ def forecast(city: str) -> tuple:
         'небольшой дождь': '🌦',
         'переменная облачность': '⛅',
         'дождь': '🌨',
-        'снег': '❄️'
+        'снег': '❄️',
+        'небольшой снег': '🌨'
     }
     # ️⛈🌧🌦☁️🌥🌩🌨
     condition = condition_emoji[condition] if condition in condition_emoji else condition
