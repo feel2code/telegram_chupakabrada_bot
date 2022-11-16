@@ -2,9 +2,8 @@ import os
 from datetime import datetime
 
 import requests
-
-from telegram_chupakabrada_bot.connections import bot, conn_db, cur
-from telegram_chupakabrada_bot.selects import simple_query
+from connections import bot, conn_db, cur
+from selects import simple_query
 
 
 def weather_in_city(message):

@@ -2,10 +2,11 @@ import os
 
 from tabulate import tabulate
 
-from telegram_chupakabrada_bot.connections import bot, cur
+from connections import bot, cur
 
 
-def send_statistics():
+def send_statistics(attrs):
+    print(attrs)
     admin_chat = os.getenv('ADMIN_CHAT')
     cur.execute(
         f"""select * from (select '1' as Номер,

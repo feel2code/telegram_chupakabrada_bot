@@ -3,8 +3,8 @@ from datetime import datetime
 
 import psycopg2
 
-from telegram_chupakabrada_bot.connections import bot, conn_db, cur
-from telegram_chupakabrada_bot.constants import GODZILLA
+from connections import bot, conn_db, cur
+from constants import GODZILLA
 
 
 # checking does message has any word in list from dictionary
@@ -50,7 +50,10 @@ def one_message(message):
     except psycopg2.ProgrammingError:
         return
     cur.execute("select msg_txt from messages")
-    msg_db = cur.fetchall()
+    try:
+        msg_db = cur.fetchall()
+    except psycopg2.ProgrammingError:
+        return
     msg_list = []
     for i in range(0, msg_length):
         msg_list.append((msg_db[i])[0])

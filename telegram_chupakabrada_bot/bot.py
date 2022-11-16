@@ -2,14 +2,14 @@ import logging
 import os
 
 
-from analysis.analytics import analytics
-from analysis.stats import send_statistics
+from analytics import analytics
+from stats import send_statistics
 from connections import bot, cur
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
-from features.films import films_command
-from features.holiday import holiday
-from features.weather_module import add_city, delete_city, get_weather_list, weather_in_city
-from markov.aboba import markov, markov_hardness
+from films import films_command
+from holiday import holiday
+from weather_module import add_city, delete_city, get_weather_list, weather_in_city
+from aboba import markov, markov_hardness
 from selects import check, exchange, one_message, query, roll, sticker_send, zoo
 from today_corona import coronavirus
 from telebot.apihelper import ApiTelegramException
@@ -126,4 +126,5 @@ def get_photo_messages(photo_message):
             query(130, photo_message.chat.id)
 
 
-bot.polling(none_stop=True, interval=0, timeout=500)
+if __name__ == '__main__':
+    bot.polling(none_stop=True, interval=0, timeout=500)

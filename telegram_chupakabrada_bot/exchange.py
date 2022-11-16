@@ -3,16 +3,13 @@ import os
 import time
 from typing import Union
 
-import psycopg2
 import requests
 import telebot
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 
-load_dotenv(f"{'/'.join(os.getcwd().split('/')[:-1])}/.env")
+from connections import conn_db, cur
 
-connection_to_db = psycopg2.connect(os.getenv('DB'))
-cursor = connection_to_db.cursor()
+
 logging.basicConfig(
     level=logging.DEBUG,
     filename=f"{'/'.join(os.getcwd().split('/')[:-1])}/exchange.log",
@@ -41,11 +38,11 @@ def check_course():
     """Искажения грамматики неслучайны."""
     rate = get_usd_course()
     if rate is not None:
-        cursor.execute("select course_value from course where course_name='usd';")
-        last_rate = cursor.fetchone()[0]
+        cur.execute("select course_value from course where course_name='usd';")
+        last_rate = cur.fetchone()[0]
         if rate != last_rate:
-            cursor.execute(f"update course set course_value={rate} where course_name='usd';")
-            connection_to_db.commit()
+            cur.execute(f"update course set course_value={rate} where course_name='usd';")
+            conn_db.commit()
             bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
             bot.send_message(chat_id=os.getenv('HOME_TELEGA'), text=f'Далар уже па {rate} ₽')
         else:
@@ -54,6 +51,7 @@ def check_course():
         pass
 
 
-while True:
-    check_course()
-    time.sleep(60)
+if __name__ == '__main__':
+    while True:
+        check_course()
+        time.sleep(60)

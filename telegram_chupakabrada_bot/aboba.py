@@ -1,6 +1,7 @@
 import os
 
 import markovify
+import psycopg2
 
 from telegram_chupakabrada_bot.connections import bot, conn_db, cur
 
@@ -10,7 +11,10 @@ markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
 
 def markov(message):
     cur.execute(f'select count(1) from markov where chat_id={message.chat.id}')
-    fetched = cur.fetchone()
+    try:
+        fetched = cur.fetchone()
+    except psycopg2.ProgrammingError:
+        return
     if fetched:
         if fetched[0] == 1:
             cur.execute(f'select hardness from markov where chat_id={message.chat.id};')

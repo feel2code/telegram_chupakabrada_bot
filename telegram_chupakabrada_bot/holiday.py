@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 from bs4 import BeautifulSoup
 
-from telegram_chupakabrada_bot.connections import bot, cur
+from connections import bot, cur
 
 
 def holiday(chat_id: str):

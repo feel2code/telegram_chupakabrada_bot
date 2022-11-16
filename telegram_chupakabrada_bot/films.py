@@ -1,5 +1,5 @@
-from telegram_chupakabrada_bot.connections import bot, cur
-from telegram_chupakabrada_bot.selects import query, simple_query
+from connections import bot, cur
+from selects import query, simple_query
 
 
 def films_command(message):

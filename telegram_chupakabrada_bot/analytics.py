@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from telegram_chupakabrada_bot.connections import conn_db, cur
+from connections import conn_db, cur
 
 
 def analytics(message):
