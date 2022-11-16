@@ -5,7 +5,7 @@ import markovify
 from connections import bot, conn_db, cur
 
 
-markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/"
+markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
 
 
 def markov(message):
