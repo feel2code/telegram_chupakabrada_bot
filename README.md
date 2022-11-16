@@ -32,5 +32,5 @@ git clone https://github.com/feel2code/telegram_chupakabrada_bot
 mv telegram_chupakabrada_bot tgbotbackup
 cd tgbotbackup && mv telegram_chupakabrada_bot .. && cd ..
 rm -rf tgbotbackup && cd telegram_chupakabrada_bot
-chmod +x install.sh && ./install.sh
+chmod +x *.sh && ./install.sh
 ```
