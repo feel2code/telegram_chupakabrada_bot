@@ -1,12 +1,13 @@
+import os
 from datetime import datetime
 
 import requests
 from bs4 import BeautifulSoup
 
-from connections import bot, cur
+from telegram_chupakabrada_bot.connections import bot, cur
 
 
-def holiday(chat_id: int):
+def holiday(chat_id: str):
     """Все искажения грамматики неслучайны."""
     day = datetime.now().day
     month = datetime.now().month
@@ -30,3 +31,7 @@ def holiday(chat_id: int):
         bot.send_message(chat_id=chat_id, text=f'Сиводня {datetime.now().date()}: \n{case}')
     except ValueError:
         bot.send_message(chat_id=chat_id, text=f'Сиводня {datetime.now().date()} праздников нет.')
+
+
+if __name__ == '__main__':
+    holiday(os.getenv('HOME_TELEGA'))

@@ -3,8 +3,8 @@ from datetime import datetime
 
 import psycopg2
 
-from connections import bot, conn_db, cur
-from constants import GODZILLA
+from telegram_chupakabrada_bot.connections import bot, conn_db, cur
+from telegram_chupakabrada_bot.constants import GODZILLA
 
 
 # checking does message has any word in list from dictionary

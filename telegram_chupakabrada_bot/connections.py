@@ -4,7 +4,7 @@ import telebot
 
 from dotenv import load_dotenv
 
-load_dotenv(f"{'/'.join(os.getcwd().split('/')[:-1])}/.env")
+load_dotenv(f"{'/'.join(os.getcwd().split('/')[:5])}/.env")
 
 
 bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))

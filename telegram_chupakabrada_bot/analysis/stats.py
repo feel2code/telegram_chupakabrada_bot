@@ -2,7 +2,7 @@ import os
 
 from tabulate import tabulate
 
-from connections import bot, cur
+from telegram_chupakabrada_bot.connections import bot, cur
 
 
 def send_statistics():

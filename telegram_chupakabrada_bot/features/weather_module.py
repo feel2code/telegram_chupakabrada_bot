@@ -3,8 +3,8 @@ from datetime import datetime
 
 import requests
 
-from connections import bot, conn_db, cur
-from selects import simple_query
+from telegram_chupakabrada_bot.connections import bot, conn_db, cur
+from telegram_chupakabrada_bot.selects import simple_query
 
 
 def weather_in_city(message):
@@ -177,3 +177,7 @@ def get_weather_list(chat_id):
     else:
         weather_message = simple_query(116)
     bot.send_message(chat_id=chat_id, text=weather_message, parse_mode='Markdown')
+
+
+if __name__ == '__main__':
+    get_weather_list(os.getenv('HOME_TELEGA'))
