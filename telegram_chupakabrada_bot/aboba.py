@@ -3,7 +3,7 @@ import os
 import markovify
 import psycopg2
 
-from telegram_chupakabrada_bot.connections import bot, conn_db, cur
+from connections import bot, conn_db, cur
 
 
 markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
