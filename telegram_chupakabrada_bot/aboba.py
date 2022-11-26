@@ -34,7 +34,7 @@ def markov(message):
             else:
                 return
         else:
-            cur.execute(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 1);")
+            cur.execute(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 9);")
             conn_db.commit()
             markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', "a")
             markov_text.write(f'{message.text}. ')
