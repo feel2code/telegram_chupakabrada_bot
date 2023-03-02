@@ -22,21 +22,30 @@ logging.basicConfig(
 
 
 def get_usd_course() -> Union[int, None]:
-    page = requests.get('https://quote.rbc.ru/ticker/59111')
+    url = 'https://www.bloomberg.com/quote/USDRUB:CUR'
     time.sleep(10)
-    soup = BeautifulSoup(page.text, "html.parser")
-    data = soup.find('div', class_='chart__info__row js-ticker').find('span', class_='chart__info__sum').text
-    float_rate = float(data.replace('₽', '').replace(' ', '').replace(',', '.'))
-    rate_remain = float_rate - int(float_rate)
+    response = requests.get(url, timeout=5, headers={"user-agent": "Mozilla/80.0"})
+    soup = BeautifulSoup(response.text, "html.parser")
+    rate = float(soup.find('div', class_='overviewRow__ab9704fa12').find('span', class_='priceText__0550103750').text)
+    rate_remain = rate - int(rate)
     if int(rate_remain * 10) in range(0, 4) or rate_remain in range(8, 10):
-        return int(float_rate)
-    else:
-        return None
+        return int(rate)
+    return None
+
+
+def get_gel_course() -> Union[int, None]:
+    url = 'https://www.xe.com/currencyconverter/convert/?Amount=1&From=GEL&To=RUB'
+    time.sleep(10)
+    response = requests.get(url, timeout=5, headers={"user-agent": "Mozilla/80.0"})
+    soup = BeautifulSoup(response.text, "html.parser")
+    return int(float(soup.find('p', class_='result__BigRate-sc-1bsijpp-1 iGrAod').text.split()[0]))
 
 
 def check_course():
     """Искажения грамматики неслучайны."""
-    rate = get_usd_course()
+    rate, gel_rate = get_usd_course(), get_gel_course()
+    cur.execute(f"update course set course_value={gel_rate} where course_name='gel';")
+    conn_db.commit()
     if rate is not None:
         cur.execute("select course_value from course where course_name='usd';")
         last_rate = cur.fetchone()[0]
@@ -54,4 +63,4 @@ def check_course():
 if __name__ == '__main__':
     while True:
         check_course()
-        time.sleep(60)
+        time.sleep(120)

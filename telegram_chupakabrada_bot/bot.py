@@ -10,7 +10,7 @@ from films import films_command
 from holiday import holiday
 from weather_module import add_city, delete_city, get_weather_list, weather_in_city
 from aboba import markov, markov_hardness
-from selects import check, exchange, one_message, query, roll, sticker_send, zoo
+from selects import check, usd_exchange, gel_exchange, one_message, query, roll, sticker_send, zoo
 from today_corona import coronavirus
 from telebot.apihelper import ApiTelegramException
 
@@ -53,8 +53,10 @@ COMMANDS_FUNCS = {
     '/sticker@chupakabrada_bot': sticker_send,
     '/roll': roll,
     '/roll@chupakabrada_bot': roll,
-    '/dollar': exchange,
-    '/dollar@chupakabrada_bot': exchange
+    '/dollar': usd_exchange,
+    '/dollar@chupakabrada_bot': usd_exchange,
+    '/lari': gel_exchange,
+    '/lari@chupakabrada_bot': gel_exchange
 }
 
 

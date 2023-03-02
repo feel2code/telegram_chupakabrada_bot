@@ -114,8 +114,15 @@ def roll(chat_id: int):
         bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')
 
 
-def exchange(chat_id):
-    """get currency."""
+def usd_exchange(chat_id):
+    """usd currency rate."""
     cur.execute("select course_value from course where course_name='usd';")
     last_rate = cur.fetchone()[0]
     bot.send_message(chat_id=chat_id, text=f'Далар чичас па {last_rate} ₽')
+
+
+def gel_exchange(chat_id):
+    """gel currency rate."""
+    cur.execute("select course_value from course where course_name='gel';")
+    last_rate = cur.fetchone()[0]
+    bot.send_message(chat_id=chat_id, text=f'Ларики чичас па {last_rate} ₽')
