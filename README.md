@@ -1,5 +1,5 @@
 <h1 align="center">🙈Telegram Chupakabrada bot🙈</h1>
-
+<div align="center"><img height=200px src="https://repository-images.githubusercontent.com/414962202/9e7ee342-c3b0-4787-83d7-27a6e98279d6"></div>
 <h4 align="center"> 
     This is funny bot for Telegram.
     Bot can dialog with user in private or group chats, can reply for  often used words and phrases in chat,
