@@ -1,4 +1,4 @@
-<h1 align="center">🙈Telegram Chupakabrada bot🙈</h1>
+<h1>🙈Telegram Chupakabrada bot🙈</h1>
 
 ![Telegram Chupakabrada Bot Logo](https://repository-images.githubusercontent.com/414962202/bebbff7c-5228-4cd9-9a98-c59278ee3cd1)
 
