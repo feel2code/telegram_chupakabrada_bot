@@ -1,6 +1,6 @@
 <h1 align="center">🙈Telegram Chupakabrada bot🙈</h1>
 
-![Telegram Chupakabrada Bot Logo](https://repository-images.githubusercontent.com/414962202/cac88d4a-5916-492a-9ae8-f573aa6ee448)
+![Telegram Chupakabrada Bot Logo](https://repository-images.githubusercontent.com/414962202/46506757-e8be-42ca-9b28-d944d73bcadd)
 
 <h4 align="center"> 
     This is funny bot for Telegram.
