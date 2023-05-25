@@ -5,8 +5,10 @@ import requests
 from bs4 import BeautifulSoup
 
 from connections import bot, cur
+from deprecation import deprecated
 
 
+@deprecated()
 def holiday(chat_id: str):
     """Все искажения грамматики неслучайны."""
     day = datetime.now().day
@@ -33,5 +35,22 @@ def holiday(chat_id: str):
         bot.send_message(chat_id=chat_id, text=f'Сиводня {datetime.now().date()} праздников нет.')
 
 
+def get_holidays(chat_id: str):
+    """Gets full parsed list of holidays and sends to the specific chat."""
+    # Все искажения грамматики неслучайны.
+    holidays = []
+    page = requests.get('https://calend.online/holiday/')
+    if page.status_code == 200:
+        holidays_list = BeautifulSoup(page.text, "html.parser").find('ul', class_='holidays-list')
+        for one_holiday in holidays_list.select("li"):
+            holidays.append(one_holiday.get_text().replace("\n", "").replace("  ", ""))
+    holidays = "\n".join(holidays)
+    bot.send_message(
+        chat_id=chat_id,
+        text=f'Сиводня {datetime.now().date()}:\n{holidays if holidays else "праздников нет."}'
+    )
+
+
 if __name__ == '__main__':
-    holiday(os.getenv('HOME_TELEGA'))
+    # holiday(os.getenv('HOME_TELEGA')) # old method
+    get_holidays(os.getenv('HOME_TELEGA'))

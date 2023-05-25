@@ -7,7 +7,7 @@ from stats import send_statistics
 from connections import bot, cur
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
-from holiday import holiday
+from holiday import get_holidays
 from weather_module import add_city, delete_city, get_weather_list, weather_in_city
 from aboba import markov, markov_hardness
 from selects import check, usd_exchange, gel_exchange, one_message, query, roll, sticker_send, zoo
@@ -45,8 +45,8 @@ COMMANDS_FUNCS = {
     os.getenv('KEY_FOR_STATS'): send_statistics,
     '/weather_list': get_weather_list,
     '/weather_list@chupakabrada_bot': get_weather_list,
-    '/holiday': holiday,
-    '/holiday@chupakabrada_bot': holiday,
+    '/holiday': get_holidays,
+    '/holiday@chupakabrada_bot': get_holidays,
     '/corona': coronavirus,
     '/corona@chupakabrada_bot': coronavirus,
     '/sticker': sticker_send,
