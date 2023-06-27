@@ -7,7 +7,7 @@ from stats import send_statistics
 from connections import bot, cur
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
-from holiday import get_holidays
+from holiday import get_holidays, get_wiki_holiday
 from weather_module import add_city, delete_city, get_weather_list, weather_in_city
 from aboba import markov, markov_hardness
 from selects import check, usd_exchange, gel_exchange, one_message, query, roll, sticker_send, zoo
@@ -47,6 +47,8 @@ COMMANDS_FUNCS = {
     '/weather_list@chupakabrada_bot': get_weather_list,
     '/holiday': get_holidays,
     '/holiday@chupakabrada_bot': get_holidays,
+    '/get_wiki_holiday': get_wiki_holiday,
+    '/get_wiki_holiday@chupakabrada_bot': get_wiki_holiday,
     '/corona': coronavirus,
     '/corona@chupakabrada_bot': coronavirus,
     '/sticker': sticker_send,
