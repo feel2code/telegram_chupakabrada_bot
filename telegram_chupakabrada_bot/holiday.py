@@ -7,6 +7,27 @@ from bs4 import BeautifulSoup
 from connections import bot, cur
 
 
+def get_holidays_from_db(chat_id: str):
+    """Get holidays from db."""
+    day, month = datetime.now().day, datetime.now().month
+    cur.execute(f"""select holiday_name from (
+                        select
+                            extract(day from dt)::int as day,
+                            extract(month from dt)::int as month,
+                            '🇷🇺 ' || holiday_name as holiday_name from holidays_ru hr
+                        union all
+                        select
+                            extract(day from dt)::int as day,
+                            extract(month from dt)::int as month,
+                            '🌍 ' || holiday_name as holiday_name from holidays_iso iso
+                        ) as holidays
+                    where day={day} and month={month}
+                    order by month, day asc;""")
+    fetched = [x[0] for x in cur.fetchall()]
+    message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + '\n'.join(fetched)
+    bot.send_message(chat_id=chat_id, text=message)
+
+
 def get_wiki_holiday(chat_id: str):
     """Get list of holidays including links to wiki."""
     # Все искажения грамматики неслучайны.
@@ -44,4 +65,4 @@ def get_holidays(chat_id: str):
 
 
 if __name__ == '__main__':
-    get_wiki_holiday(os.getenv('HOME_TELEGA'))
+    get_holidays_from_db(os.getenv('HOME_TELEGA'))
