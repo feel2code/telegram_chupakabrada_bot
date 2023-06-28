@@ -10,7 +10,9 @@ def films_command(message):
 def get_top_films(message):
     try:
         year = int(message.text)
-        if year in range(2017, 2023):
+        cur.execute(f"select min(year::int), max(year::int) from films;")
+        min_year, max_year = cur.fetchall()[0]
+        if year in range(min_year, max_year + 1):
             cur.execute(f"select film_name, year, link from films where year='{year}' order by random() limit 1")
             what_to_send = ' '.join(cur.fetchall()[0])
         else:
