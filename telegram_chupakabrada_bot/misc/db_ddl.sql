@@ -175,6 +175,8 @@ CREATE TABLE public.holidays_ru_relative (
 	rel_name varchar(200) NULL,
 	dt date NULL,
 	holiday_name varchar(250) NULL,
+	week_num int4 NULL,
+	day_num int4 NULL,
 	CONSTRAINT holiday_ru_relative_pkey PRIMARY KEY (id)
 );
 

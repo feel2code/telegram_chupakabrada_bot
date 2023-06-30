@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 
+from calendar import Calendar, MONDAY
 import requests
 from bs4 import BeautifulSoup
 
@@ -9,8 +10,19 @@ from connections import bot, cur
 
 def get_holidays_from_db(chat_id: str):
     """Get holidays from db."""
+    # Все искажения грамматики неслучайны.
+    # get week and day from calendar to check relative holidays
+    month_calendar = Calendar(firstweekday=MONDAY).monthdatescalendar(datetime.utcnow().year, datetime.utcnow().month)
+    day_num, week_num = 0, 0
+    for week_idx, week in enumerate(month_calendar):
+        for day_idx, day in enumerate(week):
+            if day == datetime.today().date():
+                day_num, week_num = day_idx + 1, week_idx  # monday = 1, tuesday = 2 etc.
+                break
+    # get current day and month
     day, month = datetime.now().day, datetime.now().month
-    cur.execute(f"""select holiday_name from (
+    cur.execute(f"""select * from (
+                    (select holiday_name from (
                         select
                             extract(day from dt)::int as day,
                             extract(month from dt)::int as month,
@@ -21,8 +33,12 @@ def get_holidays_from_db(chat_id: str):
                             extract(month from dt)::int as month,
                             '🌍 ' || holiday_name as holiday_name from holidays_iso iso
                         ) as holidays
-                    where day={day} and month={month}
-                    order by month, day asc;""")
+                    where day={day} and month={month})
+                    union all (
+                        select '🇷🇺 ' || holiday_name as holiday_name
+                        from holidays_ru_relative hrr
+                        where day_num={day_num} and week_num={week_num} and extract(month from dt)={month}
+                    )) as holidays_all;""")
     fetched = [x[0] for x in cur.fetchall()]
     message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + '\n'.join(fetched)
     bot.send_message(chat_id=chat_id, text=message)
