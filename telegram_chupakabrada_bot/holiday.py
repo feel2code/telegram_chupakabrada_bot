@@ -40,7 +40,8 @@ def get_holidays_from_db(chat_id: str):
                         where day_num={day_num} and week_num={week_num} and extract(month from dt)={month}
                     )) as holidays_all;""")
     fetched = [x[0] for x in cur.fetchall()]
-    message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + '\n'.join(fetched)
+    holidays_from_db = '\n'.join(fetched) if fetched else 'Сиводня праздников нет! Пойду сделаю омлет...'
+    message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + holidays_from_db
     bot.send_message(chat_id=chat_id, text=message)
 
 
