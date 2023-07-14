@@ -1,7 +1,6 @@
 import os
 
 import markovify
-import psycopg2
 
 from connections import bot, conn_db, cur
 
@@ -13,7 +12,7 @@ def markov(message):
     cur.execute(f'select count(1) from markov where chat_id={message.chat.id}')
     try:
         fetched = cur.fetchone()
-    except psycopg2.ProgrammingError:
+    except:
         return
     if fetched:
         if fetched[0] == 1:

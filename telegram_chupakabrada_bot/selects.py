@@ -1,8 +1,6 @@
 import time
 from datetime import datetime
 
-import psycopg2
-
 from connections import bot, conn_db, cur
 from constants import GODZILLA
 
@@ -15,7 +13,7 @@ def check(message):
                         where upper(q.question)={word.__repr__()};""")
         try:
             rec = cur.fetchone()
-        except psycopg2.ProgrammingError:
+        except:
             continue
         if not rec:
             continue
@@ -47,12 +45,12 @@ def one_message(message):
             msg_length = msg_length[0]
         else:
             return
-    except psycopg2.ProgrammingError:
+    except:
         return
     cur.execute("select msg_txt from messages")
     try:
         msg_db = cur.fetchall()
-    except psycopg2.ProgrammingError:
+    except:
         return
     msg_list = []
     for i in range(0, msg_length):
@@ -108,7 +106,7 @@ def roll(chat_id: int):
         conn_db.commit()
     else:
         cur.execute(
-            f"select nick from rolls where chat_id='{chat_id}' and date='{datetime.today().strftime('%Y-%m-%d')}';"
+            f"select nick from rolls where chat_id='{chat_id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"
         )
         nick = cur.fetchone()[0]
         bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')

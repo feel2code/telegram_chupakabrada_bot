@@ -1,14 +1,13 @@
 #!/bin/bash
 while true
 do
-	bot=$(pgrep -fc 'python3 /root/telegram_chupakabrada_bot/bot.py')
+	bot=$(pgrep -fc 'python bot.py')
 	if [ "$bot" -eq 0 ]
 then {
 	echo "Running bot.py"
         sleep 1
-    cd /root/telegram_chupakabrada_bot || exit
     source venv/bin/activate
-	python3 /root/telegram_chupakabrada_bot/bot.py &
+	  python bot.py &
 }
 else 
 {
@@ -16,14 +15,13 @@ else
 }
 fi
 
-	exchange=$(pgrep -fc 'python3 /root/telegram_chupakabrada_bot/exchange.py')
+	exchange=$(pgrep -fc 'python exchange.py')
 	if [ "$exchange" -eq 0 ]
 then {
 	echo "Running exchange.py"
         sleep 1
-    cd /root/telegram_chupakabrada_bot || exit
     source venv/bin/activate
-	python3 /root/telegram_chupakabrada_bot/exchange.py &
+	  python exchange.py &
 }
 else 
 {

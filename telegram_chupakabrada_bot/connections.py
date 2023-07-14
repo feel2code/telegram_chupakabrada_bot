@@ -4,9 +4,7 @@ import mysql.connector
 
 from dotenv import load_dotenv
 
-load_dotenv(f"{'/'.join(os.getcwd().split('/')[:5])}/.env")
-
-
+load_dotenv(".env")
 bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
 conn_db = mysql.connector.connect(user=os.getenv('DB_USER'),
                                   password=os.getenv('DB_PASSWORD'),
