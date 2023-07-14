@@ -24,13 +24,13 @@ def get_holidays_from_db(chat_id: str):
     cur.execute(f"""select * from (
                     (select holiday_name from (
                         select
-                            extract(day from dt)::int as day,
-                            extract(month from dt)::int as month,
+                            cast(extract(day from dt) as unsigned) as day,
+                            cast(extract(month from dt) as unsigned) as month,
                             '🇷🇺 ' || holiday_name as holiday_name from holidays_ru hr
                         union all
                         select
-                            extract(day from dt)::int as day,
-                            extract(month from dt)::int as month,
+                            cast(extract(day from dt) as unsigned) as day,
+                            cast(extract(month from dt) as unsigned) as month,
                             '🌍 ' || holiday_name as holiday_name from holidays_iso iso
                         ) as holidays
                     where day={day} and month={month})

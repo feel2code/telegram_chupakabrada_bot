@@ -12,7 +12,7 @@ def check(message):
     msg_check = message.text.upper().split()
     for word in msg_check:
         cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
-                        where upper(q.question)='{word}';""")
+                        where upper(q.question)={word.__repr__()};""")
         try:
             rec = cur.fetchone()
         except psycopg2.ProgrammingError:
@@ -87,7 +87,7 @@ def sticker_send(chat_id):
 
 def zoo(message, sticker_family):
     """send sticker via animal-like-codeword to chat."""
-    cur.execute(f"select sticker_id from {sticker_family} order by random() limit 1;")
+    cur.execute(f"select sticker_id from {sticker_family} order by rand() limit 1;")
     sticker_id = cur.fetchone()[0]
     bot.send_sticker(message.chat.id, sticker_id)
 
@@ -95,13 +95,13 @@ def zoo(message, sticker_family):
 def roll(chat_id: int):
     """roll someone in chat."""
     cur.execute(
-        f"select count(1) from rolls where chat_id='{chat_id}' and date='{datetime.today().strftime('%Y-%m-%d')}';"
+        f"select count(1) from rolls where chat_id='{chat_id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"
     )
     count = cur.fetchone()[0]
     if count == 0:
         cur.execute(f"""select * from (select distinct st_nick from stats
                                        where st_chat_id='{chat_id}' and st_nick != 'None') as foo
-                        order by random() limit 1;""")
+                        order by rand() limit 1;""")
         nick = cur.fetchone()[0]
         bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')
         cur.execute(f"insert into rolls values('{nick}', '{chat_id}', '{datetime.today().strftime('%Y-%m-%d')}');")

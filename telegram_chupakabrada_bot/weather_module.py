@@ -113,7 +113,7 @@ def add_temp_to_db(city_name: str, chat: int):
     :return: None
     """
     expected, condition = forecast(city_name)
-    cur.execute(f"""update cities set temp={weather(city_name)}, expected_day_temp={expected}, condition='{condition}'
+    cur.execute(f"""update cities set temp={weather(city_name)}, expected_day_temp={expected}, conditions='{condition}'
                     where city_name='{city_name}' and chat_id='{chat}';""")
     conn_db.commit()
 
@@ -129,7 +129,7 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
     :param is_forecast: selects from DB forecast or current weather
     :return:
     """
-    cur.execute(f"""select temp, expected_day_temp, condition from cities
+    cur.execute(f"""select temp, expected_day_temp, conditions from cities
                     where chat_id='{chat_id}' and city_name='{city_db}';""")
     fetched = cur.fetchall()[0]
     temp = int(fetched[1]) if is_forecast else int(fetched[0])
