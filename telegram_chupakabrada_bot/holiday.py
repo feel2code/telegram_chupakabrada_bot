@@ -5,13 +5,14 @@ from calendar import Calendar, MONDAY
 import requests
 from bs4 import BeautifulSoup
 
-from connections import bot, cur
+from connections import bot, MySQLUtils
 
 
 def get_holidays_from_db(chat_id: str):
     """Get holidays from db."""
     # Все искажения грамматики неслучайны.
     # get week and day from calendar to check relative holidays
+    db_conn = MySQLUtils()
     month_calendar = Calendar(firstweekday=MONDAY).monthdatescalendar(datetime.utcnow().year, datetime.utcnow().month)
     day_num, week_num = 0, 0
     for week_idx, week in enumerate(month_calendar):
@@ -21,25 +22,26 @@ def get_holidays_from_db(chat_id: str):
                 break
     # get current day and month
     day, month = datetime.now().day, datetime.now().month
-    cur.execute(f"""select * from (
+    fetched = db_conn.query(
+                f"""select * from (
                     (select holiday_name from (
                         select
                             cast(extract(day from dt) as unsigned) as day,
                             cast(extract(month from dt) as unsigned) as month,
-                            '🇷🇺 ' || holiday_name as holiday_name from holidays_ru hr
+                            concat('🇷🇺 ', holiday_name) as holiday_name from holidays_ru hr
                         union all
                         select
                             cast(extract(day from dt) as unsigned) as day,
                             cast(extract(month from dt) as unsigned) as month,
-                            '🌍 ' || holiday_name as holiday_name from holidays_iso iso
+                            concat('🌍 ', holiday_name) as holiday_name from holidays_iso iso
                         ) as holidays
                     where day={day} and month={month})
                     union all (
-                        select '🇷🇺 ' || holiday_name as holiday_name
+                        select concat('🇷🇺 ', holiday_name) as holiday_name
                         from holidays_ru_relative hrr
                         where day_num={day_num} and week_num={week_num} and extract(month from dt)={month}
                     )) as holidays_all;""")
-    fetched = [x[0] for x in cur.fetchall()]
+    fetched = [x[0] for x in fetched]
     holidays_from_db = '\n'.join(fetched) if fetched else 'Сиводня праздников нет! Пойду сделаю омлет...'
     message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + holidays_from_db
     bot.send_message(chat_id=chat_id, text=message)
@@ -48,11 +50,12 @@ def get_holidays_from_db(chat_id: str):
 def get_wiki_holiday(chat_id: str):
     """Get list of holidays including links to wiki."""
     # Все искажения грамматики неслучайны.
+    db_conn = MySQLUtils()
     day, month = datetime.now().day, datetime.now().month
-    cur.execute(f"select month_name from months where id={month};")
+    month_ru = db_conn.query(f"select month_name from months where id={month};")[0][0]
     holidays_list = []
     wiki_host = 'https://ru.wikipedia.org/'
-    page = requests.get(f'{wiki_host}wiki/Категория:Праздники_{day}_{cur.fetchone()[0]}')
+    page = requests.get(f'{wiki_host}wiki/Категория:Праздники_{day}_{month_ru}')
     try:
         holidays = BeautifulSoup(page.text, "html.parser").find('div', class_='mw-category')
         for item in holidays.select("li"):

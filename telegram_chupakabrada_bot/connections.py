@@ -1,13 +1,41 @@
 import os
 import telebot
-import mysql.connector
+import mysql.connector as mysql_conn
+from mysql.connector.errors import DatabaseError, OperationalError
 
 from dotenv import load_dotenv
 
 load_dotenv(".env")
 bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
-conn_db = mysql.connector.connect(user=os.getenv('DB_USER'),
-                                  password=os.getenv('DB_PASSWORD'),
-                                  host='127.0.0.1',
-                                  database=os.getenv('DB_NAME'))
-cur = conn_db.cursor()
+
+
+class MySQLUtils:
+    conn = None
+
+    def connect(self):
+        self.conn = mysql_conn.connect(user=os.getenv('DB_USER'),
+                                       password=os.getenv('DB_PASSWORD'),
+                                       host=os.getenv('DB_HOST'),
+                                       database=os.getenv('DB_NAME'))
+
+    def query(self, request):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(request)
+        except (AttributeError, DatabaseError, OperationalError):
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(request)
+        return cursor.fetchall()
+
+    def mutate(self, request):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(request)
+            self.conn.commit()
+        except (AttributeError, DatabaseError, OperationalError):
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(request)
+            self.conn.commit()
+        return cursor

@@ -4,7 +4,7 @@ import os
 
 from analytics import analytics
 from stats import send_statistics
-from connections import bot, cur
+from connections import bot, MySQLUtils
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
 from holiday import get_holidays, get_wiki_holiday, get_holidays_from_db
@@ -47,8 +47,8 @@ COMMANDS_FUNCS = {
     '/weather_list@chupakabrada_bot': get_weather_list,
     '/holiday_all': get_holidays_from_db,
     '/holiday_all@chupakabrada_bot': get_holidays_from_db,
-    '/holiday': get_holidays,
-    '/holiday@chupakabrada_bot': get_holidays,
+    '/holiday': get_holidays_from_db,
+    '/holiday@chupakabrada_bot': get_holidays_from_db,
     '/get_wiki_holiday': get_wiki_holiday,
     '/get_wiki_holiday@chupakabrada_bot': get_wiki_holiday,
     '/corona': coronavirus,
@@ -67,28 +67,29 @@ COMMANDS_FUNCS = {
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     """Catching text messages or commands for bot."""
-    analytics(message)
-    check(message)
-    one_message(message)
+    db_conn = MySQLUtils()
+    analytics(message, db_conn)
+    check(message, db_conn)
+    one_message(message, db_conn)
 
     if message.text in SELECTS:
-        standard_commands(message)
+        bot.send_message(message.chat.id, db_conn.query(SELECTS[message.text])[0][0])
 
     if message.text in COMMANDS_FUNCS:
         COMMANDS_FUNCS[message.text](message.chat.id)
 
     if message.text in ZOO_DICT:
-        zoo(message, ZOO_DICT[message.text])
+        zoo(message, ZOO_DICT[message.text], db_conn)
 
     if message.text in COMMANDS_QUERY:
-        query(COMMANDS_QUERY[message.text], message.chat.id)
+        query(COMMANDS_QUERY[message.text], message.chat.id, db_conn)
     elif message.text.split()[0] in COMMANDS_DO:
         COMMANDS_DO[message.text.split()[0]](message)
 
     if '@all' in message.text and message.chat.id == int(os.getenv('HOME_TELEGA')):
-        query(130, message.chat.id)
+        query(130, message.chat.id, db_conn)
 
-    ai_message = markov(message)
+    ai_message = markov(message, db_conn)
     if ai_message is not None:
         bot.send_message(message.chat.id, ai_message)
 
@@ -106,22 +107,23 @@ def deleting_msg(message):
                 logger.error('Issues with deleting unappropriated message.')
 
 
-def standard_commands(message):
+def standard_commands(message, db_conn: MySQLUtils):
     """Do something by commands in SELECTS constants."""
-    cur.execute(SELECTS[message.text])
-    bot.send_message(message.chat.id, cur.fetchone()[0])
+    bot.send_message(message.chat.id, db_conn.query(SELECTS[message.text])[0][0])
 
 
 @bot.message_handler(content_types=['voice'])
 def get_voice_messages(voice):
     """Catching voice messages for bot."""
-    query(49, voice.chat.id)
+    db_conn = MySQLUtils()
+    query(49, voice.chat.id, db_conn)
 
 
 @bot.message_handler(content_types=['audio'])
 def get_audio_messages(audio):
     """Catching audio files."""
-    query(50, audio.chat.id)
+    db_conn = MySQLUtils()
+    query(50, audio.chat.id, db_conn)
 
 
 @bot.message_handler(content_types=['photo'])
@@ -129,7 +131,8 @@ def get_photo_messages(photo_message):
     """Catching messages sent with photos."""
     if photo_message.caption is not None:
         if '@all' in photo_message.caption and photo_message.chat.id == int(os.getenv('HOME_TELEGA')):
-            query(130, photo_message.chat.id)
+            db_conn = MySQLUtils()
+            query(130, photo_message.chat.id, db_conn)
 
 
 if __name__ == '__main__':

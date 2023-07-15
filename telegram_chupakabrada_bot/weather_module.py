@@ -2,8 +2,8 @@ import os
 from datetime import datetime
 
 import requests
-from connections import bot, conn_db, cur
-from selects import simple_query
+from connections import bot, MySQLUtils
+from telegram_chupakabrada_bot.selects import simple_query
 
 
 def weather_in_city(message):
@@ -65,6 +65,7 @@ def add_city(message):
     :param message: message from telegram
     :return: None
     """
+    db_conn = MySQLUtils()
     chat_id = str(message.chat.id)
     city_name = message.text.split()
     city_name.pop(0)
@@ -72,8 +73,7 @@ def add_city(message):
     # checking if city not exists
     try:
         weather(city_name)
-        cur.execute("insert into cities (chat_id, city_name) values (%s, %s)", (chat_id, city_name))
-        conn_db.commit()
+        db_conn.mutate(f"insert into cities (chat_id, city_name) values ('{chat_id}', '{city_name}')")
         bot.send_message(message.chat.id, f'{city_name} {simple_query(121)}')
     except KeyError:
         bot.send_message(message.chat.id, f'{city_name}??? {simple_query(119)}')
@@ -85,17 +85,18 @@ def delete_city(message):
     :param message: message from telegram
     :return: None
     """
+    db_conn = MySQLUtils()
     chat_id = str(message.chat.id)
     city_name = message.text.split()
     city_name.pop(0)
     city_name = ' '.join(city_name).upper()
     try:
-        cur.execute(f"SELECT city_name FROM cities where upper(city_name)='{city_name}' and chat_id='{chat_id}';")
-        records = cur.fetchall()
+        records = db_conn.query(
+            f"SELECT city_name FROM cities where upper(city_name)='{city_name}' and chat_id='{chat_id}';"
+        )
         if len(records) != 0:
             try:
-                cur.execute(f"delete from cities where chat_id='{chat_id}' and upper(city_name)='{city_name}';")
-                conn_db.commit()
+                db_conn.mutate(f"delete from cities where chat_id='{chat_id}' and upper(city_name)='{city_name}';")
                 bot.send_message(message.chat.id, f'{city_name} {simple_query(126)}')
             except KeyError:
                 pass
@@ -105,20 +106,21 @@ def delete_city(message):
         bot.send_message(message.chat.id, simple_query(115))
 
 
-def add_temp_to_db(city_name: str, chat: int):
+def add_temp_to_db(city_name: str, chat: int, db_conn: MySQLUtils):
     """
     Gets current and forecast temperatures, conditions and inserts it to DB
     :param city_name: city name or id
     :param chat: chat from telegram
+    :param db_conn: connection to DB
     :return: None
     """
     expected, condition = forecast(city_name)
-    cur.execute(f"""update cities set temp={weather(city_name)}, expected_day_temp={expected}, conditions='{condition}'
-                    where city_name='{city_name}' and chat_id='{chat}';""")
-    conn_db.commit()
+    db_conn.mutate(
+        f"""update cities set temp={weather(city_name)}, expected_day_temp={expected}, conditions='{condition}'
+            where city_name='{city_name}' and chat_id='{chat}';""")
 
 
-def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast):
+def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast, db_conn: MySQLUtils):
     """
     Checking max or min temp and places emoji near temp
     :param chat_id: chat id
@@ -127,11 +129,11 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
     :param max_weather: max temperature from DB
     :param length: if length > 1 adds emoji
     :param is_forecast: selects from DB forecast or current weather
+    :param db_conn: connection to DB
     :return:
     """
-    cur.execute(f"""select temp, expected_day_temp, conditions from cities
-                    where chat_id='{chat_id}' and city_name='{city_db}';""")
-    fetched = cur.fetchall()[0]
+    fetched = db_conn.query(f"""select temp, expected_day_temp, conditions from cities
+                    where chat_id='{chat_id}' and city_name='{city_db}';""")[0]
     temp = int(fetched[1]) if is_forecast else int(fetched[0])
     condition = fetched[2]
     if 0 <= temp < 10:
@@ -151,28 +153,29 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
 
 def get_weather_list(chat_id):
     """getting cities list from DB."""
+    db_conn = MySQLUtils()
     if datetime.now().hour in range(0, 7):
         weather_message = simple_query(128) + '\n'
         is_forecast = True
     else:
         weather_message = simple_query(122) + '\n'
         is_forecast = False
-    cur.execute(f"select city_name from cities where chat_id='{chat_id}';")
-    fetched_from_db = cur.fetchall()
+    fetched_from_db = db_conn.query(f"select city_name from cities where chat_id='{chat_id}';")
     # updating temperatures in DB
     for i in range(len(fetched_from_db)):
         city_db = str((fetched_from_db[i])[0])
-        add_temp_to_db(city_db, chat_id)
+        add_temp_to_db(city_db, chat_id, db_conn)
     # find max and min weather in cities list
     max_min_temp = 'expected_day_temp' if is_forecast else 'temp'
     if len(fetched_from_db) != 0:
-        cur.execute(f"select max({max_min_temp}), min({max_min_temp}) from cities where chat_id='{chat_id}';")
-        max_min_weather = cur.fetchall()[0]
+        max_min_weather = db_conn.query(
+            f"select max({max_min_temp}), min({max_min_temp}) from cities where chat_id='{chat_id}';"
+        )[0]
         # getting each city and temp from db
         for i in range(len(fetched_from_db)):
             city_db = str((fetched_from_db[i])[0])
             weather_message += weather_send(chat_id, city_db, int(max_min_weather[1]), int(max_min_weather[0]),
-                                            len(fetched_from_db), is_forecast)
+                                            len(fetched_from_db), is_forecast, db_conn)
     else:
         weather_message = simple_query(116)
     bot.send_message(chat_id=chat_id, text=weather_message, parse_mode='Markdown')

@@ -1,35 +1,36 @@
 import time
 from datetime import datetime
 
-from connections import bot, conn_db, cur
+from connections import bot, MySQLUtils
 from constants import GODZILLA
 
 
-# checking does message has any word in list from dictionary
-def check(message):
+def check(message, db_conn: MySQLUtils):
+    """Checking does message has any word in list from dictionary."""
     msg_check = message.text.upper().split()
     for word in msg_check:
-        cur.execute(f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
-                        where upper(q.question)={word.__repr__()};""")
         try:
-            rec = cur.fetchone()
-        except:
+            rec = db_conn.query(
+                f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
+                    where upper(q.question)={word.__repr__()};"""
+            )[0]
+        except IndexError:
             continue
         if not rec:
             continue
         else:
             rec = rec[0]
         if rec == GODZILLA:
-            query(103, message.chat.id)
+            query(103, message.chat.id, db_conn)
             time.sleep(1)
             i_count = 104
             while i_count < 111:
-                query(i_count, message.chat.id)
+                query(i_count, message.chat.id, db_conn)
                 time.sleep(0.100)
                 i_count += 1
             i_count = 109
             while i_count > 103:
-                query(i_count, message.chat.id)
+                query(i_count, message.chat.id, db_conn)
                 time.sleep(0.100)
                 i_count = i_count - 1
             continue
@@ -37,90 +38,72 @@ def check(message):
             bot.send_message(message.chat.id, rec)
 
 
-def one_message(message):
-    cur.execute('select count(1) from messages')
+def one_message(message, db_conn: MySQLUtils):
     try:
-        msg_length = cur.fetchone()
-        if msg_length:
-            msg_length = msg_length[0]
-        else:
-            return
-    except:
-        return
-    cur.execute("select msg_txt from messages")
-    try:
-        msg_db = cur.fetchall()
-    except:
-        return
-    msg_list = []
-    for i in range(0, msg_length):
-        msg_list.append((msg_db[i])[0])
-    if message.text.upper() in msg_list:
-        cur.execute(f"""select a.answer from answers a join messages m on m.ans_id=a.ans_id
-                        where msg_txt='{message.text.upper()}';""")
-        records = cur.fetchone()[0]
-        bot.send_message(message.chat.id, records)
+        fetched = db_conn.query(f"""select a.answer from answers a
+                                    join messages m on m.ans_id=a.ans_id
+                                    where msg_txt='{message.text.upper()}';""")[0][0]
+        bot.send_message(message.chat.id, fetched)
+    except IndexError:
+        pass
 
 
 def simple_query(ans_id):
     """query from answers table."""
-    cur.execute(f"select answer from answers where ans_id={ans_id};")
-    return cur.fetchone()[0]
+    db_conn = MySQLUtils()
+    return db_conn.query(f"select answer from answers where ans_id={ans_id};")[0][0]
 
 
-def query(ans_id, chat_id):
+def query(ans_id, chat_id, db_conn: MySQLUtils):
     """send message to chat."""
-    bot.send_message(chat_id=chat_id, text=simple_query(ans_id))
+    bot.send_message(chat_id=chat_id,
+                     text=db_conn.query(f"select answer from answers where ans_id={ans_id};"))
 
 
 def sticker_send(chat_id):
     """send stickers to chat."""
-    query(51, chat_id)
+    db_conn = MySQLUtils()
+    query(51, chat_id, db_conn)
     for stick_id in range(1, 10):
-        cur.execute(f"select sticker from stickers where sticker_id={stick_id};")
-        records = cur.fetchone()[0]
-        bot.send_sticker(chat_id=chat_id, data=records)
+        bot.send_sticker(chat_id=chat_id,
+                         data=db_conn.query(f"select sticker from stickers where sticker_id={stick_id};")[0][0])
         time.sleep(0.200)
 
 
-def zoo(message, sticker_family):
+def zoo(message, sticker_family, db_conn: MySQLUtils):
     """send sticker via animal-like-codeword to chat."""
-    cur.execute(f"select sticker_id from {sticker_family} order by rand() limit 1;")
-    sticker_id = cur.fetchone()[0]
+    sticker_id = db_conn.query(f"select sticker_id from {sticker_family} order by rand() limit 1;")[0][0]
     bot.send_sticker(message.chat.id, sticker_id)
 
 
 def roll(chat_id: int):
     """roll someone in chat."""
-    cur.execute(
+    db_conn = MySQLUtils()
+    count = db_conn.query(
         f"select count(1) from rolls where chat_id='{chat_id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"
-    )
-    count = cur.fetchone()[0]
+    )[0][0]
     if count == 0:
-        cur.execute(f"""select * from (select distinct st_nick from stats
+        nick = db_conn.query(f"""select * from (select distinct st_nick from stats
                                        where st_chat_id='{chat_id}' and st_nick != 'None') as foo
-                        order by rand() limit 1;""")
-        nick = cur.fetchone()[0]
+                        order by rand() limit 1;""")[0][0]
         bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')
-        cur.execute(f"insert into rolls values('{nick}', '{chat_id}', '{datetime.today().strftime('%Y-%m-%d')}');")
-        conn_db.commit()
+        db_conn.mutate(f"insert into rolls values('{nick}', '{chat_id}', '{datetime.today().strftime('%Y-%m-%d')}');")
     else:
-        cur.execute(
+        nick = db_conn.query(
             f"select nick from rolls where chat_id='{chat_id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"
-        )
-        nick = cur.fetchone()[0]
+        )[0][0]
         bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')
 
 
 def usd_exchange(chat_id):
     """usd currency rate."""
-    cur.execute("select course_value from course where course_name='usd';")
-    last_rate = cur.fetchone()[0]
+    db_conn = MySQLUtils()
+    last_rate = db_conn.query("select course_value from course where course_name='usd';")[0][0]
     bot.send_message(chat_id=chat_id, text=f'Далар чичас па {last_rate} ₽')
 
 
 def gel_exchange(chat_id):
     """gel currency rate."""
-    cur.execute("select course_value from course where course_name='gel';")
-    last_rate = cur.fetchone()[0]
+    db_conn = MySQLUtils()
+    last_rate = db_conn.query("select course_value from course where course_name='gel';")[0][0]
     bot.send_message(chat_id=chat_id, text=f'Ларики чичас па {last_rate} ₽')

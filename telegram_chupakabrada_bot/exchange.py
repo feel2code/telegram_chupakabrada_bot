@@ -7,7 +7,7 @@ import requests
 import telebot
 from bs4 import BeautifulSoup
 
-from connections import conn_db, cur
+from connections import MySQLUtils
 
 
 logging.basicConfig(
@@ -43,15 +43,13 @@ def get_gel_course() -> Union[int, None]:
 
 def check_course():
     """Искажения грамматики неслучайны."""
+    db_conn = MySQLUtils()
     rate, gel_rate = get_usd_course(), get_gel_course()
-    cur.execute(f"update course set course_value={gel_rate} where course_name='gel';")
-    conn_db.commit()
+    db_conn.mutate(f"update course set course_value={gel_rate} where course_name='gel';")
     if rate is not None:
-        cur.execute("select course_value from course where course_name='usd';")
-        last_rate = cur.fetchone()[0]
+        last_rate = db_conn.query("select course_value from course where course_name='usd';")[0][0]
         if rate != last_rate:
-            cur.execute(f"update course set course_value={rate} where course_name='usd';")
-            conn_db.commit()
+            db_conn.mutate(f"update course set course_value={rate} where course_name='usd';")
             bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
             bot.send_message(chat_id=os.getenv('HOME_TELEGA'), text=f'Далар уже па {rate} ₽')
         else:

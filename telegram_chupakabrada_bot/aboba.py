@@ -2,22 +2,20 @@ import os
 
 import markovify
 
-from connections import bot, conn_db, cur
+from connections import bot, MySQLUtils
 
 
 markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
 
 
-def markov(message):
-    cur.execute(f'select count(1) from markov where chat_id={message.chat.id}')
+def markov(message, db_conn: MySQLUtils):
     try:
-        fetched = cur.fetchone()
-    except:
+        fetched = db_conn.query(f'select count(1) from markov where chat_id={message.chat.id}')[0]
+    except IndexError:
         return
     if fetched:
         if fetched[0] == 1:
-            cur.execute(f'select hardness from markov where chat_id={message.chat.id};')
-            hardness = cur.fetchone()
+            hardness = db_conn.query(f'select hardness from markov where chat_id={message.chat.id};')[0]
             if hardness:
                 hardness = hardness[0]
                 markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', 'a', encoding='utf-8')
@@ -33,8 +31,7 @@ def markov(message):
             else:
                 return
         else:
-            cur.execute(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 9);")
-            conn_db.commit()
+            db_conn.mutate(f"insert into markov (chat_id, hardness) values ({message.chat.id}, 9);")
             markov_text = open(f'{markov_path}{str(message.chat.id)}.txt', "a")
             markov_text.write(f'{message.text}. ')
             markov_text.close()
@@ -43,15 +40,14 @@ def markov(message):
 
 def markov_hardness(message):
     """Искажения грамматики неслучайны."""
+    db_conn = MySQLUtils()
     hardness = message.text.replace('/set ', '').replace(' ', '-')
-    cur.execute(f'select count(1) from markov where chat_id={message.chat.id}')
-    count = cur.fetchone()[0]
+    count = db_conn.query(f'select count(1) from markov where chat_id={message.chat.id}')[0][0]
     hardness_list = ('1', '2', '3', '4', '5', '6', '7', '8', '9')
     if count == 1:
         if hardness in hardness_list:
             hardness = int(hardness)
-            cur.execute(f'update markov set hardness={hardness} where chat_id={message.chat.id}')
-            conn_db.commit()
+            db_conn.mutate(f'update markov set hardness={hardness} where chat_id={message.chat.id}')
             if hardness == int(hardness_list[-1]):
                 msg_send = 'Заткнуть пытаешься да? Ну тада ясна.'
             else:
