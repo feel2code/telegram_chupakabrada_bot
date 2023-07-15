@@ -3,7 +3,7 @@ from datetime import datetime
 
 import requests
 from connections import bot, MySQLUtils
-from telegram_chupakabrada_bot.selects import simple_query
+from selects import simple_query
 
 
 def weather_in_city(message):

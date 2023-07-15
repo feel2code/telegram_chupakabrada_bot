@@ -7,7 +7,7 @@ from stats import send_statistics
 from connections import bot, MySQLUtils
 from constants import COMMANDS_QUERY, SELECTS, ZOO_DICT
 from films import films_command
-from holiday import get_holidays, get_wiki_holiday, get_holidays_from_db
+from holiday import get_wiki_holiday, get_holidays_from_db
 from weather_module import add_city, delete_city, get_weather_list, weather_in_city
 from aboba import markov, markov_hardness
 from selects import check, usd_exchange, gel_exchange, one_message, query, roll, sticker_send, zoo
