@@ -18,7 +18,8 @@ def get_holidays_from_db(chat_id: str):
     for week_idx, week in enumerate(month_calendar):
         for day_idx, day in enumerate(week):
             if day == datetime.today().date():
-                day_num, week_num = day_idx + 1, week_idx  # monday = 1, tuesday = 2 etc.
+                # monday = 1, tuesday = 2, etc.; 0 = first week, 1 = second week, etc.
+                day_num, week_num = day_idx + 1, week_idx + 1
                 break
     # get current day and month
     day, month = datetime.now().day, datetime.now().month
