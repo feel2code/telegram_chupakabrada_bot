@@ -11,19 +11,15 @@ from connections import bot, MySQLUtils
 def get_holidays_from_db(chat_id: str):
     """Get holidays from db."""
     # Все искажения грамматики неслучайны.
-    # get week and day from calendar to check relative holidays
     db_conn = MySQLUtils()
-    month_calendar = Calendar(firstweekday=MONDAY).monthdatescalendar(datetime.utcnow().year, datetime.utcnow().month)
-    day_num, week_num = 0, 0
-    for week_idx, week in enumerate(month_calendar):
-        for day_idx, day in enumerate(week):
-            if day == datetime.today().date():
-                # monday = 1, tuesday = 2, etc.; 0 = first week, 1 = second week, etc.
-                day_num, week_num = day_idx + 1, week_idx + 1
-                break
-    # get current day and month
-    day, month = datetime.now().day, datetime.now().month
-    fetched = db_conn.query(
+    # get week and day from calendar to check relative holidays
+    cur_day, cur_month, cur_weekday = datetime.today().day, datetime.today().month, datetime.today().weekday()
+    month_calendar = Calendar(firstweekday=MONDAY).monthdayscalendar(datetime.utcnow().year, cur_month)
+    months_weekdays = [week[cur_weekday] for week in month_calendar if week[cur_weekday] != 0]
+    day_idx = months_weekdays.index(cur_day) + 1
+    is_last = 1 if months_weekdays[-1] == cur_day else 0
+    additional_condition = f"and week_num={day_idx}" if not is_last else f"and is_last={is_last}"
+    fetched = [x[0] for x in db_conn.query(
                 f"""select * from (
                     (select holiday_name from (
                         select
@@ -36,16 +32,16 @@ def get_holidays_from_db(chat_id: str):
                             cast(extract(month from dt) as unsigned) as month,
                             concat('🌍 ', holiday_name) as holiday_name from holidays_iso iso
                         ) as holidays
-                    where day={day} and month={month})
+                    where day={cur_day} and month={cur_month})
                     union all (
                         select concat('🇷🇺 ', holiday_name) as holiday_name
                         from holidays_ru_relative hrr
-                        where day_num={day_num} and week_num={week_num} and extract(month from dt)={month}
-                    )) as holidays_all;""")
-    fetched = [x[0] for x in fetched]
+                        where day_num={cur_weekday + 1} and extract(month from dt)={cur_month}
+                        {additional_condition}
+                    )) as holidays_all;""")]
     holidays_from_db = '\n'.join(fetched) if fetched else 'Сиводня праздников нет! Пойду сделаю омлет...'
-    message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + holidays_from_db
-    bot.send_message(chat_id=chat_id, text=message)
+    bot.send_message(chat_id=chat_id,
+                     text=f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + holidays_from_db)
 
 
 def get_wiki_holiday(chat_id: str):

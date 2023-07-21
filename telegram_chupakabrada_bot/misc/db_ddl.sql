@@ -141,3 +141,6 @@ CREATE TABLE stickers (
 	sticker text NOT NULL,
 	CONSTRAINT stickers_pkey PRIMARY KEY (sticker_id)
 );
+
+alter table holidays_ru_relative add column is_last int4;
+update holidays_ru_relative set is_last=1 where rel_name like '%Последн%';
