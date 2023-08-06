@@ -14,15 +14,11 @@
 <h3><a href="https://t.me/chupakabrada_bot">LINK TO THIS INCREDIBLE TELEGRAM BOT</a></h3>
 
 <p>
-    <a href="https://python.org">
-        <img height=28px src="http://forthebadge.com/images/badges/made-with-python.svg" alt="made-with-python">
-    </a>
-    <a href="https://GitHub.com/feel2code">
-        <img height=28px src="http://ForTheBadge.com/images/badges/built-with-love.svg" alt="built-with-love">
-    </a>
     <img src="https://img.shields.io/github/license/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor" alt="LICENSE">
     <img src="https://img.shields.io/github/contributors/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor" alt="Contributors">
     <img src="https://img.shields.io/github/repo-size/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor" alt="Repository Size">
+</p>
+<p>
     <img src="https://img.shields.io/badge/python-3.9-green?style=for-the-badge&logo=appveyor" alt="Python Version">
     <img src="https://img.shields.io/github/issues/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor" alt="Issues">
     <img src="https://img.shields.io/github/stars/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor" alt="Stars">
