@@ -16,10 +16,7 @@ from weather_module import add_city_request, delete_city_request, get_weather_li
 logging.basicConfig(
     level=logging.INFO,
     filename=f"{'/'.join(os.getcwd().split('/')[:-1])}/main.log",
-    format=(
-        '%(asctime)s - %(module)s - %(levelname)s'
-        ' - %(funcName)s: %(lineno)d - %(message)s'
-    ),
+    format='%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s',
     datefmt='%H:%M:%S',
 )
 logger = logging.getLogger(__name__)
