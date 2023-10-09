@@ -2,7 +2,6 @@ import time
 from datetime import datetime
 
 from connections import bot, MySQLUtils
-from constants import GODZILLA
 
 
 def check(message, db_conn: MySQLUtils):
@@ -20,21 +19,6 @@ def check(message, db_conn: MySQLUtils):
             continue
         else:
             rec = rec[0]
-        if rec == GODZILLA:
-            query(103, message.chat.id, db_conn)
-            time.sleep(1)
-            i_count = 104
-            while i_count < 111:
-                query(i_count, message.chat.id, db_conn)
-                time.sleep(0.100)
-                i_count += 1
-            i_count = 109
-            while i_count > 103:
-                query(i_count, message.chat.id, db_conn)
-                time.sleep(0.100)
-                i_count = i_count - 1
-            continue
-        else:
             bot.send_message(message.chat.id, rec)
 
 
@@ -60,50 +44,78 @@ def query(ans_id, chat_id, db_conn: MySQLUtils):
                      text=db_conn.query(f"select answer from answers where ans_id={ans_id};"))
 
 
-def sticker_send(chat_id):
+def sticker_send(message):
     """send stickers to chat."""
     db_conn = MySQLUtils()
-    query(51, chat_id, db_conn)
+    query(51, message.chat.id, db_conn)
     for stick_id in range(1, 10):
-        bot.send_sticker(chat_id=chat_id,
+        bot.send_sticker(chat_id=message.chat.id,
                          data=db_conn.query(f"select sticker from stickers where sticker_id={stick_id};")[0][0])
         time.sleep(0.200)
 
 
-def zoo(message, sticker_family, db_conn: MySQLUtils):
+def zoo(message):
     """send sticker via animal-like-codeword to chat."""
-    sticker_id = db_conn.query(f"select sticker_id from {sticker_family} order by rand() limit 1;")[0][0]
+    zoo_dict = {
+        '/хрю': 'pig_stickers',
+        '/гав': 'dog_stickers',
+    }
+    db_conn = MySQLUtils()
+    sticker_id = db_conn.query(f"select sticker_id from {zoo_dict[message.text]} order by rand() limit 1;")[0][0]
     bot.send_sticker(message.chat.id, sticker_id)
 
 
-def roll(chat_id: int):
+def roll(message):
     """roll someone in chat."""
     db_conn = MySQLUtils()
     count = db_conn.query(
-        f"select count(1) from rolls where chat_id='{chat_id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"
+        f"""select count(1) from rolls
+            where chat_id='{message.chat.id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"""
     )[0][0]
     if count == 0:
-        nick = db_conn.query(f"""select * from (select distinct st_nick from stats
-                                       where st_chat_id='{chat_id}' and st_nick != 'None') as foo
-                        order by rand() limit 1;""")[0][0]
-        bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')
-        db_conn.mutate(f"insert into rolls values('{nick}', '{chat_id}', '{datetime.today().strftime('%Y-%m-%d')}');")
+        nick = db_conn.query(
+            f"""select * from (
+                    select distinct st_nick from stats
+                    where st_chat_id='{message.chat.id}' and st_nick != 'None'
+                    ) as foo
+                order by rand() limit 1;"""
+        )[0][0]
+        bot.send_message(chat_id=message.chat.id, text=f'Великий рандом выбрал тебя, @{nick}')
+        db_conn.mutate(
+            f"insert into rolls values('{nick}', '{message.chat.id}', '{datetime.today().strftime('%Y-%m-%d')}');"
+        )
     else:
         nick = db_conn.query(
-            f"select nick from rolls where chat_id='{chat_id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"
+            f"""select nick from rolls
+                where chat_id='{message.chat.id}' and cur_date='{datetime.today().strftime('%Y-%m-%d')}';"""
         )[0][0]
-        bot.send_message(chat_id=chat_id, text=f'Великий рандом выбрал тебя, @{nick}')
+        bot.send_message(chat_id=message.chat.id, text=f'Великий рандом выбрал тебя, @{nick}')
 
 
-def usd_exchange(chat_id):
+def rates_exchange(message):
     """usd currency rate."""
     db_conn = MySQLUtils()
-    last_rate = db_conn.query("select course_value from course where course_name='usd';")[0][0]
-    bot.send_message(chat_id=chat_id, text=f'Далар чичас па {last_rate} ₽')
+    ccy = message.text[1:]
+    ccy_map = {
+        'usd': 'Далары',
+        'gel': 'Ларики'
+    }
+    last_rate = db_conn.query(
+        f"select course_value from course where course_name='{ccy}';"
+    )[0][0]
+    bot.send_message(chat_id=message.chat.id, text=f'{ccy_map[ccy]} чичас па {last_rate} ₽')
 
 
-def gel_exchange(chat_id):
-    """gel currency rate."""
+def get_start(message):
     db_conn = MySQLUtils()
-    last_rate = db_conn.query("select course_value from course where course_name='gel';")[0][0]
-    bot.send_message(chat_id=chat_id, text=f'Ларики чичас па {last_rate} ₽')
+    bot.send_message(message.chat.id, db_conn.query("select start_text from start_q where start_id=1;")[0][0])
+
+
+def get_about(message):
+    db_conn = MySQLUtils()
+    bot.send_message(message.chat.id, db_conn.query("select about_text from about where about_id=1;")[0][0])
+
+
+def get_quote(message):
+    db_conn = MySQLUtils()
+    bot.send_message(message.chat.id, db_conn.query("select quote_value from quotes order by rand() limit 1;")[0][0])

@@ -3,7 +3,15 @@ from datetime import datetime
 
 import requests
 from connections import bot, MySQLUtils
-from selects import simple_query
+from selects import simple_query, query
+
+
+def weather_in_city_request(message):
+    db_conn = MySQLUtils()
+    if len(message.text.split(' ')) == 1:
+        query(125, message.chat.id, db_conn)
+    else:
+        weather_in_city(message)
 
 
 def weather_in_city(message):
@@ -59,6 +67,14 @@ def forecast(city: str) -> tuple:
     return temp_celsius, condition
 
 
+def add_city_request(message):
+    db_conn = MySQLUtils()
+    if len(message.text.split(' ')) == 1:
+        query(123, message.chat.id, db_conn)
+    else:
+        add_city(message)
+
+
 def add_city(message):
     """
     Adds city to DB if this city really exists and send status to chat
@@ -77,6 +93,14 @@ def add_city(message):
         bot.send_message(message.chat.id, f'{city_name} {simple_query(121)}')
     except KeyError:
         bot.send_message(message.chat.id, f'{city_name}??? {simple_query(119)}')
+
+
+def delete_city_request(message):
+    db_conn = MySQLUtils()
+    if len(message.text.split(' ')) == 1:
+        query(124, message.chat.id, db_conn)
+    else:
+        delete_city(message)
 
 
 def delete_city(message):
@@ -151,8 +175,12 @@ def weather_send(chat_id, city_db, min_weather, max_weather, length, is_forecast
     return what_to_send
 
 
-def get_weather_list(chat_id):
+def get_weather_list(message):
     """getting cities list from DB."""
+    if not isinstance(message, str):
+        chat_id = message.chat.id
+    else:
+        chat_id = message
     db_conn = MySQLUtils()
     if datetime.now().hour in range(0, 7):
         weather_message = simple_query(128) + '\n'

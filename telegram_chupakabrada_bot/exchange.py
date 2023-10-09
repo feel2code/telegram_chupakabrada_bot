@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 
 from connections import MySQLUtils
 
-
 logging.basicConfig(
     level=logging.DEBUG,
     filename=f"{'/'.join(os.getcwd().split('/')[:-1])}/exchange.log",

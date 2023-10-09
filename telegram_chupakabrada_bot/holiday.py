@@ -1,16 +1,20 @@
 import os
+from calendar import Calendar, MONDAY
 from datetime import datetime
 
-from calendar import Calendar, MONDAY
 import requests
 from bs4 import BeautifulSoup
 
 from connections import bot, MySQLUtils
 
 
-def get_holidays_from_db(chat_id: str):
+def get_holidays_from_db(message):
     """Get holidays from db."""
     # Все искажения грамматики неслучайны.
+    if not isinstance(message, str):
+        chat_id = message.chat.id
+    else:
+        chat_id = message
     db_conn = MySQLUtils()
     # get week and day from calendar to check relative holidays
     cur_day, cur_month, cur_weekday = datetime.today().day, datetime.today().month, datetime.today().weekday()
@@ -44,7 +48,7 @@ def get_holidays_from_db(chat_id: str):
                      text=f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n' + holidays_from_db)
 
 
-def get_wiki_holiday(chat_id: str):
+def get_wiki_holiday(message):
     """Get list of holidays including links to wiki."""
     # Все искажения грамматики неслучайны.
     db_conn = MySQLUtils()
@@ -59,10 +63,10 @@ def get_wiki_holiday(chat_id: str):
             link = wiki_host + item.find('a').get('href').replace(')', '%29')
             title = item.find('a').get_text()
             holidays_list.append(f'[{title}]({link})')
-        message = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n' + '\n'.join(holidays_list)
-        bot.send_message(chat_id=chat_id, text=message, parse_mode='Markdown')
+        answer = f'Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n' + '\n'.join(holidays_list)
+        bot.send_message(chat_id=message.chat.id, text=answer, parse_mode='Markdown')
     except ValueError:
-        bot.send_message(chat_id=chat_id, text=f'На сиводня {datetime.now().date()} праздников нет.')
+        bot.send_message(chat_id=message.chat.id, text=f'На сиводня {datetime.now().date()} праздников нет.')
 
 
 def get_holidays(chat_id: str):

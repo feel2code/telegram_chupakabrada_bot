@@ -3,7 +3,7 @@ import os
 import markovify
 
 from connections import bot, MySQLUtils
-
+from selects import query
 
 markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
 
@@ -36,6 +36,14 @@ def markov(message, db_conn: MySQLUtils):
             markov_text.write(f'{message.text}. ')
             markov_text.close()
             return message.text
+
+
+def markov_hardness_request(message):
+    db_conn = MySQLUtils()
+    if len(message.text.split(' ')) == 1:
+        query(129, message.chat.id, db_conn)
+    else:
+        markov_hardness(message)
 
 
 def markov_hardness(message):

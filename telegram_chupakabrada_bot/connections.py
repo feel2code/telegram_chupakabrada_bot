@@ -1,9 +1,9 @@
 import os
-import telebot
-import mysql.connector as mysql_conn
-from mysql.connector.errors import DatabaseError, OperationalError
 
+import mysql.connector as mysql_conn
+import telebot
 from dotenv import load_dotenv
+from mysql.connector.errors import DatabaseError, OperationalError
 
 load_dotenv(".env")
 bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
