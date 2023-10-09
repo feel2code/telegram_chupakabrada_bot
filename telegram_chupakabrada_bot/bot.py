@@ -26,37 +26,33 @@ logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
 logger.addHandler(handler)
 
+COMMANDS_MAPPING = {
+    'start': get_start,
+    'about': get_about,
+    'quote': get_quote,
+    'forecast': get_weather_list,
+    'holidays': get_holidays_from_db,
+    'holiday': get_wiki_holiday,
+    'coronavirus': coronavirus,
+    'sticker': sticker_send,
+    'roll': roll,
+    'usd': rates_exchange,
+    'gel': rates_exchange,
+    'add': add_city_request,
+    'delete': delete_city_request,
+    'weather': weather_in_city_request,
+    'cinema': films_command,
+    'set': markov_hardness_request,
+    'хрю': zoo,
+    'гав': zoo,
+    os.getenv('KEY_FOR_STATS'): send_statistics
+}
 
-@bot.message_handler(
-    commands=[
-        'about', 'start', 'quote', 'forecast', 'holidays', 'holiday', 'coronavirus', 'sticker', 'roll', 'usd', 'gel',
-        'add', 'delete', 'weather', 'cinema', 'set', 'гав', 'хрю', os.getenv('KEY_FOR_STATS')
-    ]
-)
+
+@bot.message_handler(commands=COMMANDS_MAPPING.keys())
 def standard_commands_sender(message):
     command = message.text.split(' ')[0][1:].replace('@chupakabrada_bot', '')
-    commands_mapping = {
-        'start': get_start,
-        'about': get_about,
-        'quote': get_quote,
-        'forecast': get_weather_list,
-        'holidays': get_holidays_from_db,
-        'holiday': get_wiki_holiday,
-        'coronavirus': coronavirus,
-        'sticker': sticker_send,
-        'roll': roll,
-        'usd': rates_exchange,
-        'gel': rates_exchange,
-        'add': add_city_request,
-        'delete': delete_city_request,
-        'weather': weather_in_city_request,
-        'cinema': films_command,
-        'set': markov_hardness_request,
-        'хрю': zoo,
-        'гав': zoo,
-        os.getenv('KEY_FOR_STATS'): send_statistics
-    }
-    commands_mapping[command](message)
+    COMMANDS_MAPPING[command](message)
 
 
 @bot.message_handler(content_types=['text'])
