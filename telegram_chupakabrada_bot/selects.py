@@ -95,7 +95,7 @@ def roll(message):
 def rates_exchange(message):
     """usd currency rate."""
     db_conn = MySQLUtils()
-    ccy = message.text[1:]
+    ccy = message.text.split(' ')[0][1:].replace('@chupakabrada_bot', '')
     ccy_map = {
         'usd': 'Далары',
         'gel': 'Ларики'

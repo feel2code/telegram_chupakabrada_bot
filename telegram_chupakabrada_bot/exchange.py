@@ -25,7 +25,7 @@ def get_usd_course() -> Union[int, None]:
     time.sleep(10)
     response = requests.get(url, timeout=5, headers={"user-agent": "Mozilla/80.0"})
     soup = BeautifulSoup(response.text, "html.parser")
-    rate = float(soup.find('div', class_='overviewRow__ab9704fa12').find('span', class_='priceText__0550103750').text)
+    rate = float(soup.find('div', class_='sized-price SizedPrice_extraLarge--VE1MpBM7Zc-').text)
     rate_remain = rate - int(rate)
     if int(rate_remain * 10) in range(0, 4) or rate_remain in range(8, 10):
         return int(rate)
