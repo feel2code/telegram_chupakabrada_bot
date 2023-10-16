@@ -197,9 +197,7 @@ def get_weather_list(message):
             add_temp_to_db(city[0], chat_id, db_conn)
         # find max and min weather in cities list
         temp_type = 'expected_day_temp' if is_forecast else 'temp'
-        fetched = db_conn.query(
-            f"""select city_name, {temp_type}
-                conditions,
+        req = f"""select city_name, {temp_type}, conditions,
             (case when {temp_type}=(select max({temp_type})
                              from cities
                              where chat_id={chat_id})
@@ -212,7 +210,7 @@ def get_weather_list(message):
             end) as min_max
             from cities
             where chat_id={chat_id};"""
-        )
+        fetched = db_conn.query(req)
         for row in fetched:
             city, temp, condition, add_cond = row
             if 0 <= temp < 10:
