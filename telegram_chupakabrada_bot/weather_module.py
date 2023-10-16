@@ -200,11 +200,11 @@ def get_weather_list(message):
         fetched = db_conn.query(
             f"""select city_name, {temp_type}
                 conditions,
-            (case when temp=(select max({temp_type})
+            (case when {temp_type}=(select max({temp_type})
                              from cities
                              where chat_id={chat_id})
                   then ' 🥵'
-                  when temp=(select min({temp_type})
+                  when {temp_type}=(select min({temp_type})
                              from cities
                              where chat_id={chat_id})
                   then ' 🥶️️'
