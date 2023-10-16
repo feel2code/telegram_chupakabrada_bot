@@ -11,7 +11,9 @@ def send_statistics(attrs):
     db_conn = MySQLUtils()
     fetched = db_conn.query(
         f"""select * from (
-        select '1' as Номер, 'Всего отсылок' as Статистика, cast(count(stat_id) as char(150)) as Количество
+        select '1' as Номер,
+        'Всего отсылок' as Статистика,
+        cast(count(stat_id) as char(150)) as Количество
         from stats
         where date(st_date)=date(now()) and st_chat_id!='{admin_chat}'
             union

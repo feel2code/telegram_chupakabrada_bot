@@ -8,15 +8,18 @@ from analytics import analytics
 from connections import bot, MySQLUtils
 from films import films_command
 from holiday import get_wiki_holiday, get_holidays_from_db
-from selects import check, rates_exchange, one_message, query, roll, sticker_send, zoo, get_start, get_about, get_quote
+from selects import (check, rates_exchange, one_message, query, roll,
+                     sticker_send, zoo, get_start, get_about, get_quote)
 from stats import send_statistics
 from today_corona import coronavirus
-from weather_module import add_city_request, delete_city_request, get_weather_list, weather_in_city_request
+from weather_module import (add_city_request, delete_city_request,
+                            get_weather_list, weather_in_city_request)
 
 logging.basicConfig(
     level=logging.INFO,
     filename=f"{'/'.join(os.getcwd().split('/')[:-1])}/main.log",
-    format='%(asctime)s - %(module)s - %(levelname)s - %(funcName)s: %(lineno)d - %(message)s',
+    format=('%(asctime)s - %(module)s - %(levelname)s - '
+            '%(funcName)s: %(lineno)d - %(message)s'),
     datefmt='%H:%M:%S',
 )
 logger = logging.getLogger(__name__)
@@ -48,6 +51,7 @@ COMMANDS_MAPPING = {
 
 @bot.message_handler(commands=COMMANDS_MAPPING.keys())
 def standard_commands_sender(message):
+    """checks commands in message."""
     command = message.text.split(' ')[0][1:].replace('@chupakabrada_bot', '')
     COMMANDS_MAPPING[command](message)
 
@@ -59,10 +63,13 @@ def get_text_messages(message):
     analytics(message, db_conn)
     check(message, db_conn)
     one_message(message, db_conn)
-    if '@all' in message.text and message.chat.id == int(os.getenv('HOME_TELEGA')):
+
+    if '@all' in message.text and message.chat.id == int(
+            os.getenv('HOME_TELEGA')):
         query(130, message.chat.id, db_conn)
+
     ai_message = markov(message, db_conn)
-    if ai_message is not None:
+    if ai_message:
         bot.send_message(message.chat.id, ai_message)
 
 
@@ -97,7 +104,9 @@ def get_audio_messages(audio):
 def get_photo_messages(photo_message):
     """Catching messages sent with photos."""
     if photo_message.caption is not None:
-        if '@all' in photo_message.caption and photo_message.chat.id == int(os.getenv('HOME_TELEGA')):
+        if '@all' in photo_message.caption and (
+                photo_message.chat.id == int(os.getenv('HOME_TELEGA'))
+        ):
             db_conn = MySQLUtils()
             query(130, photo_message.chat.id, db_conn)
 
