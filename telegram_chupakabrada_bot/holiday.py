@@ -91,7 +91,8 @@ def get_wiki_holiday(message):
             text=answer,
             parse_mode='Markdown'
         )
-    except ValueError:
+    except (ValueError, AttributeError) as e:
+        print(e)
         bot.send_message(
             chat_id=message.chat.id,
             text=f'На сиводня {datetime.now().date()} праздников нет.'
