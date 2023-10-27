@@ -144,3 +144,10 @@ CREATE TABLE stickers (
 
 alter table holidays_ru_relative add column is_last int4;
 update holidays_ru_relative set is_last=1 where rel_name like '%Последн%';
+
+drop table if exists course;
+create table if not exists rates (
+  ccy_iso3 varchar(3),
+  rate numeric(10, 6),
+  prev_rate numeric(10,6)
+);

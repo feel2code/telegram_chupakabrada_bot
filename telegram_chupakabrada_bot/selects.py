@@ -124,9 +124,12 @@ def rates_exchange(message):
         'usd': 'Далары',
         'gel': 'Ларики'
     }
-    last_rate = db_conn.query(
-        f"select course_value from course where course_name='{ccy}';"
-    )[0][0]
+    last_rate = int(db_conn.query(
+        f"""select round((
+        select
+        rate / (select rate from rates where ccy_iso3='{ccy}')
+        from rates where ccy_iso3 = 'RUB'), 1);"""
+    )[0][0])
     bot.send_message(
         chat_id=message.chat.id,
         text=f'{ccy_map[ccy]} чичас па {last_rate} ₽'
