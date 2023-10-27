@@ -151,3 +151,8 @@ create table if not exists rates (
   rate numeric(10, 6),
   prev_rate numeric(10,6)
 );
+
+insert into rates values
+('USD', 1, 1),
+('RUB', 1, 1),
+('GEL', 1, 1);

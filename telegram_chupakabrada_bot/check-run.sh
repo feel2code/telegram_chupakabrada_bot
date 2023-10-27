@@ -15,18 +15,5 @@ else
 }
 fi
 
-	exchange=$(pgrep -fc 'python exchange.py')
-	if [ "$exchange" -eq 0 ]
-then {
-	echo "Running exchange.py"
-        sleep 1
-    source venv/bin/activate
-	  python exchange.py &
-}
-else 
-{
-	echo "Exchange already running!"
-}
-fi
 sleep 30
 done
