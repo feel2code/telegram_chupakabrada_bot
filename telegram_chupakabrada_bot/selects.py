@@ -10,7 +10,8 @@ def check(message, db_conn: MySQLUtils):
     for word in msg_check:
         try:
             rec = db_conn.query(
-                f"""select a.answer from questions as q join answers a on q.ans_id=a.ans_id
+                f"""select a.answer from questions as q
+                    join answers a on q.ans_id=a.ans_id
                     where upper(q.question)={repr(word)};"""
             )[0]
         except IndexError:
@@ -59,7 +60,7 @@ def sticker_send(message):
     for stick_id in range(1, 10):
         bot.send_sticker(
             chat_id=message.chat.id,
-            data=db_conn.query(
+            sticker=db_conn.query(
                 f"select sticker from stickers where sticker_id={stick_id};"
             )[0][0])
         time.sleep(0.200)

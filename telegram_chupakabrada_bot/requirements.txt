@@ -19,7 +19,7 @@ protobuf==3.20.3
 pycodestyle==2.8.0
 pyflakes==2.4.0
 pylint==3.0.1
-pyTelegramBotAPI==4.2.0
+pyTelegramBotAPI
 python-dotenv==0.21.0
 requests==2.26.0
 soupsieve==2.3.1

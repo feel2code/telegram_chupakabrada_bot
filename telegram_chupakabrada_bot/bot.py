@@ -1,7 +1,9 @@
 import logging
 import os
+import random
 
 from telebot.apihelper import ApiTelegramException
+from telebot.types import InputFile
 
 from aboba import markov, markov_hardness_request
 from analytics import analytics
@@ -26,6 +28,14 @@ logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
 logger.addHandler(handler)
 
+
+def send_gs_voice(message):
+    """sends voice message."""
+    path = os.getenv('VOICES_PATH')
+    f = random.choice(os.listdir(path))
+    bot.send_voice(message.chat.id, InputFile(f'{path}{f}'))
+
+
 COMMANDS_MAPPING = {
     'start': get_start,
     'about': get_about,
@@ -45,6 +55,7 @@ COMMANDS_MAPPING = {
     'set': markov_hardness_request,
     'хрю': zoo,
     'гав': zoo,
+    'voice': send_gs_voice,
     os.getenv('KEY_FOR_STATS'): send_statistics
 }
 
@@ -59,6 +70,8 @@ def standard_commands_sender(message):
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     """Catching text messages or commands for bot."""
+    if random.randint(1, 5) == 1:
+        send_gs_voice(message)
     db_conn = MySQLUtils()
     analytics(message, db_conn)
     check(message, db_conn)
