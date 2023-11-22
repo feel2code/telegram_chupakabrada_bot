@@ -1,4 +1,4 @@
-from connections import bot, MySQLUtils
+from connections import MySQLUtils, bot
 from selects import query, simple_query
 
 
@@ -16,11 +16,13 @@ def get_top_films(message, db_conn: MySQLUtils):
                       max(cast(film_year as UNSIGNED)) from films;"""
         )[0]
         if year in range(min_year, max_year + 1):
-            what_to_send = ' '.join(db_conn.query(
-                f"""select film_name, film_year, link
+            what_to_send = " ".join(
+                db_conn.query(
+                    f"""select film_name, film_year, link
                     from films
                     where film_year='{year}' order by rand() limit 1"""
-            )[0])
+                )[0]
+            )
         else:
             what_to_send = simple_query(117)
     except IndexError:

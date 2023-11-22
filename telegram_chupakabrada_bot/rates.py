@@ -1,6 +1,6 @@
+import json
 import os
 
-import json
 import requests
 import telebot
 
@@ -8,23 +8,19 @@ from connections import MySQLUtils
 
 
 def get_api_rates_and_insert():
-    endpoint = ("http://api.exchangeratesapi.io/v1/latest?"
-                f"access_key={os.getenv('RATES_TOKEN')}&symbols=USD,GEL,RUB")
-    response = json.loads(requests.get(
-        endpoint,
-        timeout=5,
-        headers={"user-agent": "Mozilla/80.0"}
-    ).text)
-    if response['success']:
-        rates = response['rates']
+    endpoint = (
+        "http://api.exchangeratesapi.io/v1/latest?"
+        f"access_key={os.getenv('RATES_TOKEN')}&symbols=USD,GEL,RUB"
+    )
+    response = json.loads(
+        requests.get(endpoint, timeout=5, headers={"user-agent": "Mozilla/80.0"}).text
+    )
+    if response["success"]:
+        rates = response["rates"]
         db_conn = MySQLUtils()
-        db_conn.mutate(
-            "update rates set prev_rate=rate;"
-        )
+        db_conn.mutate("update rates set prev_rate=rate;")
         for ccy, val in rates.items():
-            db_conn.mutate(
-                f"update rates set rate={val} where ccy_iso3='{ccy}';"
-            )
+            db_conn.mutate(f"update rates set rate={val} where ccy_iso3='{ccy}';")
 
 
 def check_usd_rate_change():
@@ -43,11 +39,12 @@ def check_usd_rate_change():
     )[0]
     rate, prev_rate = [int(x) for x in rates]
     if rate != prev_rate:
-        bot = telebot.TeleBot(os.getenv('BOT_TOKEN'))
-        bot.send_message(chat_id=os.getenv('HOME_TELEGA'),
-                         text=f'Далар уже па {rate} ₽')
+        bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
+        bot.send_message(
+            chat_id=os.getenv("HOME_TELEGA"), text=f"Далар уже па {rate} ₽"
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     get_api_rates_and_insert()
     check_usd_rate_change()

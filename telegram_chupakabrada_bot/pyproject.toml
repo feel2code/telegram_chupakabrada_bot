@@ -1,0 +1,14 @@
+[tool.isort]
+profile = "black"
+line_length = 100
+
+
+[tool.pylint]
+max-line-length = 100
+min-similarity-lines=12
+max-attributes = 10
+disable = [
+        'missing-function-docstring',
+        'missing-module-docstring',
+        'missing-class-docstring',
+]

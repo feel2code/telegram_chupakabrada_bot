@@ -2,12 +2,12 @@ import os
 
 from tabulate import tabulate
 
-from connections import bot, MySQLUtils
+from connections import MySQLUtils, bot
 
 
 def send_statistics(attrs):
     print(attrs)
-    admin_chat = os.getenv('ADMIN_CHAT')
+    admin_chat = os.getenv("ADMIN_CHAT")
     db_conn = MySQLUtils()
     fetched = db_conn.query(
         f"""select * from (
@@ -32,5 +32,6 @@ def send_statistics(attrs):
         where date(st_date)=date(now())
         and st_chat_id!='{admin_chat}'
         ) as foo
-        order by Номер;""")
+        order by Номер;"""
+    )
     bot.send_message(chat_id=admin_chat, text=tabulate(fetched))

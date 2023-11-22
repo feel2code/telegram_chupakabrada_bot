@@ -6,7 +6,7 @@ from connections import MySQLUtils
 def analytics(message, db_conn: MySQLUtils):
     """analytics."""
     st_chat_id = message.chat.id
-    st_name = f'{message.from_user.first_name} {message.from_user.last_name}'
+    st_name = f"{message.from_user.first_name} {message.from_user.last_name}"
     st_nick = message.from_user.username
     st_date = datetime.now()
     db_conn.mutate(
