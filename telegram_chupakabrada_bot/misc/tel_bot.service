@@ -5,7 +5,8 @@ After=multi-user.target
 [Service]
 RestartSec=10
 Restart=always
-ExecStart=source /root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/venv/bin/activate && python /root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/bot.py
+EnvironmentFile=/root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/.env
+ExecStart=/root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/venv/bin/python /root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/bot.py
 
 [Install]
 WantedBy=multi-user.target
