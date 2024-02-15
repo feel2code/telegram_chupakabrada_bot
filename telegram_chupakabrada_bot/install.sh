@@ -5,7 +5,7 @@ pip install -r requirements.txt
 
 crontab misc/crontab.txt
 
-mkdir misc/voices && mv /misc/voices.tar.xz misc/voices/voices.tar.xz
+mkdir misc/voices && mv misc/voices.tar.xz misc/voices/voices.tar.xz
 cd misc/voices
 tar -xvf voices.tar.xz
 cd ..

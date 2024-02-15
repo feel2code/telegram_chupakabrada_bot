@@ -26,6 +26,7 @@ jobs:
             mkdir markov_files
             cd telegram_chupakabrada_bot
             touch .env
+            echo '' > .env
             echo DB_USER=${{ secrets.DB_USER }} >> .env
             echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
