@@ -21,6 +21,7 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
+            rm -rf telegram_chupakabrada_bot
             git clone https://github.com/feel2code/telegram_chupakabrada_bot.git
             cd telegram_chupakabrada_bot
             mkdir markov_files
