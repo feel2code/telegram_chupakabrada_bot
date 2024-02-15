@@ -30,12 +30,12 @@ jobs:
             echo DB_PASSWORD=${{ secrets.DB_PASSWORD }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
-            echo BOT_TOKEN=${{ secrets.DB_HOST }} >> .env
-            echo WEATHER_TOKEN=${{ secrets.DB_HOST }} >> .env
-            echo KEY_FOR_STATS=${{ secrets.DB_HOST }} >> .env
-            echo ADMIN_CHAT=${{ secrets.DB_HOST }} >> .env
-            echo HOME_TELEGA=${{ secrets.DB_HOST }} >> .env
-            echo RATES_TOKEN=${{ secrets.DB_HOST }} >> .env
-            echo VOICES_PATH=${{ secrets.DB_HOST }} >> .env
+            echo BOT_TOKEN=${{ secrets.BOT_TOKEN }} >> .env
+            echo WEATHER_TOKEN=${{ secrets.WEATHER_TOKEN }} >> .env
+            echo KEY_FOR_STATS=${{ secrets.KEY_FOR_STATS }} >> .env
+            echo ADMIN_CHAT=${{ secrets.ADMIN_CHAT }} >> .env
+            echo HOME_TELEGA=${{ secrets.HOME_TELEGA }} >> .env
+            echo RATES_TOKEN=${{ secrets.RATES_TOKEN }} >> .env
+            echo VOICES_PATH=${{ secrets.VOICES_PATH }} >> .env
             chmod +x install.sh
-            exec install.sh
+            ./install.sh
