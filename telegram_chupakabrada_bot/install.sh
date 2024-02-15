@@ -10,7 +10,7 @@ cd misc/voices
 tar -xvf voices.tar.xz
 cd ..
 
-cp tel_bot.service /etc/systemd/user/tel_bot.service
+cp tel_bot.service /etc/systemd/system/tel_bot.service
 systemctl enable tel_bot.service
 systemctl start tel_bot.service
 systemctl daemon-reload
