@@ -24,4 +24,4 @@
 
 0 4 * * * /root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/morning_messages.sh
 
-0 0/8 * * * /root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/get_rates.sh
+0 8,16,21 * * * /root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/get_rates.sh
