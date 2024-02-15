@@ -31,10 +31,8 @@
 
 ## Installation
 
-NB under developing
 ```bash
-git clone https://github.com/feel2code/telegram_chupakabrada_bot && cd telegram_chupakabrada_bot
-chmod +x *.sh && ./install.sh
+git clone https://github.com/feel2code/telegram_chupakabrada_bot && cd telegram_chupakabrada_bot && ./install.sh
 ```
 
 ## Contributing
@@ -50,11 +48,8 @@ We welcome contributions to enhance the bot's functionality and add more excitin
     <img src="https://img.shields.io/github/stars/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor"
         alt="Stars"
         style="border-radius:5px">
-<a href="https://develop.spacemacs.org">
-    <img alt="Developed with Spacemacs"
-        src="https://cdn.rawgit.com/syl20bnr/spacemacs/442d025779da2f62fc86c2082703697714db6514/assets/spacemacs-badge.svg"
+    <img src="https://img.shields.io/badge/NeoVim-%2357A143.svg?&style=for-the-badge&logo=neovim&logoColor=white"
         style="height:28px"/>
-</a>
 </p>
 
 ## License
