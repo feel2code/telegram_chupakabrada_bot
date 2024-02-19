@@ -1,4 +1,5 @@
 # Telegram Chupakabrada Bot
+![Telegram Chupakabrada Bot Deployed Status](https://github.com/feel2code/telegram_chupakabrada_bot/actions/workflows/python-app.yml/badge.svg)
 
 ![Telegram Chupakabrada Bot Logo](https://repository-images.githubusercontent.com/414962202/bebbff7c-5228-4cd9-9a98-c59278ee3cd1)
 
@@ -42,9 +43,6 @@ We welcome contributions to enhance the bot's functionality and add more excitin
 <h3><a href="https://t.me/chupakabrada_bot">LINK TO THIS INCREDIBLE TELEGRAM BOT</a></h3>
 
 <p>
-    <img src="https://img.shields.io/github/repo-size/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor"
-        alt="Repository Size"
-        style="border-radius:5px">
     <img src="https://img.shields.io/github/stars/feel2code/telegram_chupakabrada_bot?style=for-the-badge&logo=appveyor"
         alt="Stars"
         style="border-radius:5px">
