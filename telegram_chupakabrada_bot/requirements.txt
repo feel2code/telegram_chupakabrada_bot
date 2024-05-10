@@ -1,6 +1,6 @@
 astroid==3.0.1
 beautifulsoup4==4.12.2
-black==23.11.0
+black==24.3.0
 bs4==0.0.1
 certifi==2023.11.17
 charset-normalizer==3.3.2
