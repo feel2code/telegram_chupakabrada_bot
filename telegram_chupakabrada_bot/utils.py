@@ -8,7 +8,7 @@ from weather_module import get_weather_list
 
 def send_message(chat, message, parse_mode="Markdown"):
     """send sum message to the chat."""
-    bot.send_message(chat_id=chat, test=message, parse_mode=parse_mode)
+    bot.send_message(chat_id=chat, text=message, parse_mode=parse_mode)
 
 
 if __name__ == "__main__":
