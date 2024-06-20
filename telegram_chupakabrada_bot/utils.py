@@ -16,5 +16,5 @@ if __name__ == "__main__":
     weather = get_weather_list(chat_id)
     rates = rates_exchange(chat_id)
     holiday = get_holidays_from_db(chat_id)
-    sum_message = f"{weather}\n{rates}\n{holiday}"
+    sum_message = f"{weather}\n\n{rates}\n\nПраздники:\n{holiday}"
     send_message(chat_id, sum_message)
