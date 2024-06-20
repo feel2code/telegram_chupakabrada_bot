@@ -1,6 +1,5 @@
-import os
 from calendar import MONDAY, Calendar
-from datetime import datetime
+from datetime import datetime, timezone
 
 import requests
 from bs4 import BeautifulSoup
@@ -11,17 +10,18 @@ from connections import MySQLUtils, bot
 def get_holidays_from_db(message):
     """Get holidays from db."""
     # Все искажения грамматики неслучайны.
+    return_mode = False
     if not isinstance(message, str):
         chat_id = message.chat.id
     else:
-        chat_id = message
+        chat_id, return_mode = message, True
     db_conn = MySQLUtils()
     # get week and day from calendar to check relative holidays
     cur_day = datetime.today().day
     cur_month = datetime.today().month
     cur_weekday = datetime.today().weekday()
     month_calendar = Calendar(firstweekday=MONDAY).monthdayscalendar(
-        datetime.utcnow().year, cur_month
+        datetime.now(timezone.utc).year, cur_month
     )
     months_weekdays = [
         week[cur_weekday] for week in month_calendar if week[cur_weekday] != 0
@@ -63,6 +63,8 @@ def get_holidays_from_db(message):
         if fetched
         else "Сиводня праздников нет! Пойду сделаю омлет..."
     )
+    if return_mode:
+        return holidays_from_db
     bot.send_message(
         chat_id=chat_id,
         text=(
@@ -70,6 +72,7 @@ def get_holidays_from_db(message):
             + holidays_from_db
         ),
     )
+    return None
 
 
 def get_wiki_holiday(message):
@@ -123,7 +126,3 @@ def get_holidays(chat_id: str):
             f'{holidays_result if holidays_result else "праздников нет."}'
         ),
     )
-
-
-if __name__ == "__main__":
-    get_holidays_from_db(os.getenv("HOME_TELEGA"))

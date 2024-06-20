@@ -175,10 +175,11 @@ def add_temp_to_db(city_name: str, chat: int, db_conn: MySQLUtils):
 
 def get_weather_list(message):
     """getting cities list from DB."""
+    return_mode = False
     if not isinstance(message, str):
         chat_id = message.chat.id
     else:
-        chat_id = message
+        chat_id, return_mode = message, True
     db_conn = MySQLUtils()
     if datetime.now().hour in range(0, 7):
         weather_message = simple_query(128) + "\n"
@@ -222,8 +223,7 @@ def get_weather_list(message):
             )
     else:
         weather_message = simple_query(116)
+    if return_mode:
+        return weather_message
     bot.send_message(chat_id=chat_id, text=weather_message, parse_mode="Markdown")
-
-
-if __name__ == "__main__":
-    get_weather_list(os.getenv("HOME_TELEGA"))
+    return None

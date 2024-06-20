@@ -114,9 +114,24 @@ def roll(message):
 
 def rates_exchange(message):
     """usd currency rate."""
-    db_conn = MySQLUtils()
-    ccy = message.text.split(" ")[0][1:].replace("@chupakabrada_bot", "")
+    ccy = "usd"
+    return_mode = False
+    if not isinstance(message, str):
+        ccy = message.text.split(" ")[0][1:].replace("@chupakabrada_bot", "")
+    else:
+        return_mode = True
+    last_rate = get_rates_from_db(ccy)
     ccy_map = {"usd": "Далары", "gel": "Ларики"}
+    result_message = f"{ccy_map[ccy]} чичас па {last_rate} ₽"
+    if return_mode:
+        return result_message
+    bot.send_message(chat_id=message.chat.id, text=result_message)
+    return None
+
+
+def get_rates_from_db(ccy):
+    """get last updated rate from db"""
+    db_conn = MySQLUtils()
     last_rate = int(
         db_conn.query(
             f"""select round((
@@ -125,9 +140,7 @@ def rates_exchange(message):
         from rates where ccy_iso3 = 'RUB'), 1);"""
         )[0][0]
     )
-    bot.send_message(
-        chat_id=message.chat.id, text=f"{ccy_map[ccy]} чичас па {last_rate} ₽"
-    )
+    return last_rate
 
 
 def get_start(message):
