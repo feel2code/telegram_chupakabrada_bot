@@ -20,7 +20,7 @@ cp db_data.sql ..
 cp db_ddl.sql ..
 cd ..
 DB_NAME=$(read DB_NAME_RAW < .env && echo $DB_NAME_RAW | cut -d "=" -f 2)
-cp /temp/telegram_chupakabrada_bot_temp.db $DB_NAME.db
+cp /tmp/telegram_chupakabrada_bot_temp.db $DB_NAME.db
 if [ ! -f $DB_NAME.db ]; then
     echo "Database not found! Creating database..."
     sqlite3 $DB_NAME.db < db_ddl.sql

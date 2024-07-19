@@ -21,8 +21,8 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            cp telegram_chupakabrada_bot/telegram_chupakabrada_bot/${{ secrets.DB_NAME }}.db /temp/telegram_chupakabrada_bot_temp.db 
-            cp telegram_chupakabrada_bot/${{ secrets.DB_NAME }}.db /temp/telegram_chupakabrada_bot_temp.db 
+            cp telegram_chupakabrada_bot/telegram_chupakabrada_bot/${{ secrets.DB_NAME }}.db /tmp/telegram_chupakabrada_bot_temp.db 
+            cp telegram_chupakabrada_bot/${{ secrets.DB_NAME }}.db /tmp/telegram_chupakabrada_bot_temp.db 
             rm -rf telegram_chupakabrada_bot
             git clone https://github.com/feel2code/telegram_chupakabrada_bot.git
             cd telegram_chupakabrada_bot
