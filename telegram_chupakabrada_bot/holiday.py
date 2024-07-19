@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import requests
 from bs4 import BeautifulSoup
 
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 
 
 def get_holidays_from_db(message):
@@ -15,7 +15,7 @@ def get_holidays_from_db(message):
         chat_id = message.chat.id
     else:
         chat_id, return_mode = message, True
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     # get week and day from calendar to check relative holidays
     cur_day = datetime.today().day
     cur_month = datetime.today().month
@@ -78,7 +78,7 @@ def get_holidays_from_db(message):
 def get_wiki_holiday(message):
     """Get list of holidays including links to wiki."""
     # Все искажения грамматики неслучайны.
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     day, month = datetime.now().day, datetime.now().month
     month_ru = db_conn.query(f"select month_name from months where id={month};")[0][0]
     holidays_list = []

@@ -2,13 +2,13 @@ import os
 
 from tabulate import tabulate
 
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 
 
 def send_statistics(attrs):
     print(attrs)
     admin_chat = os.getenv("ADMIN_CHAT")
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     fetched = db_conn.query(
         f"""select * from (
         select '1' as Номер,

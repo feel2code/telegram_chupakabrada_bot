@@ -4,7 +4,7 @@ import os
 import requests
 import telebot
 
-from connections import MySQLUtils
+from connections import SQLUtils
 
 
 def get_api_rates_and_insert():
@@ -17,7 +17,7 @@ def get_api_rates_and_insert():
     )
     if response["success"]:
         rates = response["rates"]
-        db_conn = MySQLUtils()
+        db_conn = SQLUtils()
         db_conn.mutate("update rates set prev_rate=rate;")
         for ccy, val in rates.items():
             db_conn.mutate(f"update rates set rate={val} where ccy_iso3='{ccy}';")
@@ -25,7 +25,7 @@ def get_api_rates_and_insert():
 
 def check_usd_rate_change():
     """Искажения грамматики неслучайны."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     rates = db_conn.query(
         """select
         round((

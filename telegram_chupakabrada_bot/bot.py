@@ -7,7 +7,7 @@ from telebot.types import InputFile
 
 from aboba import markov, markov_hardness_request
 from analytics import analytics
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 from films import films_command
 from holiday import get_holidays_from_db, get_wiki_holiday
 from selects import (
@@ -23,7 +23,6 @@ from selects import (
     zoo,
 )
 from stats import send_statistics
-from today_corona import coronavirus
 from weather_module import (
     add_city_request,
     delete_city_request,
@@ -59,7 +58,6 @@ COMMANDS_MAPPING = {
     "forecast": get_weather_list,
     "holidays": get_holidays_from_db,
     "holiday": get_wiki_holiday,
-    "coronavirus": coronavirus,
     "sticker": sticker_send,
     "roll": roll,
     "usd": rates_exchange,
@@ -76,7 +74,7 @@ COMMANDS_MAPPING = {
 }
 
 
-@bot.message_handler(commands=COMMANDS_MAPPING.keys())
+@bot.message_handler(commands=list(COMMANDS_MAPPING.keys()))
 def standard_commands_sender(message):
     """checks commands in message."""
     command = message.text.split(" ")[0][1:].replace("@chupakabrada_bot", "")
@@ -88,7 +86,7 @@ def get_text_messages(message):
     """Catching text messages or commands for bot."""
     if random.randint(1, 5) == 1:
         send_gs_voice(message)
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     analytics(message, db_conn)
     check(message, db_conn)
     one_message(message, db_conn)
@@ -117,14 +115,14 @@ def deleting_msg(message):
 @bot.message_handler(content_types=["voice"])
 def get_voice_messages(voice):
     """Catching voice messages for bot."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     query(49, voice.chat.id, db_conn)
 
 
 @bot.message_handler(content_types=["audio"])
 def get_audio_messages(audio):
     """Catching audio files."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     query(50, audio.chat.id, db_conn)
 
 
@@ -135,7 +133,7 @@ def get_photo_messages(photo_message):
         if "@all" in photo_message.caption and (
             photo_message.chat.id == int(os.getenv("HOME_TELEGA"))
         ):
-            db_conn = MySQLUtils()
+            db_conn = SQLUtils()
             query(130, photo_message.chat.id, db_conn)
 
 

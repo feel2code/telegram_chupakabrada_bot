@@ -1,18 +1,18 @@
 import time
 from datetime import datetime
 
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 
 
-def check(message, db_conn: MySQLUtils):
+def check(message, db_conn: SQLUtils):
     """Checking does message has any word in list from dictionary."""
-    msg_check = message.text.upper().split()
+    msg_check = message.text.lower().split()
     for word in msg_check:
         try:
             rec = db_conn.query(
                 f"""select a.answer from questions as q
                     join answers a on q.ans_id=a.ans_id
-                    where upper(q.question)={repr(word)};"""
+                    where lower(q.question)={repr(word)};"""
             )[0]
         except IndexError:
             continue
@@ -22,7 +22,7 @@ def check(message, db_conn: MySQLUtils):
         bot.send_message(message.chat.id, rec)
 
 
-def one_message(message, db_conn: MySQLUtils):
+def one_message(message, db_conn: SQLUtils):
     """sends message if any match was fetched from db."""
     try:
         fetched = db_conn.query(
@@ -37,11 +37,11 @@ def one_message(message, db_conn: MySQLUtils):
 
 def simple_query(ans_id):
     """query from answers table."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     return db_conn.query(f"select answer from answers where ans_id={ans_id};")[0][0]
 
 
-def query(ans_id, chat_id, db_conn: MySQLUtils):
+def query(ans_id, chat_id, db_conn: SQLUtils):
     """send message to chat."""
     bot.send_message(
         chat_id=chat_id,
@@ -51,7 +51,7 @@ def query(ans_id, chat_id, db_conn: MySQLUtils):
 
 def sticker_send(message):
     """send stickers to chat."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     query(51, message.chat.id, db_conn)
     for stick_id in range(1, 10):
         bot.send_sticker(
@@ -69,17 +69,17 @@ def zoo(message):
         "/хрю": "pig_stickers",
         "/гав": "dog_stickers",
     }
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     sticker_id = db_conn.query(
         f"""select sticker_id
-            from {zoo_dict[message.text]} order by rand() limit 1;"""
+            from {zoo_dict[message.text]} order by random() limit 1;"""
     )[0][0]
     bot.send_sticker(message.chat.id, sticker_id)
 
 
 def roll(message):
     """roll someone in chat."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     count = db_conn.query(
         f"""select count(1) from rolls
             where chat_id='{message.chat.id}'
@@ -91,7 +91,7 @@ def roll(message):
                     select distinct st_nick from stats
                     where st_chat_id='{message.chat.id}' and st_nick != 'None'
                     ) as foo
-                order by rand() limit 1;"""
+                order by random() limit 1;"""
         )[0][0]
         bot.send_message(
             chat_id=message.chat.id, text=f"Великий рандом выбрал тебя, @{nick}"
@@ -131,7 +131,7 @@ def rates_exchange(message):
 
 def get_rates_from_db(ccy):
     """get last updated rate from db"""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     last_rate = int(
         db_conn.query(
             f"""select round((
@@ -145,7 +145,7 @@ def get_rates_from_db(ccy):
 
 def get_start(message):
     """sends start message."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     bot.send_message(
         message.chat.id,
         db_conn.query("select start_text from start_q where start_id=1;")[0][0],
@@ -154,7 +154,7 @@ def get_start(message):
 
 def get_about(message):
     """sends message about author."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     bot.send_message(
         message.chat.id,
         db_conn.query("select about_text from about where about_id=1;")[0][0],
@@ -163,8 +163,10 @@ def get_about(message):
 
 def get_quote(message):
     """sends quote."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     bot.send_message(
         message.chat.id,
-        db_conn.query("select quote_value from quotes order by rand() limit 1;")[0][0],
+        db_conn.query("select quote_value from quotes order by random() limit 1;")[0][
+            0
+        ],
     )

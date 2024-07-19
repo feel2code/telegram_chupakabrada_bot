@@ -3,13 +3,13 @@ from typing import Union
 
 import markovify
 
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 from selects import query
 
 markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
 
 
-def markov(message, db_conn: MySQLUtils) -> Union[str | None]:
+def markov(message, db_conn: SQLUtils) -> Union[str | None]:
     """processing message for Markov chains AI."""
     try:
         fetched = db_conn.query(
@@ -57,7 +57,7 @@ def markov(message, db_conn: MySQLUtils) -> Union[str | None]:
 
 def markov_hardness_request(message):
     """checks correct modifying of hardness level."""
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
         query(129, message.chat.id, db_conn)
     else:
@@ -67,7 +67,7 @@ def markov_hardness_request(message):
 def markov_hardness(message):
     """set hardness level of Markov chains AI."""
     # Искажения грамматики неслучайны.
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     hardness = message.text.replace("/set ", "").replace(" ", "-")
     count = db_conn.query(
         f"select count(1) from markov where chat_id={message.chat.id}"

@@ -1,24 +1,19 @@
 import os
+import sqlite3
+from sqlite3 import DatabaseError, OperationalError
 
-import mysql.connector as mysql_conn
 import telebot
 from dotenv import load_dotenv
-from mysql.connector.errors import DatabaseError, OperationalError
 
 load_dotenv(".env")
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
 
 
-class MySQLUtils:
+class SQLUtils:
     conn = None
 
     def connect(self):
-        self.conn = mysql_conn.connect(
-            user=os.getenv("DB_USER"),
-            password=os.getenv("DB_PASSWORD"),
-            host=os.getenv("DB_HOST"),
-            database=os.getenv("DB_NAME"),
-        )
+        self.conn = sqlite3.connect(f'{os.getenv("DB_NAME")}.db')
 
     def query(self, request):
         try:

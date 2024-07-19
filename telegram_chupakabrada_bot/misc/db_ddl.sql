@@ -1,29 +1,47 @@
+drop table if exists about;
+drop table if exists answers;
+drop table if exists asking;
+drop table if exists cities;
+drop table if exists dog_stickers;
+drop table if exists films;
+drop table if exists holidays_iso;
+drop table if exists holidays_ru;
+drop table if exists holidays_ru_relative;
+drop table if exists markov;
+drop table if exists messages;
+drop table if exists months;
+drop table if exists pig_stickers;
+drop table if exists questions;
+drop table if exists quotes;
+drop table if exists rates;
+drop table if exists rolls;
+drop table if exists start_q;
+drop table if exists stats;
+drop table if exists stickers;
+
 CREATE TABLE about (
 	about_id int8 NOT NULL,
 	about_text text NOT NULL
 );
 
 CREATE TABLE answers (
-	ans_id int4 AUTO_INCREMENT,
-	answer text NOT NULL,
-	CONSTRAINT answers_pkey PRIMARY KEY (ans_id)
+	ans_id integer primary key,
+	answer text NOT NULL
 );
 
 
 CREATE TABLE asking (
-	ask_id int8 AUTO_INCREMENT,
-	ask_answer text NULL,
-	CONSTRAINT asking_pkey PRIMARY KEY (ask_id)
+	ask_id integer primary key,
+	ask_answer text NULL
 );
 
 CREATE TABLE cities (
-	cities_id int8 AUTO_INCREMENT,
+	cities_id integer primary key,
 	chat_id text NULL,
 	city_name text NULL,
 	temp int8 NULL,
 	expected_day_temp int4 NULL,
-	conditions text NULL,
-	CONSTRAINT cities_pkey PRIMARY KEY (cities_id)
+	conditions text NULL
 );
 
 CREATE TABLE course (
@@ -33,7 +51,7 @@ CREATE TABLE course (
 
 
 CREATE TABLE dog_stickers (
-	id int8 AUTO_INCREMENT PRIMARY KEY,
+	id integer primary key,
 	sticker_id text NULL
 );
 
@@ -47,28 +65,22 @@ CREATE TABLE films (
 
 
 CREATE TABLE holidays_iso (
-	id int4 AUTO_INCREMENT NOT NULL,
 	dt date NULL,
-	holiday_name varchar(250) NULL,
-	CONSTRAINT holidays_iso_pkey PRIMARY KEY (id)
+	holiday_name varchar(250) NULL
 );
 
 CREATE TABLE holidays_ru (
-	id int4 AUTO_INCREMENT NOT NULL,
 	dt date NULL,
-	holiday_name varchar(250) NULL,
-	CONSTRAINT holidays_ru_pkey PRIMARY KEY (id)
+	holiday_name varchar(250) NULL
 );
 
 
 CREATE TABLE holidays_ru_relative (
-	id int4 AUTO_INCREMENT NOT NULL,
 	rel_name varchar(200) NULL,
 	dt date NULL,
 	holiday_name varchar(250) NULL,
 	week_num int4 NULL,
-	day_num int4 NULL,
-	CONSTRAINT holiday_ru_relative_pkey PRIMARY KEY (id)
+	day_num int4 NULL
 );
 
 
@@ -79,37 +91,34 @@ CREATE TABLE markov (
 
 
 CREATE TABLE messages (
-	msg_id int8 AUTO_INCREMENT,
+	msg_id integer primary key,
 	msg_txt text NOT NULL,
-	ans_id int8 NOT NULL,
-	CONSTRAINT messages_pkey PRIMARY KEY (msg_id)
+	ans_id int8 NOT NULL
 );
 
 
 CREATE TABLE months (
-	id int8 AUTO_INCREMENT PRIMARY KEY,
+	id integer primary key,
 	month_name text NULL
 );
 
 
 CREATE TABLE pig_stickers (
-	id int8 AUTO_INCREMENT PRIMARY KEY,
+	id integer primary key,
 	sticker_id text NULL
 );
 
 
 CREATE TABLE questions (
-	que_id int4 AUTO_INCREMENT,
+	que_id integer primary key,
 	ans_id int4 NOT NULL,
-	question text NOT NULL,
-	CONSTRAINT questions_pkey PRIMARY KEY (que_id)
+	question text NOT NULL
 );
 
 
 CREATE TABLE quotes (
-	quote_id int4 AUTO_INCREMENT,
-	quote_value text NOT NULL,
-	CONSTRAINT quotes_pkey PRIMARY KEY (quote_id)
+	quote_id integer primary key,
+	quote_value text NOT NULL
 );
 
 
@@ -127,22 +136,20 @@ CREATE TABLE start_q (
 
 
 CREATE TABLE stats (
-	stat_id int8 AUTO_INCREMENT,
+	stat_id integer primary key,
 	st_chat_id text NULL,
 	st_name text NULL,
 	st_nick text NULL,
-	st_date timestamp NULL,
-	CONSTRAINT stats_pkey PRIMARY KEY (stat_id)
+	st_date timestamp NULL
 );
 
 
 CREATE TABLE stickers (
-	sticker_id int4 AUTO_INCREMENT,
-	sticker text NOT NULL,
-	CONSTRAINT stickers_pkey PRIMARY KEY (sticker_id)
+	sticker_id integer primary key,
+	sticker text NOT NULL
 );
 
-alter table holidays_ru_relative add column is_last int4;
+alter table holidays_ru_relative add column is_last integer;
 update holidays_ru_relative set is_last=1 where rel_name like '%Последн%';
 
 drop table if exists course;

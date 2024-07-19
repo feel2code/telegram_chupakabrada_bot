@@ -1,22 +1,22 @@
 from telebot.util import quick_markup
 
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 from selects import query, simple_query
 
 
 def films_command(message):
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     query(118, message.chat.id, db_conn)
     bot.register_next_step_handler(message, get_top_films, db_conn)
 
 
 def send_film(chat_id, year):
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     film = " ".join(
         db_conn.query(
             f"""select film_name, film_year, link
                     from films
-                    where film_year='{year}' order by rand() limit 1"""
+                    where film_year='{year}' order by random() limit 1"""
         )[0]
     )
     bot.send_message(chat_id, film)
@@ -38,7 +38,7 @@ def callback_query(call):
     send_film(call.message.chat.id, call.data)
 
 
-def get_top_films(message, db_conn: MySQLUtils):
+def get_top_films(message, db_conn: SQLUtils):
     try:
         year = int(message.text)
         min_year, max_year = db_conn.query(

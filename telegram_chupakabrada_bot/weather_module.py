@@ -3,12 +3,12 @@ from datetime import datetime
 
 import requests
 
-from connections import MySQLUtils, bot
+from connections import SQLUtils, bot
 from selects import query, simple_query
 
 
 def weather_in_city_request(message):
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
         query(125, message.chat.id, db_conn)
     else:
@@ -86,7 +86,7 @@ def forecast(city: str) -> tuple:
 
 
 def add_city_request(message):
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
         query(123, message.chat.id, db_conn)
     else:
@@ -99,7 +99,7 @@ def add_city(message):
     :param message: message from telegram
     :return: None
     """
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     chat_id = str(message.chat.id)
     city_name = message.text.split()
     city_name.pop(0)
@@ -117,7 +117,7 @@ def add_city(message):
 
 
 def delete_city_request(message):
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
         query(124, message.chat.id, db_conn)
     else:
@@ -130,7 +130,7 @@ def delete_city(message):
     :param message: message from telegram
     :return: None
     """
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     chat_id = str(message.chat.id)
     city_name = message.text.split()
     city_name.pop(0)
@@ -157,7 +157,7 @@ def delete_city(message):
         bot.send_message(message.chat.id, simple_query(115))
 
 
-def add_temp_to_db(city_name: str, chat: int, db_conn: MySQLUtils):
+def add_temp_to_db(city_name: str, chat: int, db_conn: SQLUtils):
     """
     Gets current and forecast temperatures, conditions and inserts it to DB
     :param city_name: city name or id
@@ -180,7 +180,7 @@ def get_weather_list(message):
         chat_id = message.chat.id
     else:
         chat_id, return_mode = message, True
-    db_conn = MySQLUtils()
+    db_conn = SQLUtils()
     if datetime.now().hour in range(0, 7):
         weather_message = simple_query(128) + "\n"
         is_forecast = True

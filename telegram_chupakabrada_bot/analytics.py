@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from connections import MySQLUtils
+from connections import SQLUtils
 
 
-def analytics(message, db_conn: MySQLUtils):
+def analytics(message, db_conn: SQLUtils):
     """analytics."""
     st_chat_id = message.chat.id
     st_name = f"{message.from_user.first_name} {message.from_user.last_name}"

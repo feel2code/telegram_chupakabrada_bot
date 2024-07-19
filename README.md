@@ -16,8 +16,6 @@
 
 - **Holiday Updates:** Find out which holidays are being celebrated today with a quick command or scheduled CRON job. Never miss a special occasion again.
 
-- **Coronavirus Information:** Get the latest COVID-19 updates by sending a command or scheduling a CRON job to receive up-to-date information on the pandemic.
-
 - **YouTube Streamer Quotes:** For an extra dose of entertainment, the bot can also share famous quotes from a well-known Russian YouTube streamer.
 
 ## How to Use
