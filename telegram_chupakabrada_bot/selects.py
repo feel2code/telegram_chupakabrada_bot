@@ -136,7 +136,7 @@ def get_rates_from_db(ccy):
         db_conn.query(
             f"""select round((
         select
-        rate / (select rate from rates where ccy_iso3='{ccy}')
+        rate / (select rate from rates where lower(ccy_iso3)='{ccy}')
         from rates where ccy_iso3 = 'RUB'), 1);"""
         )[0][0]
     )

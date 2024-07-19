@@ -37,5 +37,6 @@ jobs:
             echo HOME_TELEGA=${{ secrets.HOME_TELEGA }} >> .env
             echo RATES_TOKEN=${{ secrets.RATES_TOKEN }} >> .env
             echo VOICES_PATH=${{ secrets.VOICES_PATH }} >> .env
+            echo ENVIRONMENT=PROD >> .env
             chmod +x install.sh
             ./install.sh

@@ -7,15 +7,14 @@ from dotenv import load_dotenv
 
 load_dotenv(".env")
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
+env_path = os.getenv("ENV_PATH", "")
 
 
 class SQLUtils:
     conn = None
 
     def connect(self):
-        self.conn = sqlite3.connect(
-            f'/root/telegram_chupakabrada_bot/telegram_chupakabrada_bot/{os.getenv("DB_NAME")}.db'
-        )
+        self.conn = sqlite3.connect(f'{env_path}{os.getenv("DB_NAME")}.db')
 
     def query(self, request):
         try:
