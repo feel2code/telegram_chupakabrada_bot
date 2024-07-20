@@ -34,28 +34,30 @@ def get_holidays_from_db(message):
     fetched = [
         x[0]
         for x in db_conn.query(
-            f"""select * from (
-                    (select holiday_name from (
+            f"""with base_holidays as (select holiday_name from (
                         select
-                            cast(extract(day from dt) as unsigned) as day,
-                            cast(extract(month from dt) as unsigned) as month,
+                            cast(strftime('%d', dt) as integer) as day,
+                            cast(strftime('%m', dt) as integer) as month,
                             concat('🇷🇺 ', holiday_name) as holiday_name
                         from holidays_ru hr
                         union all
                         select
-                            cast(extract(day from dt) as unsigned) as day,
-                            cast(extract(month from dt) as unsigned) as month,
+                            cast(strftime('%d', dt) as integer) as day,
+                            cast(strftime('%m', dt) as integer) as month,
                             concat('🌍 ', holiday_name) as holiday_name
                         from holidays_iso iso
                         ) as holidays
-                    where day={cur_day} and month={cur_month})
-                    union all (
+                    where day={cur_day} and month={cur_month}),
+                relative_holidays as (
                         select concat('🇷🇺 ', holiday_name) as holiday_name
                         from holidays_ru_relative hrr
                         where day_num={cur_weekday + 1}
-                              and extract(month from dt)={cur_month}
+                              and cast(strftime('%m', dt) as integer)={cur_month}
                         {additional_condition}
-                    )) as holidays_all;"""
+                    )
+                select * from base_holidays
+                union all
+                select * from relative_holidays;"""
         )
     ]
     holidays_from_db = (
