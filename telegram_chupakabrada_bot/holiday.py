@@ -38,18 +38,19 @@ def get_holidays_from_db(message):
                         select
                             cast(strftime('%d', dt) as integer) as day,
                             cast(strftime('%m', dt) as integer) as month,
-                            concat('🇷🇺 ', holiday_name) as holiday_name
+                            '🇷🇺 ' || holiday_name as holiday_name
                         from holidays_ru hr
                         union all
                         select
                             cast(strftime('%d', dt) as integer) as day,
                             cast(strftime('%m', dt) as integer) as month,
-                            concat('🌍 ', holiday_name) as holiday_name
+                            '🌍 ' || holiday_name as holiday_name
                         from holidays_iso iso
                         ) as holidays
                     where day={cur_day} and month={cur_month}),
                 relative_holidays as (
-                        select concat('🇷🇺 ', holiday_name) as holiday_name
+                        select 
+                            '🇷🇺 ' || holiday_name as holiday_name
                         from holidays_ru_relative hrr
                         where day_num={cur_weekday + 1}
                               and cast(strftime('%m', dt) as integer)={cur_month}
