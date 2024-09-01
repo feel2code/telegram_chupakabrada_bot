@@ -51,4 +51,4 @@ We welcome contributions to enhance the bot's functionality and add more excitin
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-We hope you have as much fun using Chupakabrada Bot as we had creating it! Happy chatting!
+We hope you have as much fun using this bot! Happy chatting! Dab dab ya!
