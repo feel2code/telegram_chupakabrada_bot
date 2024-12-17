@@ -47,10 +47,12 @@ logger.addHandler(handler)
 def send_gs_voice(message):
     """sends voice message."""
     path = os.getenv("VOICES_PATH")
-    f = random.choice(os.listdir(path))
-    bot.send_voice(message.chat.id, InputFile(f"{path}{f}"))
+    bot.send_voice(
+        message.chat.id, InputFile(f"{path}{random.choice(os.listdir(path))}")
+    )
 
 
+MAIN_CHAT_ID = int(os.getenv("HOME_TELEGA"))
 COMMANDS_MAPPING = {
     "start": get_start,
     "about": get_about,
@@ -90,7 +92,7 @@ def get_text_messages(message):
     check(message)
     one_message(message)
 
-    if "@all" in message.text and message.chat.id == int(os.getenv("HOME_TELEGA")):
+    if "@all" in message.text and message.chat.id == MAIN_CHAT_ID:
         query(130, message.chat.id)
 
     ai_message = markov(message)
@@ -126,10 +128,8 @@ def get_audio_messages(audio):
 @bot.message_handler(content_types=["photo"])
 def get_photo_messages(photo_message):
     """Catching messages sent with photos."""
-    if photo_message.caption is not None:
-        if "@all" in photo_message.caption and (
-            photo_message.chat.id == int(os.getenv("HOME_TELEGA"))
-        ):
+    if photo_message.caption:
+        if "@all" in photo_message.caption and photo_message.chat.id == MAIN_CHAT_ID:
             query(130, photo_message.chat.id)
 
 
