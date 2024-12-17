@@ -48,13 +48,9 @@ def sticker_send(message):
     """send stickers to chat."""
     db_conn = SQLUtils()
     query(51, message.chat.id)
-    for stick_id in range(1, 10):
-        bot.send_sticker(
-            chat_id=message.chat.id,
-            sticker=db_conn.query(
-                f"select sticker from stickers where sticker_id={stick_id};"
-            ),
-        )
+    stickers = db_conn.query("select sticker from stickers;")
+    for stick_id in stickers:
+        bot.send_sticker(chat_id=message.chat.id, sticker=stick_id)
         time.sleep(0.200)
 
 
