@@ -9,22 +9,21 @@ from selects import query
 markov_path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files/markov"
 
 
-def markov(message, db_conn: SQLUtils) -> Union[str | None]:
+def markov(message) -> Union[str | None]:
     """processing message for Markov chains AI."""
+    db_conn = SQLUtils()
     try:
         fetched = db_conn.query(
             f"select count(1) from markov where chat_id={message.chat.id}"
-        )[0]
+        )
     except IndexError:
         return None
     if fetched:
-        if fetched[0] == 1:
+        if fetched == 1:
             hardness = db_conn.query(
                 f"select hardness from markov where chat_id={message.chat.id};"
-            )[0]
+            )
             if hardness:
-                hardness = hardness[0]
-
                 with open(
                     f"{markov_path}{str(message.chat.id)}.txt", "a", encoding="utf-8"
                 ) as markov_text:
@@ -57,9 +56,8 @@ def markov(message, db_conn: SQLUtils) -> Union[str | None]:
 
 def markov_hardness_request(message):
     """checks correct modifying of hardness level."""
-    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
-        query(129, message.chat.id, db_conn)
+        query(129, message.chat.id)
     else:
         markov_hardness(message)
 
@@ -68,19 +66,18 @@ def markov_hardness(message):
     """set hardness level of Markov chains AI."""
     # Искажения грамматики неслучайны.
     db_conn = SQLUtils()
-    hardness = message.text.replace("/set ", "").replace(" ", "-")
+    hardness = int(message.text.replace("/set ", "").replace(" ", "-"))
     count = db_conn.query(
         f"select count(1) from markov where chat_id={message.chat.id}"
-    )[0][0]
-    hardness_list = ("1", "2", "3", "4", "5", "6", "7", "8", "9")
+    )
+    hardness_list = list(range(1, 10))
     if count == 1:
         if hardness in hardness_list:
-            hardness = int(hardness)
             db_conn.mutate(
                 f"""update markov set hardness={hardness}
                     where chat_id={message.chat.id}"""
             )
-            if hardness == int(hardness_list[-1]):
+            if hardness == hardness_list[-1]:
                 msg_send = "Заткнуть пытаешься да? Ну тада ясна."
             else:
                 msg_send = f"Мой ICQ уменьшился до {hardness}."

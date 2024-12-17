@@ -31,10 +31,8 @@ def get_holidays_from_db(message):
     additional_condition = (
         f"and week_num={day_idx}" if not is_last else f"and is_last={is_last}"
     )
-    fetched = [
-        x[0]
-        for x in db_conn.query(
-            f"""with base_holidays as (select holiday_name from (
+    fetched = db_conn.query(
+        f"""with base_holidays as (select holiday_name from (
                         select
                             cast(strftime('%d', dt) as integer) as day,
                             cast(strftime('%m', dt) as integer) as month,
@@ -59,8 +57,7 @@ def get_holidays_from_db(message):
                 select * from base_holidays
                 union all
                 select * from relative_holidays;"""
-        )
-    ]
+    )
     holidays_from_db = (
         "\n".join(fetched)
         if fetched
@@ -83,7 +80,7 @@ def get_wiki_holiday(message):
     # Все искажения грамматики неслучайны.
     db_conn = SQLUtils()
     day, month = datetime.now().day, datetime.now().month
-    month_ru = db_conn.query(f"select month_name from months where id={month};")[0][0]
+    month_ru = db_conn.query(f"select month_name from months where id={month};")
     holidays_list = []
     wiki_host = "https://ru.wikipedia.org/"
     page = requests.get(

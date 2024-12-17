@@ -36,7 +36,7 @@ def check_usd_rate_change():
          select prev_rate / (select prev_rate from rates
          where ccy_iso3 = 'USD') from rates where ccy_iso3 = 'RUB'
         ), 1) as prev_rate;"""
-    )[0]
+    )
     rate, prev_rate = [int(x) for x in rates]
     if rate != prev_rate:
         bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))

@@ -7,7 +7,7 @@ from telebot.types import InputFile
 
 from aboba import markov, markov_hardness_request
 from analytics import analytics
-from connections import SQLUtils, bot
+from connections import bot
 from films import films_command
 from holiday import get_holidays_from_db, get_wiki_holiday
 from selects import (
@@ -77,7 +77,7 @@ COMMANDS_MAPPING = {
 @bot.message_handler(commands=list(COMMANDS_MAPPING.keys()))
 def standard_commands_sender(message):
     """checks commands in message."""
-    command = message.text.split(" ")[0][1:].replace("@chupakabrada_bot", "")
+    command = message.text.split()[0][1:].rstrip("@chupakabrada_bot")
     COMMANDS_MAPPING[command](message)
 
 
@@ -86,15 +86,14 @@ def get_text_messages(message):
     """Catching text messages or commands for bot."""
     if random.randint(1, 5) == 1:
         send_gs_voice(message)
-    db_conn = SQLUtils()
-    analytics(message, db_conn)
-    check(message, db_conn)
-    one_message(message, db_conn)
+    analytics(message)
+    check(message)
+    one_message(message)
 
     if "@all" in message.text and message.chat.id == int(os.getenv("HOME_TELEGA")):
-        query(130, message.chat.id, db_conn)
+        query(130, message.chat.id)
 
-    ai_message = markov(message, db_conn)
+    ai_message = markov(message)
     if ai_message:
         bot.send_message(message.chat.id, ai_message)
 
@@ -115,15 +114,13 @@ def deleting_msg(message):
 @bot.message_handler(content_types=["voice"])
 def get_voice_messages(voice):
     """Catching voice messages for bot."""
-    db_conn = SQLUtils()
-    query(49, voice.chat.id, db_conn)
+    query(49, voice.chat.id)
 
 
 @bot.message_handler(content_types=["audio"])
 def get_audio_messages(audio):
     """Catching audio files."""
-    db_conn = SQLUtils()
-    query(50, audio.chat.id, db_conn)
+    query(50, audio.chat.id)
 
 
 @bot.message_handler(content_types=["photo"])
@@ -133,8 +130,7 @@ def get_photo_messages(photo_message):
         if "@all" in photo_message.caption and (
             photo_message.chat.id == int(os.getenv("HOME_TELEGA"))
         ):
-            db_conn = SQLUtils()
-            query(130, photo_message.chat.id, db_conn)
+            query(130, photo_message.chat.id)
 
 
 if __name__ == "__main__":

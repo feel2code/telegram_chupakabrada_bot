@@ -8,9 +8,8 @@ from selects import query, simple_query
 
 
 def weather_in_city_request(message):
-    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
-        query(125, message.chat.id, db_conn)
+        query(125, message.chat.id)
     else:
         weather_in_city(message)
 
@@ -86,9 +85,8 @@ def forecast(city: str) -> tuple:
 
 
 def add_city_request(message):
-    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
-        query(123, message.chat.id, db_conn)
+        query(123, message.chat.id)
     else:
         add_city(message)
 
@@ -117,9 +115,8 @@ def add_city(message):
 
 
 def delete_city_request(message):
-    db_conn = SQLUtils()
     if len(message.text.split(" ")) == 1:
-        query(124, message.chat.id, db_conn)
+        query(124, message.chat.id)
     else:
         delete_city(message)
 
@@ -180,20 +177,20 @@ def get_weather_list(message):
         chat_id = message.chat.id
     else:
         chat_id, return_mode = message, True
-    db_conn = SQLUtils()
     if datetime.now().hour in range(0, 7):
         weather_message = simple_query(128) + "\n"
         is_forecast = True
     else:
         weather_message = simple_query(122) + "\n"
         is_forecast = False
+    db_conn = SQLUtils()
     fetched_from_db = db_conn.query(
         f"select city_name from cities where chat_id='{chat_id}';"
     )
     # updating temperatures in DB
     if fetched_from_db:
         for city in fetched_from_db:
-            add_temp_to_db(city[0], chat_id, db_conn)
+            add_temp_to_db(city, chat_id, db_conn)
         # find max and min weather in cities list
         temp_type = "expected_day_temp" if is_forecast else "temp"
         req = f"""select city_name, {temp_type}, conditions,

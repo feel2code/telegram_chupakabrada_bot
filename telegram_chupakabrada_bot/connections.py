@@ -24,7 +24,14 @@ class SQLUtils:
             self.connect()
             cursor = self.conn.cursor()
             cursor.execute(request)
-        return cursor.fetchall()
+        fetched = cursor.fetchall()
+        if len(fetched) == 1:
+            if len(fetched[0]) == 1:
+                return fetched[0][0]
+            return fetched[0]
+        if len(fetched) > 1 and len(fetched[0]) == 1:
+            return [x[0] for x in fetched]
+        return fetched
 
     def mutate(self, request):
         try:

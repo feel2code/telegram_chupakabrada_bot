@@ -5,8 +5,8 @@ from selects import query, simple_query
 
 
 def films_command(message):
+    query(118, message.chat.id)
     db_conn = SQLUtils()
-    query(118, message.chat.id, db_conn)
     bot.register_next_step_handler(message, get_top_films, db_conn)
 
 
@@ -17,7 +17,7 @@ def send_film(chat_id, year):
             f"""select film_name, film_year, link
                     from films
                     where film_year='{year}' order by random() limit 1"""
-        )[0]
+        )
     )
     bot.send_message(chat_id, film)
     bot.send_message(chat_id, "Еще?", reply_markup=get_inline_keys(year))
@@ -44,7 +44,7 @@ def get_top_films(message, db_conn: SQLUtils):
         min_year, max_year = db_conn.query(
             """select min(cast(film_year as UNSIGNED)),
                       max(cast(film_year as UNSIGNED)) from films;"""
-        )[0]
+        )
         if year in range(min_year, max_year + 1):
             send_film(message.chat.id, year)
             return
