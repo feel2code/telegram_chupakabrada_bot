@@ -79,7 +79,7 @@ COMMANDS_MAPPING = {
 @bot.message_handler(commands=list(COMMANDS_MAPPING.keys()))
 def standard_commands_sender(message):
     """checks commands in message."""
-    command = message.text.split()[0][1:].rstrip("@chupakabrada_bot")
+    command = message.text.split()[0][1:].replace("@chupakabrada_bot", "")
     COMMANDS_MAPPING[command](message)
 
 

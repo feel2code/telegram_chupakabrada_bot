@@ -73,18 +73,19 @@ def get_holidays_from_db(message):
                 union all
                 select * from relative_holidays;"""
     )
-    holidays_from_db = (
-        "\n".join(fetched)
-        if fetched
-        else "Сиводня праздников нет! Пойду сделаю омлет..."
-    )
+    if fetched:
+        if isinstance(fetched, list):
+            holidays_from_db = "\n".join(fetched)
+        else:
+            holidays_from_db = fetched
+    else:
+        holidays_from_db = "Сиводня праздников нет! Пойду сделаю омлет..."
     if return_mode:
         return holidays_from_db
     bot.send_message(
         chat_id=chat_id,
         text=(
-            f"Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n"
-            + holidays_from_db
+            f"Хааай, пасики! Сиводня палучаица {datetime.now().date()}:\n\n{holidays_from_db}"
         ),
     )
     return None

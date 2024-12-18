@@ -9,14 +9,11 @@ def check(message):
     db_conn = SQLUtils()
     msg_check = message.text.lower().split()
     for word in msg_check:
-        try:
-            rec = db_conn.query(
-                f"""select a.answer from questions as q
-                    join answers a on q.ans_id=a.ans_id
-                    where lower(q.question)={repr(word)};"""
-            )
-        except IndexError:
-            continue
+        rec = db_conn.query(
+            f"""select a.answer from questions as q
+                join answers a on q.ans_id=a.ans_id
+                where lower(q.question)={repr(word)};"""
+        )
         if not rec:
             continue
         bot.send_message(message.chat.id, rec)
@@ -108,7 +105,7 @@ def rates_exchange(message):
     ccy = "usd"
     return_mode = False
     if not isinstance(message, str):
-        ccy = message.text.split(" ")[0][1:].rstrip("@chupakabrada_bot")
+        ccy = message.text.split(" ")[0][1:].replace("@chupakabrada_bot", "")
     else:
         return_mode = True
     last_rate = get_rates_from_db(ccy)
