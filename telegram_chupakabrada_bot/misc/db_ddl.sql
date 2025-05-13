@@ -163,3 +163,6 @@ insert into rates values
 ('USD', 1, 1),
 ('RUB', 1, 1),
 ('GEL', 1, 1);
+
+delete from holidays_iso where holiday_name='День матери';
+insert into holidays_ru_relative (rel_name, dt, holiday_name, week_num, day_num, is_last) values ('Второе воскресенье', '2000-05-01', 'День матери (международный)', 2, 7, 0);
