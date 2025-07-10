@@ -11,12 +11,16 @@ env_path = os.getenv("ENV_PATH", "")
 
 
 class SQLUtils:
+    """Utility class for handling SQLite database connections and queries."""
+
     conn = None
 
     def connect(self):
+        """Connect to the database."""
         self.conn = sqlite3.connect(f'{env_path}{os.getenv("DB_NAME")}.db')
 
     def query(self, request):
+        """Execute a query and return the result."""
         try:
             cursor = self.conn.cursor()
             cursor.execute(request)
@@ -34,6 +38,7 @@ class SQLUtils:
         return fetched
 
     def mutate(self, request):
+        """Execute a mutation query (INSERT, UPDATE, DELETE)."""
         try:
             cursor = self.conn.cursor()
             cursor.execute(request)
