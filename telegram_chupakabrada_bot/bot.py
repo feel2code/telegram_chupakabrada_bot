@@ -12,6 +12,7 @@ from films import films_command
 from holiday import get_holidays_from_db, get_wiki_holiday
 from selects import (
     check,
+    check_sending_random_voice,
     get_about,
     get_quote,
     get_start,
@@ -52,7 +53,7 @@ def send_gs_voice(message):
     )
 
 
-MAIN_CHAT_ID = int(os.getenv("HOME_TELEGA"))
+MAIN_CHAT_ID = int(os.getenv("HOME_TELEGA", ""))
 COMMANDS_MAPPING = {
     "start": get_start,
     "about": get_about,
@@ -86,7 +87,7 @@ def standard_commands_sender(message):
 @bot.message_handler(content_types=["text"])
 def get_text_messages(message):
     """Catching text messages or commands for bot."""
-    if random.randint(1, 5) == 1:
+    if check_sending_random_voice(message):
         send_gs_voice(message)
     analytics(message)
     check(message)
@@ -103,9 +104,14 @@ def get_text_messages(message):
 def deleting_msg(message):
     """Delete unappropriated words."""
     # seek for space and other symbols
+    ban_list = os.getenv("BAN")
+    if not ban_list:
+        return
+    full_msg_ban = message.text.lower()
     for sym in (" ", "-", "_"):
-        full_msg_ban = str(message.text.lower()).replace(sym, "")
-    for msg_ban in os.getenv("BAN", None):
+        full_msg_ban = full_msg_ban.replace(sym, "")
+    ban_words = ban_list.split(",")
+    for msg_ban in ban_words:
         if msg_ban in full_msg_ban:
             try:
                 bot.delete_message(message.chat.id, message.id)
