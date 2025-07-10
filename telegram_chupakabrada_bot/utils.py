@@ -12,9 +12,9 @@ def send_message(chat, message, parse_mode="Markdown"):
 
 
 if __name__ == "__main__":
-    chat_id = os.getenv("HOME_TELEGA")
-    weather = get_weather_list(chat_id)
-    rates = rates_exchange(chat_id)
-    holiday = get_holidays_from_db(chat_id)
-    SUM_MESSAGE = f"{weather}\n\n{rates}\n\nПраздники:\n{holiday}"
-    send_message(chat_id, SUM_MESSAGE)
+    for chat_id in os.getenv("CHATS_FOR_MORNING_MESSAGE", "").split(","):
+        weather = get_weather_list(chat_id)
+        rates = rates_exchange(chat_id)
+        holiday = get_holidays_from_db(chat_id)
+        sum_message = f"{weather}\n\n{rates}\n\nпраздники:\n{holiday}"
+        send_message(chat_id, sum_message)
