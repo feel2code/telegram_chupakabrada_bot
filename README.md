@@ -31,7 +31,10 @@
 ## Installation
 
 ```bash
-git clone https://github.com/feel2code/telegram_chupakabrada_bot && cd telegram_chupakabrada_bot && ./install.sh
+git clone https://github.com/feel2code/telegram_chupakabrada_bot
+cd telegram_chupakabrada_bot
+chmod +x install.sh
+./install.sh
 ```
 
 ## Contributing
