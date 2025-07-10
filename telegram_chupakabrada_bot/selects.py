@@ -1,3 +1,4 @@
+import random
 import time
 from datetime import datetime
 
@@ -156,3 +157,15 @@ def get_quote(message):
         message.chat.id,
         db_conn.query("select quote_value from quotes order by random() limit 1;"),
     )
+
+
+def check_sending_random_voice(message):
+    """Check if random voice message should be sent."""
+    db_conn = SQLUtils()
+    hardness = int(
+        db_conn.query(f"select hardness from markov where chat_id={message.chat.id}")
+    )
+    if hardness < 9:
+        if random.randint(1, 5) == 1:
+            return True
+    return False
