@@ -47,7 +47,7 @@ def weather(city_name: str) -> Optional[int]:
                 city_name, temp, expected_day_temp, conditions, updated_at, is_active
                 )
                 values (
-                '{city_name}', 0, 0, '', {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}, 0'
+                '{city_name}', 0, 0, '', '{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', 0
                 );"""
         )
     fetched_from_db = db_conn.query(
