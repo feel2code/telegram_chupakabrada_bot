@@ -63,7 +63,10 @@ def forecast(city: str) -> tuple:
         ),
         timeout=60,
     ).json()
-    temp_celsius = int(response["list"][3]["main"]["feels_like"])
+    try:
+        temp_celsius = int(response["list"][3]["main"]["feels_like"])
+    except KeyError:
+        return None, None
     condition = response["list"][3]["weather"][0]["description"].lower()
     condition_emoji = {
         "ясно": "☀️",
