@@ -37,17 +37,22 @@ def weather(city_name: str) -> int:
     :param city_name: city name or id
     :return: temp in Celsius
     """
-    return int(
-        (
-            requests.get(
-                (
-                    f"https://api.openweathermap.org/data/2.5/weather?q={city_name}"
-                    f"&units=metric&appid={os.getenv('WEATHER_TOKEN')}"
-                ),
-                timeout=60,
-            ).json()
-        )["main"]["temp"]
-    )
+    try:
+        temp = int(
+            (
+                requests.get(
+                    (
+                        f"https://api.openweathermap.org/data/2.5/weather?q={city_name}"
+                        f"&units=metric&appid={os.getenv('WEATHER_TOKEN')}"
+                    ),
+                    timeout=60,
+                ).json()
+            )["main"]["temp"]
+        )
+    except KeyError:
+        print("City not found or API error")
+        temp = 0
+    return temp
 
 
 def forecast(city: str) -> tuple:
