@@ -179,7 +179,6 @@ insert into city_chat_id (chat_id, city_name) select cast(chat_id as integer), c
 
 drop table if exists cities;
 CREATE TABLE cities (
-	chat_id integer NULL,
 	city_name text NULL,
 	temp int8 NULL,
 	expected_day_temp int4 NULL,

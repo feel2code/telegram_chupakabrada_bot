@@ -263,7 +263,7 @@ def get_weather_list(message):
                 select city_name from city_chat_id where chat_id={chat_id}
             );
         """
-        fetched = db_conn.query(req)
+        fetched = db_conn.query_many(req)
         for row in fetched:
             city, temp, condition, add_cond = row
             if 0 <= temp < 10:

@@ -49,3 +49,15 @@ class SQLUtils:
             cursor.execute(request)
             self.conn.commit()
         return cursor
+
+    def query_many(self, request):
+        """Execute a query and return the result of rows."""
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(request)
+        except (AttributeError, DatabaseError, OperationalError):
+            self.connect()
+            cursor = self.conn.cursor()
+            cursor.execute(request)
+        fetched = cursor.fetchall()
+        return fetched
