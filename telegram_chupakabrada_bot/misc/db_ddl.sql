@@ -183,5 +183,7 @@ CREATE TABLE cities (
 	city_name text NULL,
 	temp int8 NULL,
 	expected_day_temp int4 NULL,
-	conditions text NULL
+	conditions text NULL,
+  updated_at timestamp NULL,
+  is_active integer NULL
 );
