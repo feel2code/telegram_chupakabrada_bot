@@ -166,3 +166,22 @@ insert into rates values
 
 delete from holidays_iso where holiday_name='День матери';
 insert into holidays_ru_relative (rel_name, dt, holiday_name, week_num, day_num, is_last) values ('Второе воскресенье', '2000-05-01', 'День матери (международный)', 2, 7, 0);
+
+alter table cities add column updated_at timestamp NULL;
+alter table cities add column is_active integer NULL;
+
+CREATE TABLE city_chat_id (
+	chat_id int8 NOT NULL,
+	city_name text NOT NULL
+);
+
+insert into city_chat_id (chat_id, city_name) select cast(chat_id as integer), city_name from cities;
+
+drop table if exists cities;
+CREATE TABLE cities (
+	chat_id integer NULL,
+	city_name text NULL,
+	temp int8 NULL,
+	expected_day_temp int4 NULL,
+	conditions text NULL
+);
