@@ -38,6 +38,6 @@ jobs:
             echo RATES_TOKEN=${{ secrets.RATES_TOKEN }} >> .env
             echo VOICES_PATH=${{ secrets.VOICES_PATH }} >> .env
             echo ENV_PATH=${{ secrets.ENV_PATH }} >> .env
-            echo CHATS_FOR_MORNING_MESSAGE=${{ secrets.ENV_PATH }} >> .env
+            echo CHATS_FOR_MORNING_MESSAGE=${{ secrets.CHATS_FOR_MORNING_MESSAGE }} >> .env
             chmod +x install.sh
             ./install.sh
