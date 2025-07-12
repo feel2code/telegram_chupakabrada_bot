@@ -171,11 +171,12 @@ def add_temp_to_db(city_name: str, chat: int, db_conn: SQLUtils):
     :return: None
     """
     expected, condition = forecast(city_name)
-    db_conn.mutate(
-        f"""update cities set temp={weather(city_name)},
-            expected_day_temp={expected}, conditions='{condition}'
-            where city_name='{city_name}' and chat_id='{chat}';"""
-    )
+    if expected:
+        db_conn.mutate(
+            f"""update cities set temp={weather(city_name)},
+                expected_day_temp={expected}, conditions='{condition}'
+                where city_name='{city_name}' and chat_id='{chat}';"""
+        )
 
 
 def get_weather_list(message):
