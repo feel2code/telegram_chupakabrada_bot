@@ -72,7 +72,7 @@ def weather(city_name: str) -> Optional[int]:
         )
         db_conn.mutate(
             f"""update cities set temp={new_temp},
-                updated_at='{datetime.now().strftime('%d-%m-%Y %H:%M:%S')}',
+                updated_at='{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}',
                 is_active=1
                 where city_name='{city_name}';"""
         )
