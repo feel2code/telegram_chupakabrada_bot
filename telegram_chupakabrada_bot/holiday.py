@@ -142,3 +142,18 @@ def get_holidays(chat_id: str):
             f'{holidays_result if holidays_result else "праздников нет."}'
         ),
     )
+
+
+def get_birthdays():
+    """Get list of birthdays from db."""
+    db_conn = SQLUtils()
+    cur_day = datetime.today().day
+    cur_month = datetime.today().month
+    fetched = db_conn.query(
+        f"select name from birthdays where day={cur_day} and month={cur_month};"
+    )
+    if fetched:
+        birthday_from_db = f"СИВОДНЯ ВАЩЕТА ДЕНЬ РАЖДЕНЬЯ у {fetched}!!!"
+    else:
+        birthday_from_db = ""
+    return birthday_from_db

@@ -1,7 +1,7 @@
 import os
 
 from connections import bot
-from holiday import get_holidays_from_db
+from holiday import get_birthdays, get_holidays_from_db
 from selects import rates_exchange
 from weather_module import get_weather_list
 
@@ -18,3 +18,6 @@ if __name__ == "__main__":
         holiday = get_holidays_from_db(chat_id)
         sum_message = f"{weather}\n\n{rates}\n\nпраздники:\n{holiday}"
         send_message(chat_id, sum_message)
+        birthdays = get_birthdays()
+        if birthdays:
+            send_message(chat_id, birthdays)
