@@ -1,6 +1,7 @@
 import os
 import sqlite3
 from sqlite3 import DatabaseError, OperationalError
+from typing import Union
 
 import telebot
 from dotenv import load_dotenv
@@ -13,13 +14,11 @@ env_path = os.getenv("ENV_PATH", "")
 class SQLUtils:
     """Utility class for handling SQLite database connections and queries."""
 
-    conn = None
-
     def connect(self):
         """Connect to the database."""
         self.conn = sqlite3.connect(f'{env_path}{os.getenv("DB_NAME")}.db')
 
-    def query(self, request):
+    def query(self, request) -> Union[list, str]:
         """Execute a query and return the result."""
         try:
             cursor = self.conn.cursor()

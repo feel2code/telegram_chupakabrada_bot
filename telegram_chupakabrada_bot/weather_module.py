@@ -38,6 +38,7 @@ def weather(city_name: str) -> Optional[int]:
     :param city_name: city name or id
     :return: temp in Celsius
     """
+    city_name = city_name.upper()
     db_conn = SQLUtils()
     if not db_conn.query(
         f"select city_name from cities where city_name='{city_name}';"
@@ -226,7 +227,7 @@ def get_weather_list(message):
         chat_id = message.chat.id
     else:
         chat_id, return_mode = message, True
-    if datetime.now().hour in range(0, 7):
+    if datetime.now().hour in range(0, 8):
         weather_message = simple_query(128) + "\n"
         is_forecast = True
     else:
