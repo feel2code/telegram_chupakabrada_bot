@@ -3,7 +3,8 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-crontab misc/crontab.txt
+# uncomment this for initial deployment
+# crontab misc/crontab.txt
 
 mkdir misc/voices && mv misc/voices.tar.xz misc/voices/voices.tar.xz
 cd misc/voices
