@@ -28,7 +28,8 @@ def one_message(message):
             join messages m on m.ans_id=a.ans_id
             where msg_txt='{message.text.upper()}';"""
     )
-    bot.send_message(message.chat.id, fetched)
+    if fetched:
+        bot.send_message(message.chat.id, fetched)
 
 
 def simple_query(ans_id):
