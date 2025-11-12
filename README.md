@@ -46,19 +46,19 @@ I'm welcome any contributions to enhance the bot's functionality and add more ex
 ## Commands descriptions
 ### English:
 ```
-start - start the elderly chuchundra
-quote - quote from grandpa
-voice - voice clip from grandpa
+start - start the elderly chuchundra bot
+quote - quote from grandpa bot
+voice - voice clip from grandpa bot
 sticker - grandpa-themed sticker pack
-weather - pagoda in the town
-forecast - pagoda forecast in surrounding towns
+weather - weather in the town
+forecast - weather forecast in surrounding towns
 add - add a town
 delete - delete a town
-roll - random character generator
+roll - random user choose
 cinema - movie roulette
 holidays - holidays today
 set - set talkativeness level from 1 to 9
-usd - current exchange rate for student currency
+usd - current exchange rate for usd
 about - about the author
 ```
 
