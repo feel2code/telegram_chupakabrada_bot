@@ -19,38 +19,38 @@ def markov(message) -> Union[str | None]:
     except IndexError:
         return None
     if fetched:
-        if fetched == 1:
-            hardness = db_conn.query(
-                f"select hardness from markov where chat_id={message.chat.id};"
-            )
-            if hardness:
-                with open(
-                    f"{markov_path}{str(message.chat.id)}.txt", "a", encoding="utf-8"
-                ) as markov_text:
-                    markov_text.write(f"{message.text}. ")
-
-                with open(
-                    f"{markov_path}{str(message.chat.id)}.txt", encoding="utf8"
-                ) as text:
-                    try:
-                        text_model = markovify.Text(text, state_size=int(hardness))
-                        return text_model.make_sentence(tries=50)
-                    except KeyError:
-                        return None
-            else:
-                return None
-        else:
-            db_conn.mutate(
-                f"""insert into markov (chat_id, hardness)
-                    values ({message.chat.id}, 9);"""
-            )
-            path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files"
-            if not os.path.exists(path):
-                os.makedirs(path)
+        hardness = db_conn.query(
+            f"select hardness from markov where chat_id={message.chat.id};"
+        )
+        if hardness:
             with open(
-                f"{markov_path}{str(message.chat.id)}.txt", "a", encoding="utf8"
+                f"{markov_path}{str(message.chat.id)}.txt", "a", encoding="utf-8"
             ) as markov_text:
                 markov_text.write(f"{message.text}. ")
+
+            with open(
+                f"{markov_path}{str(message.chat.id)}.txt", encoding="utf8"
+            ) as text:
+                try:
+                    text_model = markovify.Text(text, state_size=int(hardness))
+                    return text_model.make_sentence(tries=50)
+                except KeyError:
+                    return None
+        else:
+            return None
+    else:
+        db_conn.mutate(
+            f"""insert into markov (chat_id, hardness)
+                values ({message.chat.id}, 9);"""
+        )
+        path = f"{'/'.join(os.getcwd().split('/')[:-1])}/markov_files"
+        print(path)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        with open(
+            f"{markov_path}{str(message.chat.id)}.txt", "a", encoding="utf8"
+        ) as markov_text:
+            markov_text.write(f"{message.text}. ")
     return None
 
 

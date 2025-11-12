@@ -163,10 +163,11 @@ def get_quote(message):
 def check_sending_random_voice(message):
     """Check if random voice message should be sent."""
     db_conn = SQLUtils()
-    hardness = int(
-        db_conn.query(f"select hardness from markov where chat_id={message.chat.id}")
+    hardness = db_conn.query(
+        f"select hardness from markov where chat_id={message.chat.id}"
     )
-    if hardness < 9:
-        if random.randint(1, 5) == 1:
-            return True
+    if hardness:
+        if int(hardness) < 9:
+            if random.randint(1, 5) == 1:
+                return True
     return False
