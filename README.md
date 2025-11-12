@@ -59,9 +59,9 @@ cinema - movie roulette
 holidays - holidays today
 set - set talkativeness level from 1 to 9
 usd - current exchange rate for student currency
+about - about the author
 ```
 
-about - about the author
 ### Russian:
 ```
 start - стартануть пажилую чучундру
