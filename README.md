@@ -10,13 +10,16 @@
 
 - **Smart Replies:** It can respond to frequently used words and phrases within the chat, adding a touch of humor and engagement to your conversations.
 
+- **Streamer's Quotes:** For an extra dose of entertainment, the bot can also share famous quotes in text and voice from a well-known Russian streamer.
+
 - **Sticker Recommendations:** With a simple command, the bot can recommend stickers that add an extra layer of fun to your chats.
 
 - **Weather Updates:** Chupakabrada Bot can provide current weather information on-demand or at scheduled times using CRON jobs, ensuring you're always weather-ready.
 
 - **Holiday Updates:** Find out which holidays are being celebrated today with a quick command or scheduled CRON job. Never miss a special occasion again.
 
-- **YouTube Streamer Quotes:** For an extra dose of entertainment, the bot can also share famous quotes from a well-known Russian YouTube streamer.
+- **More there...**
+
 
 ## How to Use
 - Invite the bot to your Telegram group or start a private chat to experience its features.
@@ -38,7 +41,44 @@ chmod +x install.sh
 ```
 
 ## Contributing
-We welcome contributions to enhance the bot's functionality and add more exciting features. Feel free to fork the repository, make improvements, and submit pull requests.
+I'm welcome any contributions to enhance the bot's functionality and add more exciting features. Feel free to fork the repository, make improvements, and submit pull requests.
+
+## Commands descriptions
+### English:
+```
+start - start the elderly chuchundra
+quote - quote from grandpa
+voice - voice clip from grandpa
+sticker - grandpa-themed sticker pack
+weather - pagoda in the town
+forecast - pagoda forecast in surrounding towns
+add - add a town
+delete - delete a town
+roll - random character generator
+cinema - movie roulette
+holidays - holidays today
+set - set talkativeness level from 1 to 9
+usd - current exchange rate for student currency
+```
+
+about - about the author
+### Russian:
+```
+start - стартануть пажилую чучундру
+quote - цитатка от деда
+voice - голосовая цитатка от деда
+sticker - стикерпак дидовский
+weather - пагода в хораде
+forecast - пагода в районах-харадах
+add - добавить хорад
+delete - удалить хорад
+roll - рандом челик
+cinema - фильм рулетка
+holidays - праздники сиводня
+set - установить болтливость от 1 до 9
+usd - курс студеной
+about - об авторе
+```
 
 ## Developing
 <h3><a href="https://t.me/chupakabrada_bot">LINK TO THIS INCREDIBLE TELEGRAM BOT</a></h3>
