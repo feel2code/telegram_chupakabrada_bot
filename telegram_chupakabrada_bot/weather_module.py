@@ -141,6 +141,7 @@ def add_city(message):
     city_name = " ".join(city_name).upper()
     if not weather(city_name):
         bot.send_message(message.chat.id, f"{city_name}??? {simple_query(119)}")
+        return
     if db_conn.query(
         f"""select city_name from city_chat_id
             where upper(city_name)='{city_name}'
