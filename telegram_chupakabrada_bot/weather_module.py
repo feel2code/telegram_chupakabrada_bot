@@ -24,11 +24,11 @@ def weather_in_city(message):
     """
     city_name = message.text.replace("/weather ", "").replace(" ", "-")
     city_temp = weather(city_name)
-    if not city_temp:
+    if city_temp is None:
         bot.send_message(message.chat.id, simple_query(111))
         return
     bot.send_message(
-        message.chat.id, f"{simple_query(112)}\n {city_temp} °C {city_name}"
+        message.chat.id, f"{simple_query(112)}\n {city_temp} °C {city_name.title()}"
     )
 
 
@@ -47,10 +47,11 @@ def weather(city_name: str) -> Optional[int]:
         fetched_from_db = db_conn.query(
             f"select temp, updated_at from cities where city_name='{city_name}' and is_active=1;"
         )
-        city_temp, updated_at = fetched_from_db
-        updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S")
-        if datetime.now().date() == updated_at.date():
-            return city_temp
+        if fetched_from_db:
+            city_temp, updated_at = fetched_from_db
+            updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S")
+            if datetime.now().date() == updated_at.date():
+                return city_temp
     try:
         new_temp = int(
             (
@@ -141,7 +142,8 @@ def add_city(message):
     city_name = message.text.split()
     city_name.pop(0)
     city_name = " ".join(city_name).upper()
-    if not weather(city_name):
+    weather_exists = weather(city_name)
+    if weather_exists is None:
         bot.send_message(message.chat.id, f"{city_name}??? {simple_query(119)}")
         return
     if db_conn.query(
