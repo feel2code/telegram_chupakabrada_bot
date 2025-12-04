@@ -40,24 +40,17 @@ def weather(city_name: str) -> Optional[int]:
     """
     city_name = city_name.upper()
     db_conn = SQLUtils()
-    if not db_conn.query(
+    city_exists_in_db = db_conn.query(
         f"select city_name from cities where city_name='{city_name}';"
-    ):
-        db_conn.mutate(
-            f"""insert into cities (
-                city_name, temp, expected_day_temp, conditions, updated_at, is_active
-                )
-                values (
-                '{city_name}', 0, 0, '', '{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', 0
-                );"""
-        )
-    fetched_from_db = db_conn.query(
-        f"select temp, updated_at from cities where city_name='{city_name}' and is_active=1;"
     )
+    if city_exists_in_db:
+        fetched_from_db = db_conn.query(
+            f"select temp, updated_at from cities where city_name='{city_name}' and is_active=1;"
+        )
     if fetched_from_db:
         city_temp, updated_at = fetched_from_db
         updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S")
-        if datetime.now().hour == updated_at.hour:
+        if datetime.now().date() == updated_at.date():
             return city_temp
     try:
         new_temp = int(
@@ -71,12 +64,22 @@ def weather(city_name: str) -> Optional[int]:
                 ).json()
             )["main"]["temp"]
         )
-        db_conn.mutate(
-            f"""update cities set temp={new_temp},
-                updated_at='{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}',
-                is_active=1
-                where city_name='{city_name}';"""
-        )
+        if not city_exists_in_db:
+            db_conn.mutate(
+                f"""insert into cities (
+                    city_name, temp, expected_day_temp, conditions, updated_at, is_active
+                    )
+                    values (
+                    '{city_name}', 0, 0, '', '{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}', 0
+                    );"""
+            )
+        else:
+            db_conn.mutate(
+                f"""update cities set temp={new_temp},
+                    updated_at='{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}',
+                    is_active=1
+                    where city_name='{city_name}';"""
+            )
         return new_temp
     except KeyError as e:
         print(e)
@@ -209,7 +212,7 @@ def add_temp_to_db(city_name: str, db_conn: SQLUtils):
     )
     if updated_at:
         updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S")
-        if datetime.now().hour == updated_at.hour:
+        if datetime.now().date() == updated_at.date():
             return
     fetched_forecast = forecast(city_name)
     if fetched_forecast:
