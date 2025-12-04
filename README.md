@@ -46,16 +46,17 @@ I'm welcome any contributions to enhance the bot's functionality and add more ex
 ## Commands descriptions
 ### English:
 ```
-start - start the elderly chuchundra bot
-quote - quote from grandpa bot
-voice - voice clip from grandpa bot
+start - start the chuchundra
+quote - quote from valakas
+voice - voice clip from valakas
 sticker - grandpa-themed sticker pack
 weather - weather in the town
 forecast - weather forecast in surrounding towns
-add - add a town
-delete - delete a town
-roll - random user choose
-cinema - movie roulette
+set_forecast_schedule - send forecast in the mornings
+add - add a town to the list
+delete - delete a town from the list
+roll - random user roll
+cinema - random movie
 holidays - holidays today
 set - set talkativeness level from 1 to 9
 usd - current exchange rate for usd
@@ -70,6 +71,7 @@ voice - голосовая цитатка от деда
 sticker - стикерпак дидовский
 weather - пагода в хораде
 forecast - пагода в районах-харадах
+set_forecast_schedule - присылать утром прагнозы
 add - добавить хорад
 delete - удалить хорад
 roll - рандом челик
