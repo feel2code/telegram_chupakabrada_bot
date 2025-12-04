@@ -53,20 +53,6 @@ def sticker_send(message):
         time.sleep(0.200)
 
 
-def zoo(message):
-    """send sticker via animal-like-codeword to chat."""
-    zoo_dict = {
-        "/хрю": "pig_stickers",
-        "/гав": "dog_stickers",
-    }
-    db_conn = SQLUtils()
-    sticker_id = db_conn.query(
-        f"""select sticker_id
-            from {zoo_dict[message.text]} order by random() limit 1;"""
-    )
-    bot.send_sticker(message.chat.id, sticker_id)
-
-
 def roll(message):
     """roll someone in chat."""
     db_conn = SQLUtils()
@@ -106,7 +92,7 @@ def rates_exchange(message):
     """usd currency rate."""
     ccy = "usd"
     return_mode = False
-    if not isinstance(message, str):
+    if not isinstance(message, int):
         ccy = message.text.split(" ")[0][1:].replace("@chupakabrada_bot", "")
     else:
         return_mode = True

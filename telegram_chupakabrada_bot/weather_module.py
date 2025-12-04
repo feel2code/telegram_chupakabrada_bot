@@ -154,8 +154,8 @@ def add_city(message):
         bot.send_message(message.chat.id, f"{city_name} {simple_query(121)}")
         return
     db_conn.mutate(
-        f"""insert into city_chat_id (chat_id, city_name)
-            values ({chat_id}, '{city_name}')"""
+        f"""insert into city_chat_id (chat_id, city_name, scheduled_forecast)
+            values ({chat_id}, '{city_name}', 0)"""
     )
     bot.send_message(message.chat.id, f"{city_name} {simple_query(121)}")
 
@@ -228,16 +228,33 @@ def add_temp_to_db(city_name: str, db_conn: SQLUtils):
 def get_weather_list(message):
     """getting cities list from DB."""
     return_mode = False
-    if not isinstance(message, str):
+    if not isinstance(message, int):
         chat_id = message.chat.id
     else:
         chat_id, return_mode = message, True
+
     if datetime.now().hour in range(0, 8):
         weather_message = simple_query(128) + "\n"
         is_forecast = True
     else:
         weather_message = simple_query(122) + "\n"
         is_forecast = False
+
+    weather_list = get_weather_list_from_db(chat_id, is_forecast=is_forecast)
+    if not weather_list:
+        weather_message = simple_query(116)
+    if return_mode:
+        return weather_message + weather_list
+    bot.send_message(
+        chat_id=chat_id, text=weather_message + weather_list, parse_mode="Markdown"
+    )
+    return None
+
+
+def get_weather_list_from_db(
+    chat_id: str, weather_message: str = "", is_forecast: bool = False
+):
+    """Return weather list from db for chat_id"""
     db_conn = SQLUtils()
     fetched_from_db = db_conn.query(
         f"select city_name from city_chat_id where chat_id={chat_id};"
@@ -281,9 +298,42 @@ def get_weather_list(message):
             weather_message += (
                 f"\n ` {temp_spaces}{temp}° " f"{condition} {city}{add_cond}`"
             )
-    else:
-        weather_message = simple_query(116)
-    if return_mode:
         return weather_message
-    bot.send_message(chat_id=chat_id, text=weather_message, parse_mode="Markdown")
     return None
+
+
+def set_forecast_schedule(message):
+    """Sets scheduled forecast for group chat."""
+    if message.chat.id < 0:
+        bot.send_message(
+            chat_id=message.chat.id,
+            text="Функция отправки прогноза по расписанию доступна только для групповых чатов",
+        )
+    db_conn = SQLUtils()
+    fetched_from_db = db_conn.query(
+        f"select distinct scheduled_forecast from city_chat_id where chat_id={message.chat.id};"
+    )
+    if fetched_from_db is None:
+        bot.send_message(
+            chat_id=message.chat.id,
+            text="Сначала добавьте хотя бы один город командой /add <город>",
+        )
+    else:
+        if fetched_from_db == 0:
+            db_conn.mutate(
+                f"""update city_chat_id set scheduled_forecast=1
+                    where chat_id={message.chat.id};"""
+            )
+            bot.send_message(
+                chat_id=message.chat.id,
+                text="Функция отправки прогноза по расписанию включена.",
+            )
+        if fetched_from_db == 1:
+            db_conn.mutate(
+                f"""update city_chat_id set scheduled_forecast=0
+                    where chat_id={message.chat.id};"""
+            )
+            bot.send_message(
+                chat_id=message.chat.id,
+                text="Функция отправки прогноза по расписанию выключена.",
+            )

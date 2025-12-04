@@ -21,13 +21,13 @@ from selects import (
     rates_exchange,
     roll,
     sticker_send,
-    zoo,
 )
 from stats import send_statistics
 from weather_module import (
     add_city_request,
     delete_city_request,
     get_weather_list,
+    set_forecast_schedule,
     weather_in_city_request,
 )
 
@@ -70,8 +70,7 @@ COMMANDS_MAPPING = {
     "weather": weather_in_city_request,
     "cinema": films_command,
     "set": markov_hardness_request,
-    "хрю": zoo,
-    "гав": zoo,
+    "scheduled_forecast": set_forecast_schedule,
     "voice": send_gs_voice,
     os.getenv("KEY_FOR_STATS"): send_statistics,
 }

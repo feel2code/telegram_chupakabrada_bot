@@ -29,7 +29,7 @@ def get_holidays_from_db(message):
     """Get holidays from db."""
     # Все искажения грамматики неслучайны.
     return_mode = False
-    if not isinstance(message, str):
+    if not isinstance(message, int):
         chat_id = message.chat.id
     else:
         chat_id, return_mode = message, True
