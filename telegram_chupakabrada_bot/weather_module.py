@@ -47,7 +47,6 @@ def weather(city_name: str) -> Optional[int]:
         fetched_from_db = db_conn.query(
             f"select temp, updated_at from cities where city_name='{city_name}' and is_active=1;"
         )
-    if fetched_from_db:
         city_temp, updated_at = fetched_from_db
         updated_at = datetime.strptime(updated_at, "%Y-%m-%d %H:%M:%S")
         if datetime.now().date() == updated_at.date():
