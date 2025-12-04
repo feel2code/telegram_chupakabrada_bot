@@ -309,6 +309,7 @@ def set_forecast_schedule(message):
             chat_id=message.chat.id,
             text="Функция отправки прогноза по расписанию доступна только для групповых чатов",
         )
+        return
     db_conn = SQLUtils()
     fetched_from_db = db_conn.query(
         f"select distinct scheduled_forecast from city_chat_id where chat_id={message.chat.id};"
