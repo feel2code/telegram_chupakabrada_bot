@@ -70,7 +70,7 @@ COMMANDS_MAPPING = {
     "weather": weather_in_city_request,
     "cinema": films_command,
     "set": markov_hardness_request,
-    "scheduled_forecast": set_forecast_schedule,
+    "set_forecast_schedule": set_forecast_schedule,
     "voice": send_gs_voice,
     os.getenv("KEY_FOR_STATS"): send_statistics,
 }

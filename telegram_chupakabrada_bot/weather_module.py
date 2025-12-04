@@ -304,7 +304,7 @@ def get_weather_list_from_db(
 
 def set_forecast_schedule(message):
     """Sets scheduled forecast for group chat."""
-    if message.chat.id < 0:
+    if message.chat.id > 0:
         bot.send_message(
             chat_id=message.chat.id,
             text="Функция отправки прогноза по расписанию доступна только для групповых чатов",
