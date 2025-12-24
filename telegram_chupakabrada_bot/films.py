@@ -5,7 +5,7 @@ from selects import query, simple_query
 
 
 def films_command(message):
-    query(118, message.chat.id)
+    bot.send_message(message.chat_id, "Какого хода нужен фильм? А ню давай!")
     db_conn = SQLUtils()
     bot.register_next_step_handler(message, get_top_films, db_conn)
 
