@@ -80,7 +80,10 @@ COMMANDS_MAPPING = {
 def standard_commands_sender(message):
     """checks commands in message."""
     command = message.text.split()[0][1:].replace("@chupakabrada_bot", "")
-    COMMANDS_MAPPING[command](message)
+    try:
+        COMMANDS_MAPPING[command](message)
+    except KeyError:
+        print(f"Incorrect command {command}")
 
 
 @bot.message_handler(content_types=["text"])
