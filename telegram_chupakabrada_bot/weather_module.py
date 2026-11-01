@@ -76,7 +76,7 @@ def weather(city_name: str) -> Optional[int]:
         else:
             db_conn.mutate(
                 f"""update cities set temp={new_temp},
-                    updated_at='{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}',
+                    updated_at='{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}',
                     is_active=1
                     where city_name='{city_name}';"""
             )
@@ -233,7 +233,7 @@ def get_weather_list(message):
     else:
         chat_id, return_mode = message, True
 
-    if datetime.now().hour in range(0, 8):
+    if datetime.now().hour in range(8):
         weather_message = simple_query(128) + "\n"
         is_forecast = True
     else:
@@ -296,7 +296,7 @@ def get_weather_list_from_db(
             else:
                 temp_spaces = ""
             weather_message += (
-                f"\n ` {temp_spaces}{temp}° " f"{condition} {city}{add_cond}`"
+                f"\n ` {temp_spaces}{temp}° {condition} {city}{add_cond}`"
             )
         return weather_message
     return None

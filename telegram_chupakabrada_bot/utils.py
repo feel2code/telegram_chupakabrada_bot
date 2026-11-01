@@ -1,5 +1,3 @@
-import os
-
 from telebot.apihelper import ApiTelegramException
 
 from connections import SQLUtils, bot
